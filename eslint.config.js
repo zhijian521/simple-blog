@@ -2,10 +2,14 @@ import js from '@eslint/js';
 import tsPlugin from '@typescript-eslint/eslint-plugin';
 import tsParser from '@typescript-eslint/parser';
 import vuePlugin from 'eslint-plugin-vue';
+import prettierConfig from 'eslint-config-prettier';
+import prettierPlugin from 'eslint-plugin-prettier';
 import vueParser from 'vue-eslint-parser';
 
 /** @type {import('eslint').Linter.FlatConfig[]} */
 export default [
+    // Prettier 负责格式化；ESLint 负责代码质量。
+    prettierConfig,
     {
         ignores: ['**/node_modules/**', '**/dist/**', '**/coverage/**'],
     },
@@ -34,10 +38,15 @@ export default [
         plugins: {
             '@typescript-eslint': tsPlugin,
         },
+        plugins: {
+            '@typescript-eslint': tsPlugin,
+            prettier: prettierPlugin,
+        },
         rules: {
             ...tsPlugin.configs.recommended.rules,
             '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
             'no-undef': 'off',
+            'prettier/prettier': 'warn',
         },
     },
 
@@ -59,11 +68,13 @@ export default [
         plugins: {
             vue: vuePlugin,
             '@typescript-eslint': tsPlugin,
+            prettier: prettierPlugin,
         },
         rules: {
             ...vuePlugin.configs.recommended.rules,
             'vue/multi-word-component-names': 'off',
             'no-undef': 'off',
+            'prettier/prettier': 'warn',
         },
     },
 ];

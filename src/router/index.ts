@@ -1,11 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
+import type { RouteLocationNormalized } from 'vue-router';
+
 import { routes } from './routes';
 
 /**
- * Router 实例。
- * - history 使用 HTML5 history
- * - routes 单独维护，利于模块化拆分
+ * Router 实例（仅负责路由创建与全局 hooks 注册）。
+ * 约定：页面标题使用 `route.meta.title?: string`。
  */
 export const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -15,7 +16,13 @@ export const router = createRouter({
     },
 });
 
-router.afterEach((to) => {
+function applyDocumentTitle(to: RouteLocationNormalized): void {
+    const baseTitle = import.meta.env.VITE_APP_TITLE || 'Vite Vue';
     const title = typeof to.meta.title === 'string' ? to.meta.title : undefined;
-    document.title = title ? `${title} | Vite Vue` : 'Vite Vue';
+
+    document.title = title ? `${title} | ${baseTitle}` : baseTitle;
+}
+
+router.afterEach((to) => {
+    applyDocumentTitle(to);
 });
