@@ -7,6 +7,5 @@ import { router } from '@/router';
  * 好处：main.ts 保持极简，启动流程清晰。
  */
 export function bootstrapApp(app: App): void {
-  app.use(router);
+    app.use(router);
 }
-
