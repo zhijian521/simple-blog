@@ -33,23 +33,16 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { getArticles } from '../utils/markdown'
+import { formatDate } from '../utils/date'
 import type { Article } from '../types/article'
 
 const articles = ref<Article[]>([])
 const loading = ref(true)
 
-onMounted(async () => {
-  articles.value = await getArticles()
+onMounted(() => {
+  articles.value = getArticles()
   loading.value = false
 })
-
-function formatDate(date: string): string {
-  return new Date(date).toLocaleDateString('zh-CN', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  })
-}
 </script>
 
 <style scoped>

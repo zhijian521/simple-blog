@@ -32,17 +32,17 @@
 import { ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { getArticleBySlug } from '../utils/markdown'
+import { formatDate } from '../utils/date'
 import type { Article } from '../types/article'
 
 const route = useRoute()
 const article = ref<Article | null>(null)
 const loading = ref(true)
 
-const loadArticle = async (slug: string) => {
+const loadArticle = (slug: string) => {
   loading.value = true
-  // 解码 URL 编码的 slug
   const decodedSlug = decodeURIComponent(slug)
-  article.value = await getArticleBySlug(decodedSlug)
+  article.value = getArticleBySlug(decodedSlug)
   loading.value = false
 }
 
@@ -56,14 +56,6 @@ watch(() => route.params.slug, (newSlug) => {
     loadArticle(newSlug as string)
   }
 })
-
-function formatDate(date: string): string {
-  return new Date(date).toLocaleDateString('zh-CN', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  })
-}
 </script>
 
 <style scoped>

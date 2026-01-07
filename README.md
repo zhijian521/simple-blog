@@ -64,16 +64,21 @@ tags:
 ```
 simple-blog/
 ├── blogs/              # Markdown 博客文章
-│   ├── hello-world.md
-│   └── vue3-composition-api.md
+│   └── */*.md
 ├── src/
 │   ├── pages/         # 页面组件
 │   │   ├── HomePage.vue
 │   │   ├── ArticlesPage.vue
 │   │   └── ArticleDetailPage.vue
+│   ├── router/        # 路由配置
+│   │   └── index.ts
+│   ├── constants/     # 常量配置
+│   │   └── index.ts
 │   ├── styles/        # 样式文件
 │   ├── types/         # 类型定义
 │   ├── utils/         # 工具函数
+│   │   ├── markdown.ts
+│   │   └── date.ts
 │   ├── App.vue        # 根组件
 │   └── main.ts        # 应用入口
 ├── index.html
