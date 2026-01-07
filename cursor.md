@@ -45,13 +45,14 @@ refactor(components): optimize component structure
 3. **工作流程**
    - 可以执行 `git add` 暂存更改
    - 可以执行 `git status` 查看状态
-   - 只有在用户明确说"提交代码"、"commit" 等指令时才能执行 `git commit`
+   - 只有在用户明确说“提交代码”“commit”等指令时才能执行 `git commit`
 
 ## 当前项目信息
 
-- 框架：Nuxt.js
-- 内容管理：@nuxt/content
-- 语言：TypeScript + Vue 3
+- 构建工具：Vite
+- 框架：Vue 3
+- 语言：TypeScript
+- 路由：Vue Router
 
 ## 开发要求与最佳实践
 
@@ -63,20 +64,20 @@ refactor(components): optimize component structure
    - 尽量保持函数/组件“单一职责”，文件过大时及时拆分
 
 2. **符合当前流行的最佳实践**
-   - 优先使用组合式 API（Vue 3 / Nuxt 3 风格），避免在新代码中混用旧式写法
+   - 优先使用组合式 API（Vue 3 风格）
    - 使用类型系统（TS）增强可维护性，避免滥用 `any`
    - 遵循语义化 HTML 和可访问性（a11y）基本要求
    - 尽量保持无副作用的纯函数，副作用集中在少数可控位置（如 composables、store）
 
 3. **符合模块化实践**
    - 页面展示、业务逻辑、数据访问等层次分离，避免所有逻辑堆在页面组件中
-   - 公共逻辑抽离到 `composables/`、`utils/` 等目录（如后续新增）
+   - 公共逻辑抽离到 `src/*` 下的明确分层目录（见下方“企业级目录结构”）
    - 组件拆分遵循：UI 组件（展示为主）、业务组件（承载业务流程）、布局组件（整体框架）
 
 ### 注释与文档要求
 
 1. **注释策略**
-   - 为**重要模块、关键业务流程、复杂算法或易误解逻辑**编写简洁清晰的注释
+   - 为重要模块、关键业务流程、复杂算法或易误解逻辑编写简洁清晰的注释
    - 避免解释“代码本身已经很清楚”的注释，减少噪音
    - 当代码意图不能通过命名充分表达时，使用注释补充“为什么这么做”（why），而非“做了什么”（what）
 
@@ -92,14 +93,72 @@ refactor(components): optimize component structure
 ### 代码风格与结构
 
 1. **命名规范**
-   - 组件/类：`PascalCase`，如 `BlogCard`, `UserProfile`
-   - 变量/函数：`camelCase`，命名表达意图而非缩写
-   - 常量：全部大写，使用下划线分隔，如 `DEFAULT_PAGE_SIZE`
+   - 组件/类：`PascalCase`
+   - 变量/函数：`camelCase`
+   - 常量：全部大写，使用下划线分隔
 
-2. **文件与目录结构**
-   - 保持目录结构清晰、职责明确，同类文件放在一起（如组件、内容、配置等）
-   - 新增模块时优先复用现有结构规则，保持整体风格一致
+2. **文件与目录结构（企业级建议）**
+
+说明：该结构参考当前主流前端工程实践（分层 + 按业务模块聚合），兼顾可扩展性与可维护性。
+
+- `app/`：应用初始化层（router、全局样式、providers、入口组装）
+- `pages/`：页面层（路由承载页面；只做编排，避免堆业务）
+- `features/`：业务功能模块（推荐按领域/功能拆分，每个模块自带组件、API、类型、状态）
+- `entities/`：领域实体（可复用的数据模型与业务规则，如 Article、User）
+- `shared/`：跨业务复用（UI 组件、工具函数、通用 hooks、基础样式、类型）
+
+推荐结构：
+
+```
+src/
+  app/
+    router/
+      index.ts
+    styles/
+      main.css
+    main.ts
+
+  pages/
+    Home/
+      HomePage.vue
+    Articles/
+      ArticlesPage.vue
+      ArticleDetailPage.vue
+
+  features/
+    search/
+      ui/
+      model/
+      lib/
+      index.ts
+
+  entities/
+    article/
+      model/
+      api/
+      lib/
+      index.ts
+
+  shared/
+    ui/
+    composables/
+    lib/
+    styles/
+    types/
+
+  App.vue
+  env.d.ts
+
+index.html
+vite.config.ts
+```
+
+落地规则：
+- 页面文件统一放在 `src/pages/**`，路由只引用 pages 层组件。
+- 业务逻辑优先放 `features/*` 或 `entities/*`，页面只负责组合与展示。
+- 通用 UI（Button、Alert、Modal 等）放 `shared/ui`；业务 UI 放各自 feature 的 `ui/`。
+- 与后端交互封装在 `entities/*/api`（按领域），不要散落在页面里。
 
 3. **复杂度控制**
-   - 尽量避免深层嵌套的逻辑和超长函数，如逻辑变复杂应及时抽取子函数或子组件
-   - 尽量控制单文件/单函数责任范围，使整体项目“简单易懂、结构清晰明了”
+   - 尽量避免深层嵌套逻辑和超长函数，复杂逻辑及时抽取
+   - 控制单文件/单函数责任范围，使项目结构清晰易懂
