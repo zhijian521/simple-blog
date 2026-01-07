@@ -13,6 +13,7 @@ id: hleayr4y
 ## 为什么需要提交规范
 
 统一的提交规范可以带来以下好处：
+
 - **清晰的历史记录**：快速了解每次提交的目的
 - **自动化生成日志**：自动生成 CHANGELOG
 - **团队协作效率**：统一的沟通语言
@@ -34,19 +35,19 @@ id: hleayr4y
 
 必须使用以下类型之一：
 
-| 类型 | 说明 | 示例 |
-|------|------|------|
-| `feat` | 新功能 | feat: 添加用户登录功能 |
-| `fix` | 修复 Bug | fix: 修复登录后页面跳转错误 |
-| `docs` | 文档变更 | docs: 更新 README 安装说明 |
-| `style` | 代码格式调整（不影响代码运行） | style: 统一代码缩进为 2 空格 |
-| `refactor` | 重构代码（既不是新功能也不是修复） | refactor: 重构用户服务层代码 |
-| `perf` | 性能优化 | perf: 优化图片加载速度 |
-| `test` | 测试相关 | test: 添加用户模块单元测试 |
-| `build` | 构建系统或外部依赖变更 | build: 升级 webpack 到 5.0 |
-| `ci` | CI/CD 配置变更 | ci: 优化 GitHub Actions 工作流 |
-| `chore` | 其他不修改 src 或 test 的变更 | chore: 更新 .gitignore |
-| `revert` | 回退提交 | revert: feat: 移除用户头像功能 |
+| 类型       | 说明                               | 示例                           |
+| ---------- | ---------------------------------- | ------------------------------ |
+| `feat`     | 新功能                             | feat: 添加用户登录功能         |
+| `fix`      | 修复 Bug                           | fix: 修复登录后页面跳转错误    |
+| `docs`     | 文档变更                           | docs: 更新 README 安装说明     |
+| `style`    | 代码格式调整（不影响代码运行）     | style: 统一代码缩进为 2 空格   |
+| `refactor` | 重构代码（既不是新功能也不是修复） | refactor: 重构用户服务层代码   |
+| `perf`     | 性能优化                           | perf: 优化图片加载速度         |
+| `test`     | 测试相关                           | test: 添加用户模块单元测试     |
+| `build`    | 构建系统或外部依赖变更             | build: 升级 webpack 到 5.0     |
+| `ci`       | CI/CD 配置变更                     | ci: 优化 GitHub Actions 工作流 |
+| `chore`    | 其他不修改 src 或 test 的变更      | chore: 更新 .gitignore         |
+| `revert`   | 回退提交                           | revert: feat: 移除用户头像功能 |
 
 ### Scope 范围
 
@@ -65,6 +66,7 @@ docs(api): 更新 API 接口文档
 Subject 是对本次提交的简短描述。
 
 **规则**：
+
 - 使用中文或英文（保持一致）
 - 不超过 50 个字符
 - 不以句号结尾
@@ -103,6 +105,7 @@ Closes #123
 Footer 用于补充说明和关联信息。
 
 **常用脚注**：
+
 - **Closes #123**：关闭 Issue #123
 - **Refs #456**：关联 Issue #456
 - **BREAKING CHANGE**：破坏性变更

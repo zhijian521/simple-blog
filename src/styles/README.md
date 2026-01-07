@@ -22,6 +22,7 @@ src/styles/
 ## 设计规范
 
 ### 颜色系统
+
 - `--color-text`: 主要文本 (#3a3a3a)
 - `--color-text-light`: 次要文本 (#666666)
 - `--color-text-lighter`: 辅助文本 (#999999)
@@ -31,6 +32,7 @@ src/styles/
 - `--color-border`: 边框色 (#e5e5e5)
 
 ### 间距系统
+
 - `--spacing-xs`: 0.25rem
 - `--spacing-sm`: 0.5rem
 - `--spacing-md`: 1rem
@@ -39,16 +41,19 @@ src/styles/
 - `--spacing-2xl`: 3rem
 
 ### 字体系统
+
 - 字号：`--font-size-xs` 到 `--font-size-4xl`
 - 字重：`--font-weight-normal`/`medium`/`semibold`/`bold`
 
 ### 圆角与阴影
+
 - 圆角：`--radius-sm`/`md`/`lg`/`full`
 - 阴影：`--shadow-sm`/`md`/`lg`
 
 ## 使用示例
 
 ### CSS 变量
+
 ```css
 .my-component {
   color: var(--color-text);
@@ -59,6 +64,7 @@ src/styles/
 ```
 
 ### 通用组件类
+
 ```vue
 <div class="container">
   <div class="card">
@@ -70,6 +76,7 @@ src/styles/
 ```
 
 ### 工具类
+
 ```vue
 <div class="text-center mb-lg">
   <div class="flex flex-between gap-md">

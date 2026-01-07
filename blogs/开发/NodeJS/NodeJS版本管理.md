@@ -12,6 +12,7 @@ tags:
   - nvm-windows
   - 内网
 ---
+
 Node.js 版本管理工具：来确保开发环境的一致性。推荐使用 **nvm** 进行 Node.js 版本管理。
 
 ---
@@ -47,8 +48,6 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
 2. 将下载好的文件包上传到内网服务器。
 3. 在内网解压并重命名为 `vxx.xx.x` (例如: v22.21.1) 实际对应版本号，并放到 nvm 安装目录下。
 4. 运行 `nvm ls` 即可查看已安装的 Node.js 版本。使用 `nvm use <version>` 切换到指定版本。
-
-
 
 ## 📚参考资料
 

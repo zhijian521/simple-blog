@@ -1,0 +1,26 @@
+{
+  "semi": false,
+  "singleQuote": true,
+  "printWidth": 100,
+  "trailingComma": "es5",
+  "tabWidth": 2,
+  "useTabs": false,
+  "endOfLine": "lf",
+  "arrowParens": "avoid",
+  "bracketSpacing": true,
+  "vueIndentScriptAndStyle": false,
+  "overrides": [
+    {
+      "files": "*.vue",
+      "options": {
+        "tabWidth": 4
+      }
+    },
+    {
+      "files": "*.ts",
+      "options": {
+        "tabWidth": 4
+      }
+    }
+  ]
+}

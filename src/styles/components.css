@@ -30,8 +30,9 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   padding: var(--spacing-lg);
-  transition: border-color var(--transition-base),
-              box-shadow var(--transition-base);
+  transition:
+    border-color var(--transition-base),
+    box-shadow var(--transition-base);
 }
 
 .card:hover {
@@ -41,8 +42,9 @@
 
 .card-elevated {
   box-shadow: var(--shadow-sm);
-  transition: transform var(--transition-base),
-              box-shadow var(--transition-base);
+  transition:
+    transform var(--transition-base),
+    box-shadow var(--transition-base);
 }
 
 .card-elevated:hover {
