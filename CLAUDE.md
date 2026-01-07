@@ -291,5 +291,7 @@ style: apply prettier formatting
 - Do not end subject with period
 - Wrap body at 72 characters
 - Reference issues in footer: `Closes #123`
+- **Do NOT include AI-related information in commit messages** (e.g., "Generated with Claude Code", "Co-Authored-By", etc.)
+- Keep commit logs clean and professional, focusing only on technical changes
 
 **IMPORTANT:** Never create commits unless explicitly requested by the user.
