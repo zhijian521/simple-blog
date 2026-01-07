@@ -1,29 +1,29 @@
-# Build outputs
-/dist
-
-# Vite cache
-.vite
-
-# Node dependencies
-/node_modules
-
-# TypeScript build cache
-*.tsbuildinfo
-
 # Logs
 logs
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# Misc
-.DS_Store
-.fleet
+# Dependencies
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
 .idea
-.vscode
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
-# Local env files
-.env
-.env.*
-!.env.example
-
-# Package managers
-pnpm-lock.yaml
+# Build artifacts
+dist
+*.tsbuildinfo

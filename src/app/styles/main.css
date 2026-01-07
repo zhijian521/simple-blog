@@ -1,7 +1,0 @@
-/* 样式入口：按层级聚合（tokens -> base -> components） */
-@import "./tokens/theme.css";
-
-@import "./base/reset.css";
-@import "./base/layout.css";
-
-@import "./components/button.css";
