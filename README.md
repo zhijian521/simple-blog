@@ -1,75 +1,55 @@
-# Nuxt Content Starter
+# Simple Blog (Nuxt + @nuxt/content)
 
-Look at the [Nuxt Content documentation](https://content.nuxt.com) to learn more.
+一个基于 Nuxt 3 和 @nuxt/content 的简洁博客示例，支持 Markdown 内容渲染与基础布局。
 
-## Setup
-
-Make sure to install dependencies:
+## 开发与运行
 
 ```bash
-# npm
+# 安装依赖
 npm install
 
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
+# 开发模式
 npm run dev
 
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
+# 生产构建
 npm run build
 
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
+# 预览生产构建
 npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
 ```
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+默认地址：`http://localhost:3000`
+
+## 目录结构（摘录）
+
+- `app/layouts/default.vue`：全局布局（导航、页脚、基础样式）
+- `app/pages/[...slug].vue`：内容页面渲染，含加载/错误处理
+- `app/composables/usePageContent.ts`：内容获取与状态管理
+- `app/components/Alert.vue` / `Counter.vue`：演示组件
+- `content/`：Markdown 内容源（如 `index.md`, `about.md`）
+- `nuxt.config.ts`：Nuxt 配置（含 favicon）
+- `cursor.md`：团队开发与提交规范
+
+## 提交规范
+
+遵循 Conventional Commits，详情见 `cursor.md`。示例：
+
+- `feat(config): add favicon configuration`
+- `fix(router): resolve navigation issue`
+- `docs(readme): update installation guide`
+- `chore: add project files and initial structure`
+
+## 开发约定（摘要）
+
+完整规范见 `cursor.md`，核心要点：
+
+- 资深开发规范：可维护、易扩展、DRY、单一职责
+- 模块化：公共逻辑抽到 `composables/`、`utils/` 等
+- 最佳实践：Vue 3 组合式 API、TypeScript、a11y 与语义化
+- 注释策略：只为重要模块/复杂逻辑写“why”型注释，避免冗余
+
+## 常见命令
+
+- `npm run dev`：本地开发
+- `npm run build`：生产构建
+- `npm run preview`：预览生产构建
