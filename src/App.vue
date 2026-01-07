@@ -3,13 +3,13 @@
         <main class="main">
             <router-view />
         </main>
-        <footer class="footer">
-            <p>&copy; 2026 耶温博客</p>
-        </footer>
+        <Footer />
     </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import Footer from '@/components/common/Footer.vue'
+</script>
 
 <style scoped>
 .app {
@@ -21,14 +21,5 @@
 .main {
     flex: 1;
     width: 100%;
-}
-
-.footer {
-    border-top: 1px solid var(--color-border);
-    text-align: center;
-    padding: var(--spacing-xl) var(--spacing-lg);
-    margin-top: auto;
-    color: var(--color-text-lighter);
-    font-size: var(--font-size-sm);
 }
 </style>
