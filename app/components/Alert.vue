@@ -5,11 +5,12 @@
 </template>
 
 <script setup lang="ts">
-const { color } = defineProps({
-  color: {
-    type: String,
-    default: 'orange'
-  }
+interface Props {
+  color?: string
+}
+
+withDefaults(defineProps<Props>(), {
+  color: 'orange'
 })
 </script>
 

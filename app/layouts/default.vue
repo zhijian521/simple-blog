@@ -1,21 +1,26 @@
+<script setup lang="ts">
+const route = useRoute()
+const isHomePage = computed(() => route.path === '/')
+</script>
+
 <template>
-  <div class="layout">
-    <header class="layout__header">
+  <div class="layout" :class="{ 'layout--home': isHomePage }">
+    <header v-if="!isHomePage" class="layout__header">
       <nav class="layout__nav">
-        <NuxtLink class="layout__brand" to="/">Simple Blog</NuxtLink>
+        <NuxtLink class="layout__brand" to="/">耶温博客</NuxtLink>
         <div class="layout__links">
           <NuxtLink to="/">首页</NuxtLink>
-          <NuxtLink to="/about">关于</NuxtLink>
+          <NuxtLink to="/articles">文章</NuxtLink>
         </div>
       </nav>
     </header>
 
-    <main class="layout__main">
+    <main class="layout__main" :class="{ 'layout__main--home': isHomePage }">
       <slot />
     </main>
 
-    <footer class="layout__footer">
-      <span>© {{ new Date().getFullYear() }} Simple Blog</span>
+    <footer v-if="!isHomePage" class="layout__footer">
+      <span>© {{ new Date().getFullYear() }} 耶温博客</span>
     </footer>
   </div>
 </template>
@@ -73,6 +78,11 @@
   width: 100%;
   margin: 0 auto;
   padding: 24px 16px 48px;
+}
+
+.layout__main--home {
+  padding: 0;
+  max-width: 100%;
 }
 
 .layout__footer {

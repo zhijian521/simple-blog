@@ -5,6 +5,13 @@ export default defineNuxtConfig({
   ],
   devtools: { enabled: true },
   compatibilityDate: '2024-04-03',
+  ssr: true,
+  nitro: {
+    prerender: {
+      crawlLinks: true,
+      routes: ['/', '/articles']
+    }
+  },
   app: {
     head: {
       link: [

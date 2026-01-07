@@ -1,5 +1,7 @@
 <script setup lang="ts">
 const { page, pending, error } = usePageContent()
+
+// 仅依赖模板状态渲染，不主动抛错，刷新时保持当前页面
 </script>
 
 <template>

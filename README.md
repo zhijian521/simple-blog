@@ -11,8 +11,11 @@ npm install
 # 开发模式
 npm run dev
 
-# 生产构建
+# 生产构建（SSR）
 npm run build
+
+# 静态站点生成（SSG）
+npm run generate
 
 # 预览生产构建
 npm run preview
@@ -20,14 +23,16 @@ npm run preview
 
 默认地址：`http://localhost:3000`
 
+**注意**：项目已配置为 SSG（静态站点生成）模式，使用 `npm run generate` 可生成完全静态的站点，适合部署到静态托管服务（如 Vercel、Netlify、GitHub Pages 等）。
+
 ## 目录结构（摘录）
 
 - `app/layouts/default.vue`：全局布局（导航、页脚、基础样式）
 - `app/pages/[...slug].vue`：内容页面渲染，含加载/错误处理
 - `app/composables/usePageContent.ts`：内容获取与状态管理
-- `app/components/Alert.vue` / `Counter.vue`：演示组件
-- `content/`：Markdown 内容源（如 `index.md`, `about.md`）
-- `nuxt.config.ts`：Nuxt 配置（含 favicon）
+- `app/components/Alert.vue` / `IconSearch.vue`：UI 组件
+- `content/`：Markdown 内容源目录（可在此添加文章内容）
+- `nuxt.config.ts`：Nuxt 配置（含 favicon、SSG 预渲染配置）
 - `cursor.md`：团队开发与提交规范
 
 ## 提交规范
@@ -51,5 +56,6 @@ npm run preview
 ## 常见命令
 
 - `npm run dev`：本地开发
-- `npm run build`：生产构建
+- `npm run build`：生产构建（SSR）
+- `npm run generate`：静态站点生成（SSG）
 - `npm run preview`：预览生产构建
