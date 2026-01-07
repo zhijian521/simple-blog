@@ -1,0 +1,16 @@
+/**
+ * 全局样式入口
+ * 统一引入所有样式文件
+ */
+
+/* CSS 变量 - 定义设计规范 */
+@import './variables.css';
+
+/* 基础样式 - 重置、基础元素、滚动条 */
+@import './base.css';
+
+/* 通用组件样式 - 可复用的组件类 */
+@import './components.css';
+
+/* 工具类 - 原子化工具类 */
+@import './utilities.css';
