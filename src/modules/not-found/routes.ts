@@ -9,4 +9,3 @@ export const notFoundRoutes: RouteRecordRaw[] = [
         meta: { title: 'Not Found' },
     },
 ];
-

@@ -9,4 +9,3 @@ export const homeRoutes: RouteRecordRaw[] = [
         meta: { title: 'Home' },
     },
 ];
-

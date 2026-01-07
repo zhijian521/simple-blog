@@ -9,4 +9,3 @@ export const aboutRoutes: RouteRecordRaw[] = [
         meta: { title: 'About' },
     },
 ];
-

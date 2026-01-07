@@ -37,9 +37,6 @@ export default [
         },
         plugins: {
             '@typescript-eslint': tsPlugin,
-        },
-        plugins: {
-            '@typescript-eslint': tsPlugin,
             prettier: prettierPlugin,
         },
         rules: {
