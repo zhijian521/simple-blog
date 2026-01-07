@@ -1,21 +1,17 @@
 <template>
     <div class="article-detail">
-        <div v-if="loading" class="loading">加载中...</div>
+        <LoadingState v-if="loading" />
 
-        <div v-else-if="!article" class="not-found">
-            <h1>文章未找到</h1>
-            <router-link to="/articles">返回文章列表</router-link>
-        </div>
+        <EmptyState v-else-if="!article" title="文章未找到" message="抱歉，您访问的文章不存在">
+            <template #actions>
+                <router-link to="/articles" class="btn">返回文章列表</router-link>
+            </template>
+        </EmptyState>
 
         <article v-else class="article-content">
             <div class="article-header">
                 <h1 class="article-title">{{ article.title }}</h1>
-                <div class="article-meta">
-                    <span class="article-date">{{ formatDate(article.date) }}</span>
-                    <span v-if="article.author" class="article-author"
-                        >作者：{{ article.author }}</span
-                    >
-                </div>
+                <ArticleMeta :article="article" />
                 <div v-if="article.tags && article.tags.length" class="article-tags">
                     <span v-for="tag in article.tags" :key="tag" class="tag">{{ tag }}</span>
                 </div>
@@ -33,9 +29,11 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { getArticleBySlug } from '../utils/markdown'
-import { formatDate } from '../utils/date'
-import type { Article } from '../types/article'
+import { getArticleBySlug } from '@/utils/markdown'
+import ArticleMeta from '@/components/common/ArticleMeta.vue'
+import LoadingState from '@/components/common/LoadingState.vue'
+import EmptyState from '@/components/common/EmptyState.vue'
+import type { Article } from '@/types/article'
 
 const route = useRoute()
 const article = ref<Article | null>(null)
@@ -65,119 +63,89 @@ watch(
 
 <style scoped>
 .article-detail {
-    max-width: 800px;
+    max-width: var(--article-max-width);
     margin: 0 auto;
-}
-
-.loading {
-    text-align: center;
-    padding: 3rem;
-    color: #666;
-    font-size: 1.1rem;
-}
-
-.not-found {
-    text-align: center;
-    padding: 3rem;
-}
-
-.not-found h1 {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-    color: #e74c3c;
+    padding: var(--spacing-lg);
 }
 
 .article-content {
-    background: white;
-    border-radius: 8px;
-    padding: 3rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background: var(--color-bg);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-2xl);
+    border: 1px solid var(--color-border);
 }
 
 .article-header {
-    margin-bottom: 2rem;
-    padding-bottom: 2rem;
-    border-bottom: 2px solid #f0f0f0;
+    margin-bottom: var(--spacing-xl);
+    padding-bottom: var(--spacing-xl);
+    border-bottom: 1px solid var(--color-border);
 }
 
 .article-title {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-    color: #2c3e50;
+    font-size: var(--font-size-4xl);
+    margin-bottom: var(--spacing-md);
+    color: var(--color-text);
     line-height: 1.3;
-}
-
-.article-meta {
-    display: flex;
-    gap: 1.5rem;
-    margin-bottom: 1rem;
-    font-size: 0.95rem;
-    color: #666;
+    font-weight: var(--font-weight-bold);
 }
 
 .article-tags {
     display: flex;
-    gap: 0.5rem;
+    gap: var(--spacing-sm);
     flex-wrap: wrap;
-    margin-top: 1rem;
-}
-
-.tag {
-    background: #42b983;
-    color: white;
-    padding: 0.25rem 0.75rem;
-    border-radius: 16px;
-    font-size: 0.85rem;
+    margin-top: var(--spacing-md);
 }
 
 .article-body {
-    font-size: 1.1rem;
+    font-size: var(--font-size-lg);
     line-height: 1.8;
-    color: #333;
+    color: var(--color-text);
 }
 
 .article-body :deep(h2) {
-    font-size: 2rem;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-    color: #2c3e50;
+    font-size: var(--font-size-3xl);
+    margin-top: var(--spacing-xl);
+    margin-bottom: var(--spacing-md);
+    color: var(--color-text);
+    font-weight: var(--font-weight-semibold);
 }
 
 .article-body :deep(h3) {
-    font-size: 1.5rem;
-    margin-top: 1.5rem;
-    margin-bottom: 0.75rem;
-    color: #34495e;
+    font-size: var(--font-size-2xl);
+    margin-top: var(--spacing-lg);
+    margin-bottom: var(--spacing-md);
+    color: var(--color-text);
+    font-weight: var(--font-weight-semibold);
 }
 
 .article-body :deep(p) {
-    margin-bottom: 1rem;
+    margin-bottom: var(--spacing-md);
 }
 
 .article-body :deep(ul),
 .article-body :deep(ol) {
-    margin-bottom: 1rem;
-    padding-left: 2rem;
+    margin-bottom: var(--spacing-md);
+    padding-left: var(--spacing-lg);
 }
 
 .article-body :deep(li) {
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--spacing-sm);
 }
 
 .article-body :deep(code) {
-    background: #f4f4f4;
+    background: var(--color-bg-secondary);
     padding: 0.2rem 0.4rem;
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     font-size: 0.9em;
 }
 
 .article-body :deep(pre) {
     background: #2d2d2d;
     color: #f8f8f2;
-    padding: 1.5rem;
-    border-radius: 8px;
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
     overflow-x: auto;
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--spacing-md);
 }
 
 .article-body :deep(pre code) {
@@ -187,28 +155,38 @@ watch(
 }
 
 .article-body :deep(blockquote) {
-    border-left: 4px solid #42b983;
-    padding-left: 1.5rem;
-    margin: 1.5rem 0;
-    color: #666;
-    font-style: italic;
+    border-left: 3px solid var(--color-accent);
+    padding-left: var(--spacing-md);
+    margin: var(--spacing-md) 0;
+    color: var(--color-text-light);
 }
 
 .article-footer {
-    margin-top: 3rem;
-    padding-top: 2rem;
-    border-top: 2px solid #f0f0f0;
+    margin-top: var(--spacing-2xl);
+    padding-top: var(--spacing-xl);
+    border-top: 1px solid var(--color-border);
 }
 
 .back-link {
     display: inline-block;
-    color: #42b983;
+    color: var(--color-text);
     text-decoration: none;
-    font-weight: 500;
-    transition: color 0.3s;
+    font-weight: var(--font-weight-medium);
+    transition: color var(--transition-fast);
 }
 
 .back-link:hover {
-    color: #359268;
+    color: var(--color-accent);
+}
+
+.btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background: var(--color-accent);
+    color: var(--color-bg);
+    border: none;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    margin-top: var(--spacing-md);
 }
 </style>
