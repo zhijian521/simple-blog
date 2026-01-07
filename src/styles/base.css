@@ -1,10 +1,9 @@
 /**
  * 基础样式
- * 包含：样式重置、基础元素样式、滚动条样式
+ * 重置 + 基础元素 + 滚动条
  */
 
-/* ==================== 样式重置 ==================== */
-
+/* Reset */
 *,
 *::before,
 *::after {
@@ -41,10 +40,11 @@ body {
     linear-gradient(90deg, rgba(0, 0, 0, 0.01) 1px, transparent 1px);
   background-size: 40px 40px;
   color: var(--color-text);
-  overflow-x: hidden;
   line-height: 1.6;
+  overflow-x: hidden;
 }
 
+/* Elements */
 img {
   max-width: 100%;
   height: auto;
@@ -68,9 +68,6 @@ button {
   cursor: pointer;
 }
 
-/* ==================== 基础元素样式 ==================== */
-
-/* 代码块 */
 code {
   background: var(--color-bg-secondary);
   padding: 0.2rem 0.4rem;
@@ -94,7 +91,6 @@ pre code {
   color: inherit;
 }
 
-/* 引用 */
 blockquote {
   border-left: 3px solid var(--color-accent);
   padding-left: var(--spacing-md);
@@ -102,26 +98,21 @@ blockquote {
   color: var(--color-text-light);
 }
 
-/* ==================== 滚动条样式 ==================== */
-
-/* 滚动条整体尺寸 */
+/* Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
-/* 滚动条轨道 - 透明背景 */
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 
-/* 滚动条滑块 - 浅色半透明 */
 ::-webkit-scrollbar-thumb {
   background: rgba(0, 0, 0, 0.15);
   border-radius: 3px;
 }
 
-/* 滚动条滑块悬停状态 */
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(0, 0, 0, 0.25);
 }
