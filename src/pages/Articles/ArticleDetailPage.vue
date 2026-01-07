@@ -11,7 +11,7 @@ const { article } = useArticleBySlug(slug)
 </script>
 
 <template>
-  <main class="page">
+  <main class="page container">
     <p v-if="!article" class="muted">未找到文章</p>
 
     <article v-else class="card">
@@ -29,43 +29,37 @@ const { article } = useArticleBySlug(slug)
 
 <style scoped>
 .page {
-  max-width: 920px;
-  margin: 0 auto;
-  padding: 28px 16px 56px;
+  padding-top: var(--spacing-xl);
+  padding-bottom: var(--spacing-2xl);
 }
 
 .card {
-  background: var(--color-surface);
+  background: var(--color-bg);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
-  padding: 18px;
+  padding: var(--spacing-lg);
 }
 
 .header {
-  padding-bottom: 12px;
+  padding-bottom: var(--spacing-md);
   border-bottom: 1px solid var(--color-border);
-  margin-bottom: 14px;
+  margin-bottom: var(--spacing-md);
 }
 
 .title {
-  margin: 0 0 8px;
-  font-size: 32px;
+  margin: 0 0 var(--spacing-sm);
+  font-size: var(--font-size-3xl);
   letter-spacing: -0.02em;
+  color: var(--color-text);
 }
 
 .desc {
   margin: 0;
-  color: var(--color-text-muted);
+  color: var(--color-text-light);
   line-height: 1.6;
 }
 
 .body {
   line-height: 1.75;
 }
-
-.muted {
-  margin: 0;
-  color: var(--color-text-muted);
-}
 </style>
-

@@ -11,7 +11,7 @@ const sorted = computed(() => {
 </script>
 
 <template>
-  <main class="page">
+  <main class="page container">
     <header class="page__header">
       <h1 class="page__title">文章列表</h1>
       <p class="page__subtitle">所有文章</p>
@@ -34,35 +34,30 @@ const sorted = computed(() => {
 
 <style scoped>
 .page {
-  max-width: 920px;
-  margin: 0 auto;
-  padding: 28px 16px 56px;
+  padding-top: var(--spacing-xl);
+  padding-bottom: var(--spacing-2xl);
 }
 
 .page__header {
-  margin-bottom: 18px;
+  margin-bottom: var(--spacing-lg);
 }
 
 .page__title {
-  margin: 0 0 6px;
-  font-size: 32px;
+  margin: 0 0 var(--spacing-xs);
+  font-size: var(--font-size-3xl);
+  color: var(--color-text);
 }
 
 .page__subtitle {
   margin: 0;
-  color: var(--color-text-muted);
+  color: var(--color-text-light);
 }
 
 .card {
-  background: var(--color-surface);
+  background: var(--color-bg);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
-  padding: 14px;
-}
-
-.muted {
-  color: var(--color-text-muted);
-  margin: 0;
+  padding: var(--spacing-md);
 }
 
 .list {
@@ -71,20 +66,15 @@ const sorted = computed(() => {
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-}
-
-.list__item {
-  border-radius: 10px;
+  gap: var(--spacing-sm);
 }
 
 .list__link {
   display: block;
-  padding: 12px;
-  border-radius: 10px;
-  text-decoration: none;
+  padding: var(--spacing-md);
+  border-radius: var(--radius);
   color: inherit;
-  transition: background 0.15s ease, transform 0.15s ease;
+  transition: background var(--transition-fast) ease, transform var(--transition-fast) ease;
 }
 
 .list__link:hover {
@@ -97,10 +87,9 @@ const sorted = computed(() => {
 }
 
 .list__desc {
-  margin-top: 4px;
-  color: var(--color-text-muted);
-  font-size: 14px;
+  margin-top: var(--spacing-xs);
+  color: var(--color-text-light);
+  font-size: var(--font-size-sm);
   line-height: 1.6;
 }
 </style>
-

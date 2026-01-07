@@ -19,12 +19,8 @@
   overflow: hidden;
   display: grid;
   place-items: center;
-  padding: 24px;
-  background: var(--color-bg);
-  background-image:
-    linear-gradient(var(--color-grid) 1px, transparent 1px),
-    linear-gradient(90deg, var(--color-grid) 1px, transparent 1px);
-  background-size: 40px 40px;
+  padding: var(--spacing-xl);
+  background: var(--color-bg-page);
 }
 
 .home__content {
@@ -35,15 +31,15 @@
 .home__title {
   font-size: clamp(40px, 6vw, 64px);
   line-height: 1.1;
-  margin: 0 0 12px;
+  margin: 0 0 var(--spacing-sm);
   color: var(--color-text);
   letter-spacing: -0.02em;
 }
 
 .home__subtitle {
-  margin: 0 0 28px;
-  color: var(--color-text-muted);
-  font-size: 18px;
+  margin: 0 0 var(--spacing-lg);
+  color: var(--color-text-light);
+  font-size: var(--font-size-lg);
   line-height: 1.6;
 }
 
@@ -52,4 +48,3 @@
   justify-content: center;
 }
 </style>
-
