@@ -1,13 +1,14 @@
-# Nuxt dev/build outputs
-.output
-.data
-.nuxt
-.nitro
-.cache
-dist
+# Build outputs
+/dist
+
+# Vite cache
+.vite
 
 # Node dependencies
-node_modules
+/node_modules
+
+# TypeScript build cache
+*.tsbuildinfo
 
 # Logs
 logs
@@ -17,10 +18,12 @@ logs
 .DS_Store
 .fleet
 .idea
+.vscode
 
 # Local env files
 .env
 .env.*
 !.env.example
 
+# Package managers
 pnpm-lock.yaml
