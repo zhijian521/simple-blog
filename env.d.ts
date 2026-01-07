@@ -15,3 +15,18 @@ declare module 'front-matter' {
     function frontMatter<T = any>(content: string): FrontMatterResult<T>
     export = frontMatter
 }
+
+interface ImportMetaEnv {
+    readonly VITE_APP_TITLE: string
+    readonly BASE_URL: string
+    readonly MODE: string
+    readonly DEV: boolean
+    readonly PROD: boolean
+    readonly SSR: boolean
+}
+
+interface ImportMeta {
+    readonly env: ImportMetaEnv
+    readonly glob: (pattern: string) => Record<string, () => Promise<any>>
+    readonly globEager: (pattern: string) => Record<string, any>
+}

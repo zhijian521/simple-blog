@@ -79,7 +79,7 @@ function parseArticle(markdownContent: string, slug: string): Article {
  * 提取文章摘要（前 200 字符）
  */
 function extractExcerpt(content: string, maxLength = 200): string {
-    const plainText = content.replace(/[#*`_\[\]]/g, '').trim()
+    const plainText = content.replace(/[#*`_[\]]/g, '').trim()
     return plainText.slice(0, maxLength) + '...'
 }
 

@@ -67,11 +67,11 @@ src/styles/
 
 ```vue
 <div class="container">
-  <div class="card">
-    <span class="tag">标签</span>
-    <a class="btn">按钮</a>
-    <a class="btn btn-outline">轮廓按钮</a>
-  </div>
+    <div class="card">
+        <span class="tag">标签</span>
+        <a class="btn">按钮</a>
+        <a class="btn btn-outline">轮廓按钮</a>
+    </div>
 </div>
 ```
 
@@ -79,10 +79,10 @@ src/styles/
 
 ```vue
 <div class="text-center mb-lg">
-  <div class="flex flex-between gap-md">
-    <span class="text">主要文本</span>
-    <span class="text-light">次要文本</span>
-  </div>
+    <div class="flex flex-between gap-md">
+        <span class="text">主要文本</span>
+        <span class="text-light">次要文本</span>
+    </div>
 </div>
 ```
 

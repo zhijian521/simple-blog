@@ -5,7 +5,9 @@
       "Bash(git commit:*)",
       "Bash(npm install:*)",
       "Bash(npm run format:*)",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "Bash(npm run lint)",
+      "Bash(npm run lint:*)"
     ]
   }
 }
