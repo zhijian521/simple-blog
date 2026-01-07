@@ -30,7 +30,7 @@ withDefaults(defineProps<Props>(), {
 }
 
 .empty-icon {
-    font-size: 3rem;
+    font-size: var(--spacing-icon);
     margin-bottom: var(--spacing-lg);
 }
 

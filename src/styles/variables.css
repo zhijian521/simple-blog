@@ -19,6 +19,10 @@
   --color-link: #3a3a3a;
   --color-link-hover: #1a1a1a;
 
+  /* 代码块颜色 */
+  --color-code-bg: #2d2d2d;
+  --color-code-text: #f8f8f2;
+
   /* === 间距系统 === */
   --spacing-xs: 0.25rem;
   --spacing-sm: 0.5rem;
@@ -27,8 +31,15 @@
   --spacing-xl: 2rem;
   --spacing-2xl: 3rem;
 
+  /* 特殊间距 */
+  --spacing-btn-vertical: 0.75rem;
+  --spacing-icon: 3rem;
+
   /* === 字体系统 === */
-  --font-size-xs: 0.75rem;
+  --font-family:
+    system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  --font-size-xs: 0.7rem;
   --font-size-sm: 0.875rem;
   --font-size-base: 1rem;
   --font-size-lg: 1.125rem;
@@ -38,10 +49,10 @@
   --font-size-4xl: 2.25rem;
 
   /* 字重 */
-  --font-weight-normal: 400;
-  --font-weight-medium: 500;
-  --font-weight-semibold: 600;
-  --font-weight-bold: 700;
+  --font-weight-normal: 300;
+  --font-weight-medium: 400;
+  --font-weight-semibold: 500;
+  --font-weight-bold: 600;
 
   /* === 圆角系统 === */
   --radius-sm: 4px;
@@ -58,6 +69,12 @@
   --container-max-width: 1200px;
   --content-max-width: 700px;
   --article-max-width: 800px;
+
+  /* === 背景网格 === */
+  --bg-grid:
+    linear-gradient(rgba(0, 0, 0, 0.01) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.01) 1px, transparent 1px);
+  --bg-grid-size: 40px 40px;
 
   /* === 过渡动画 === */
   --transition-fast: 0.15s;

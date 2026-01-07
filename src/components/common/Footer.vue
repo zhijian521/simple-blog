@@ -65,7 +65,7 @@ const currentYear = new Date().getFullYear()
     }
 
     .site-footer-copyright {
-        font-size: 0.7rem;
+        font-size: var(--font-size-xs);
     }
 }
 </style>

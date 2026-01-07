@@ -134,14 +134,14 @@ watch(
 
 .article-body :deep(code) {
     background: var(--color-bg-secondary);
-    padding: 0.2rem 0.4rem;
+    padding: var(--spacing-xs) var(--spacing-sm);
     border-radius: var(--radius-sm);
     font-size: 0.9em;
 }
 
 .article-body :deep(pre) {
-    background: #2d2d2d;
-    color: #f8f8f2;
+    background: var(--color-code-bg);
+    color: var(--color-code-text);
     padding: var(--spacing-md);
     border-radius: var(--radius-md);
     overflow-x: auto;
@@ -181,7 +181,7 @@ watch(
 
 .btn {
     display: inline-block;
-    padding: 0.75rem 1.5rem;
+    padding: var(--spacing-btn-vertical) var(--spacing-lg);
     background: var(--color-accent);
     color: var(--color-bg);
     border: none;
