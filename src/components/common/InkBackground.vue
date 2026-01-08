@@ -300,6 +300,9 @@ const resizeCanvas = (canvas: HTMLCanvasElement) => {
     canvas.height = window.innerHeight
 }
 
+// 保存事件处理函数引用，以便正确清理
+let resizeHandler: (() => void) | null = null
+
 onMounted(() => {
     const canvas = canvasRef.value
     if (!canvas) return
@@ -308,7 +311,10 @@ onMounted(() => {
     if (!ctx) return
 
     resizeCanvas(canvas)
-    window.addEventListener('resize', () => resizeCanvas(canvas))
+
+    // 保存函数引用
+    resizeHandler = () => resizeCanvas(canvas)
+    window.addEventListener('resize', resizeHandler)
     canvas.addEventListener('click', handleClick, true)
     canvas.addEventListener('mousemove', handleMouseMove, true)
 
@@ -319,7 +325,10 @@ onUnmounted(() => {
     const canvas = canvasRef.value
     if (!canvas) return
 
-    window.removeEventListener('resize', () => resizeCanvas(canvas))
+    // 使用保存的函数引用移除监听器
+    if (resizeHandler) {
+        window.removeEventListener('resize', resizeHandler)
+    }
     canvas.removeEventListener('click', handleClick, true)
     canvas.removeEventListener('mousemove', handleMouseMove, true)
     if (animationFrameId) {

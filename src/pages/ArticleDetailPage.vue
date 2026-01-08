@@ -17,7 +17,8 @@
                 </div>
             </div>
 
-            <div class="article-body" v-html="article.content"></div>
+            <!-- eslint-disable-next-line vue/no-v-html -->
+            <div class="article-body" v-html="sanitizedContent"></div>
 
             <div class="article-footer">
                 <router-link to="/articles" class="back-link">← 返回文章列表</router-link>
@@ -27,8 +28,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
+import DOMPurify from 'dompurify'
 import { getArticleBySlug } from '@/utils/markdown'
 import ArticleMeta from '@/components/common/ArticleMeta.vue'
 import LoadingState from '@/components/common/LoadingState.vue'
@@ -38,6 +40,16 @@ import type { Article } from '@/types/article'
 const route = useRoute()
 const article = ref<Article | null>(null)
 const loading = ref(true)
+
+// 净化 HTML 内容，防止 XSS 攻击
+const sanitizedContent = computed(() => {
+    if (!article.value) return ''
+    return DOMPurify.sanitize(article.value.content, {
+        ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 's', 'a', 'code', 'pre', 'blockquote', 'ul', 'ol', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'table', 'thead', 'tbody', 'tr', 'th', 'td'],
+        ALLOWED_ATTR: ['href', 'title', 'class', 'id'],
+        ALLOW_DATA_ATTR: false,
+    })
+})
 
 const loadArticle = (slug: string) => {
     loading.value = true
