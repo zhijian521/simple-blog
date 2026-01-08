@@ -58,7 +58,7 @@ import InkBackground from '@/components/common/InkBackground.vue'
     margin-top: var(--spacing-2xl);
 }
 
-@media (max-width: 768px) {
+@media (max-width: var(--breakpoint-md)) {
     .home-page {
         height: 100vh;
     }

@@ -89,7 +89,7 @@
     border-color: var(--color-accent);
 }
 
-@media (max-width: 768px) {
+@media (max-width: var(--breakpoint-md)) {
     .error-code {
         font-size: 80px;
     }

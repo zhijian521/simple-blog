@@ -73,10 +73,13 @@ export function animateRipples(
         currentTime - lastRippleTime.value >
         GENERATION_INTERVAL.min + Math.random() * (GENERATION_INTERVAL.max - GENERATION_INTERVAL.min)
     ) {
-        const centerX = Math.random() * canvas.width
-        const centerY = Math.random() * canvas.height
-        createRipples(centerX, centerY, Math.random(), canvas, ripples)
-        lastRippleTime.value = currentTime
+        // 检查波纹数量，防止性能问题
+        if (ripples.length < RIPPLE_CONFIG.MAX_RIPPLES) {
+            const centerX = Math.random() * canvas.width
+            const centerY = Math.random() * canvas.height
+            createRipples(centerX, centerY, Math.random(), canvas, ripples)
+            lastRippleTime.value = currentTime
+        }
     }
 
     // 更新和绘制涟漪

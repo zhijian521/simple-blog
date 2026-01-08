@@ -17,7 +17,11 @@ export function setupRippleEvents(
             const x = e.clientX - rect.left
             const y = e.clientY - rect.top
             const clickIntensity = 0.5 + Math.random() * 0.5
-            createRipples(x, y, clickIntensity, canvas, ripples)
+
+            // 检查波纹数量，防止性能问题
+            if (ripples.length < RIPPLE_CONFIG.MAX_RIPPLES) {
+                createRipples(x, y, clickIntensity, canvas, ripples)
+            }
         }
     }
 
@@ -39,7 +43,10 @@ export function setupRippleEvents(
             const currentTime = Date.now()
             if (currentTime - lastMouseRippleTime.value > 150) {
                 const mouseRipples = ripples.filter(r => r.intensity < 0.3)
-                if (mouseRipples.length < MOUSE_MOVE.maxCount) {
+                if (
+                    mouseRipples.length < MOUSE_MOVE.maxCount &&
+                    ripples.length < RIPPLE_CONFIG.MAX_RIPPLES
+                ) {
                     createRipples(x, y, MOUSE_MOVE.intensity + Math.random() * 0.1, canvas, ripples)
                 }
                 lastMouseRippleTime.value = currentTime

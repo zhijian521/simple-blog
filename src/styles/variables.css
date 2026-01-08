@@ -79,4 +79,10 @@
   /* === 过渡动画 === */
   --transition-fast: 0.15s;
   --transition-base: 0.3s;
+
+  /* === 响应式断点 === */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
 }

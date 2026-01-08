@@ -13,6 +13,7 @@ export const RIPPLE_CONFIG = {
     WAVE_COUNT: { small: 2, medium: 3, large: 4 },
     MOUSE_MOVE: { enabled: true, minDistance: 80, intensity: 0.2, maxCount: 8 },
     HIGHLIGHT: { enabled: true, opacity: 0.12, offset: 0.15 },
+    MAX_RIPPLES: 15, // 最大波纹数量限制，防止性能问题
 } as const
 
 export const RIPPLE_SIZE_MULTIPLIERS = {

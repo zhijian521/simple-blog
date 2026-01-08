@@ -63,8 +63,8 @@ code {
 }
 
 pre {
-  background: #2d2d2d;
-  color: #f8f8f2;
+  background: var(--color-code-bg);
+  color: var(--color-code-text);
   padding: var(--spacing-md);
   border-radius: var(--radius-md);
   overflow-x: auto;
