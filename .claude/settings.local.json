@@ -19,7 +19,8 @@
       "Bash(test:*)",
       "Bash(git reset:*)",
       "Bash(rm:*)",
-      "Bash(npm run dev)"
+      "Bash(npm run dev)",
+      "Bash(git push:*)"
     ]
   }
 }

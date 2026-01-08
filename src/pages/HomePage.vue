@@ -37,7 +37,7 @@ import SnowfallEffect from '@/components/effects/SnowfallEffect.vue'
     /* 使用 flex-start 配合 padding-top 为底部 Git 热力图预留空间 */
     align-items: flex-start;
     justify-content: center;
-    padding-top: 32vh;
+    padding-top: 30vh;
 }
 
 .home-content {
