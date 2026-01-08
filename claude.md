@@ -44,6 +44,7 @@ npm run format:check
 - **重要**：所有文章数据在应用启动时一次性加载，后续通过 `getArticles()` 和 `getArticleBySlug()` 从缓存读取
 
 **安全机制：**
+
 - `validateSlug()` 函数防止路径遍历攻击（检查 `../`、`./`、`\\` 等模式）
 - 无效的 slug 会导致返回 `null` 而不是抛出错误
 
@@ -57,6 +58,7 @@ npm run format:check
 - 404 页面 `/:pathMatch(.*)*` - `NotFoundPage.vue`
 
 **首页特殊处理：**
+
 - 根组件 `App.vue` 通过 `isHomePage` 判断当前路由
 - 首页使用 `100dvh` 固定高度并禁用滚动（解决移动端 100vh 不稳定问题）
 - 其他页面正常显示 Footer 组件
@@ -66,24 +68,29 @@ npm run format:check
 **目录结构：** `src/composables/`
 
 两个独立的 Canvas 动画模块：
+
 1. **水滴涟漪** (`src/composables/ripple/`) - `InkBackground.vue`
 2. **雪花飘落** (`src/composables/snowfall/`) - `SnowfallEffect.vue`
 
 每个模块采用统一的 Composables 架构：
+
 - `useConfig.ts` - 动画参数配置（粒子数量、速度、大小等）
 - `useAnimation.ts` - 动画循环逻辑（`requestAnimationFrame`、状态更新）
 - `useEvents.ts` - Canvas 尺寸调整和交互事件
 
 **公共模块：**
+
 - `src/composables/common/useCanvasResize.ts` - 通用的 Canvas 尺寸调整逻辑（防抖、orientationchange 监听）
 
 **Canvas 尺寸处理：**
+
 - 使用父容器的 `clientWidth/clientHeight` 而非 `window.innerWidth/innerHeight`
 - 添加 100ms 防抖优化 resize 性能
 - 监听 `orientationchange` 事件适配移动端屏幕旋转
 
 **资源清理：**
 所有 Canvas 组件必须在 `onUnmounted` 钩子中清理：
+
 1. 调用 `cancelAnimationFrame(animationFrameId)` 停止动画循环
 2. 调用事件清理函数移除事件监听器
 3. 设置所有引用为 `null` 避免内存泄漏
@@ -91,11 +98,13 @@ npm run format:check
 ### 样式系统
 
 **关键文件：**
+
 - `src/styles/base.css` - CSS Reset、基础元素样式、移动端优化
 - `src/styles/variables.css` - CSS 变量（颜色、字体、间距等）
 - `src/styles/mixins.css` - 可复用的样式模式
 
 **移动端优化（已实现）：**
+
 - 全局移除点击高亮：`-webkit-tap-highlight-color: transparent`
 - 禁用文本选择：`user-select: none`
 - 平滑滚动：`-webkit-overflow-scrolling: touch`
@@ -103,6 +112,7 @@ npm run format:check
 ## 类型系统
 
 **关键文件：**
+
 - `src/types/article.d.ts` - `Article` 和 `ArticleFrontMatter` 接口
 - `src/types/ripple.d.ts` - 涟漪动画类型
 - `src/types/snowflake.d.ts` - 雪花动画类型
@@ -111,6 +121,7 @@ npm run format:check
 ## 添加新功能时的注意事项
 
 ### 添加新的 Canvas 动画
+
 1. 在 `src/composables/` 下创建新文件夹
 2. 按照现有模块结构创建 `useConfig.ts`、`useAnimation.ts`、`useEvents.ts`
 3. 在 `src/components/effects/` 创建对应的 Vue 组件
@@ -119,29 +130,35 @@ npm run format:check
 6. 在组件中添加详细的文档注释（参考 `InkBackground.vue`）
 
 ### 添加新文章
+
 1. 在 `blogs/` 目录下创建 `.md` 文件（支持嵌套文件夹）
 2. 添加 YAML front-matter 元数据
 3. 文章路径会自动转换为 slug（例如 `blogs/category/article.md` → `category/article`）
 
 ### 修改文章数据结构
+
 1. 更新 `src/types/article.d.ts` 中的类型定义
 2. 在 `src/utils/markdown.ts` 的 `parseArticle()` 函数中添加字段解析逻辑
 3. 更新 `ArticleFrontMatter` 接口以支持 front-matter 中的新字段
 
 ### 安全机制
+
 **XSS 防护：**
+
 - 文章详情页使用 `DOMPurify.sanitize()` 净化 HTML 内容
 - 使用保守的标签白名单（`ArticleDetailPage.vue:46-77`）
 - 禁止 JavaScript 协议链接（`ALLOWED_URI_REGEXP`）
 - 禁止 `data-*` 属性（`ALLOW_DATA_ATTR: false`）
 
 **路径遍历防护：**
+
 - `validateSlug()` 函数检查 `../`、`./`、`\\` 等模式（`src/utils/markdown.ts:28-39`）
 - 无效的 slug 返回 `null` 而非抛出错误
 
 ## 项目开发规范
 
 ### 组件组织
+
 ```
 src/components/
 ├── effects/      # Canvas 动画特效组件
@@ -150,17 +167,20 @@ src/components/
 ```
 
 ### 代码质量
+
 - **简单易懂**：代码逻辑清晰，避免过度设计
 - **结构清晰**：模块职责明确，层次分明
 - **可维护性**：便于后续扩展和维护
 - **模块化实践**：合理划分功能模块，保持模块间低耦合、高内聚
 
 ### 注释规范
+
 - 为重要的模块、类、复杂方法添加清晰的注释
 - 减少非必要注释，代码应该是自解释的
 - 注释应说明"为什么"而非"是什么"
 
 ### Git 提交规范
+
 - 遵循 Conventional Commits 规范：`<type>: <subject>`
   - type: feat, fix, docs, style, refactor, test, chore 等
   - subject: 简洁描述，不超过 50 字符
@@ -171,12 +191,15 @@ src/components/
 ## 重要实现细节
 
 ### 文章 slug 处理
+
 - 文件路径 `blogs/category/article.md` 转换为 slug `category/article`
 - URL 支持嵌套路径：`/article/:slug(.*)` 中的 `(.*)` 捕获包括斜杠在内的完整路径
 - 文章详情页使用 `decodeURIComponent()` 解码 URL 编码的 slug（`ArticleDetailPage.vue:81`）
 
 ### 响应式雪花数量
+
 雪花动画根据屏幕宽度自动调整数量：
+
 - Mobile (< 768px): 30 个雪花
 - Tablet (768-1024px): 45 个雪花
 - Desktop (1024-1280px): 55 个雪花
@@ -185,6 +208,7 @@ src/components/
 配置位置：`src/composables/snowfall/useConfig.ts:23-28`
 
 ### TypeScript 配置
+
 - 严格模式已启用（`strict: true`）
 - 路径别名：`@/*` 映射到 `src/*`（在 `tsconfig.json` 和 `vite.config.ts` 中配置）
 - 未使用变量和参数会报错（`noUnusedLocals`、`noUnusedParameters`）

@@ -7,13 +7,9 @@ import { setupCanvasResize as commonSetupCanvasResize } from '@/composables/comm
  * @param onResize - 尺寸变化回调函数
  * @returns 清理函数，调用后移除监听器
  */
-export function setupCanvasResize(
-  canvas: HTMLCanvasElement,
-  onResize: () => void
-): () => void {
-  return commonSetupCanvasResize(canvas, onResize)
+export function setupCanvasResize(canvas: HTMLCanvasElement, onResize: () => void): () => void {
+    return commonSetupCanvasResize(canvas, onResize)
 }
-
 
 /**
  * 加载雪花图片
@@ -22,10 +18,10 @@ export function setupCanvasResize(
  * @throws 图片加载失败时抛出错误
  */
 export function loadSnowflakeImage(src: string): Promise<HTMLImageElement> {
-  return new Promise((resolve, reject) => {
-    const img = new Image()
-    img.onload = () => resolve(img)
-    img.onerror = () => reject(new Error(`Failed to load snowflake image: ${src}`))
-    img.src = src
-  })
+    return new Promise((resolve, reject) => {
+        const img = new Image()
+        img.onload = () => resolve(img)
+        img.onerror = () => reject(new Error(`Failed to load snowflake image: ${src}`))
+        img.src = src
+    })
 }

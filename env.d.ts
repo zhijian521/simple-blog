@@ -33,10 +33,13 @@ interface ImportMetaEnv {
 
 interface ImportMeta {
     readonly env: ImportMetaEnv
-    readonly glob: (pattern: string, options?: {
-        query?: string
-        import?: string
-        eager?: boolean
-    }) => Record<string, unknown>
+    readonly glob: (
+        pattern: string,
+        options?: {
+            query?: string
+            import?: string
+            eager?: boolean
+        }
+    ) => Record<string, unknown>
     readonly globEager: (pattern: string) => Record<string, unknown>
 }

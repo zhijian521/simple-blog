@@ -1,10 +1,10 @@
 <template>
-  <div class="app" :class="{ 'is-home': isHomePage }">
-    <main class="main">
-      <router-view />
-    </main>
-    <Footer v-if="!isHomePage" />
-  </div>
+    <div class="app" :class="{ 'is-home': isHomePage }">
+        <main class="main">
+            <router-view />
+        </main>
+        <Footer v-if="!isHomePage" />
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -23,20 +23,20 @@ const isHomePage = computed(() => route.path === '/')
 
 <style scoped>
 .app {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 .main {
-  flex: 1;
-  width: 100%;
+    flex: 1;
+    width: 100%;
 }
 
 /* 首页特殊处理：固定高度并禁用滚动（解决移动端 100vh 不稳定问题） */
 .app.is-home {
-  height: 100vh; /* 传统浏览器回退 */
-  height: 100dvh; /* 现代浏览器动态视口 */
-  overflow: hidden;
+    height: 100vh; /* 传统浏览器回退 */
+    height: 100dvh; /* 现代浏览器动态视口 */
+    overflow: hidden;
 }
 </style>

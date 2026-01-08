@@ -25,7 +25,7 @@
   - 自动清理过期涟漪
 -->
 <template>
-  <canvas ref="canvasRef" class="ink-background"></canvas>
+    <canvas ref="canvasRef" class="ink-background"></canvas>
 </template>
 
 <script setup lang="ts">
@@ -53,49 +53,49 @@ let cleanupEvents: (() => void) | null = null
 let cleanupResize: (() => void) | null = null
 
 onMounted(() => {
-  const canvas = canvasRef.value
-  if (!canvas) return
+    const canvas = canvasRef.value
+    if (!canvas) return
 
-  const ctx = canvas.getContext('2d', { alpha: true })
-  if (!ctx) return
+    const ctx = canvas.getContext('2d', { alpha: true })
+    if (!ctx) return
 
-  // 初始化 Canvas 尺寸和事件监听
-  cleanupResize = setupCanvasResize(canvas)
-  cleanupEvents = setupRippleEvents(canvas, ripples, mousePosition, lastMouseRippleTime)
-  animationFrameId = startAnimationLoop(canvas, ctx, ripples, lastRippleTime)
+    // 初始化 Canvas 尺寸和事件监听
+    cleanupResize = setupCanvasResize(canvas)
+    cleanupEvents = setupRippleEvents(canvas, ripples, mousePosition, lastMouseRippleTime)
+    animationFrameId = startAnimationLoop(canvas, ctx, ripples, lastRippleTime)
 })
 
 onUnmounted(() => {
-  // 清理所有资源
-  if (animationFrameId !== null) {
-    cancelAnimationFrame(animationFrameId)
-    animationFrameId = null
-  }
+    // 清理所有资源
+    if (animationFrameId !== null) {
+        cancelAnimationFrame(animationFrameId)
+        animationFrameId = null
+    }
 
-  if (cleanupEvents) {
-    cleanupEvents()
-    cleanupEvents = null
-  }
+    if (cleanupEvents) {
+        cleanupEvents()
+        cleanupEvents = null
+    }
 
-  if (cleanupResize) {
-    cleanupResize()
-    cleanupResize = null
-  }
+    if (cleanupResize) {
+        cleanupResize()
+        cleanupResize = null
+    }
 })
 </script>
 
 <style scoped>
 .ink-background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: auto;
-  z-index: 0;
-  mix-blend-mode: normal;
-  cursor: default;
-  /* 移动端优化：确保 Canvas 尺寸正确 */
-  display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: auto;
+    z-index: 0;
+    mix-blend-mode: normal;
+    cursor: default;
+    /* 移动端优化：确保 Canvas 尺寸正确 */
+    display: block;
 }
 </style>
