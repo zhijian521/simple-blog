@@ -1,31 +1,41 @@
 <template>
     <div class="home-page">
-        <section class="hero">
-            <h1 class="hero-title">耶温博客</h1>
-            <p class="hero-subtitle">记录思考，分享知识</p>
-            <div class="hero-actions">
-                <ViewArticleButton to="/articles" text="查看文章" />
-            </div>
-        </section>
+        <InkBackground />
+        <div class="home-content">
+            <section class="hero">
+                <h1 class="hero-title">耶温博客</h1>
+                <p class="hero-subtitle">记录思考，分享知识</p>
+                <div class="hero-actions">
+                    <ViewArticleButton to="/articles" text="查看文章" />
+                </div>
+            </section>
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
 import ViewArticleButton from '@/components/common/ViewArticleButton.vue'
+import InkBackground from '@/components/common/InkBackground.vue'
 </script>
 
 <style scoped>
 .home-page {
-    max-width: var(--container-max-width);
-    margin: 0 auto;
-    padding: 0 var(--spacing-lg);
+    position: relative;
+    width: 100%;
     height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
+.home-content {
+    max-width: var(--container-max-width);
+    padding: 0 var(--spacing-lg);
+}
+
 .hero {
+    position: relative;
+    z-index: 1;
     text-align: center;
 }
 
