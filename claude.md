@@ -74,10 +74,19 @@ npm run format:check
 - `useAnimation.ts` - 动画循环逻辑（`requestAnimationFrame`、状态更新）
 - `useEvents.ts` - Canvas 尺寸调整和交互事件
 
+**公共模块：**
+- `src/composables/common/useCanvasResize.ts` - 通用的 Canvas 尺寸调整逻辑（防抖、orientationchange 监听）
+
 **Canvas 尺寸处理：**
 - 使用父容器的 `clientWidth/clientHeight` 而非 `window.innerWidth/innerHeight`
 - 添加 100ms 防抖优化 resize 性能
 - 监听 `orientationchange` 事件适配移动端屏幕旋转
+
+**资源清理：**
+所有 Canvas 组件必须在 `onUnmounted` 钩子中清理：
+1. 调用 `cancelAnimationFrame(animationFrameId)` 停止动画循环
+2. 调用事件清理函数移除事件监听器
+3. 设置所有引用为 `null` 避免内存泄漏
 
 ### 样式系统
 
@@ -105,7 +114,9 @@ npm run format:check
 1. 在 `src/composables/` 下创建新文件夹
 2. 按照现有模块结构创建 `useConfig.ts`、`useAnimation.ts`、`useEvents.ts`
 3. 在 `src/components/effects/` 创建对应的 Vue 组件
-4. 确保正确清理资源（`cancelAnimationFrame`、移除事件监听器）
+4. 使用 `src/composables/common/useCanvasResize.ts` 处理尺寸调整
+5. 确保正确清理资源（`cancelAnimationFrame`、移除事件监听器）
+6. 在组件中添加详细的文档注释（参考 `InkBackground.vue`）
 
 ### 添加新文章
 1. 在 `blogs/` 目录下创建 `.md` 文件（支持嵌套文件夹）
@@ -117,7 +128,26 @@ npm run format:check
 2. 在 `src/utils/markdown.ts` 的 `parseArticle()` 函数中添加字段解析逻辑
 3. 更新 `ArticleFrontMatter` 接口以支持 front-matter 中的新字段
 
+### 安全机制
+**XSS 防护：**
+- 文章详情页使用 `DOMPurify.sanitize()` 净化 HTML 内容
+- 使用保守的标签白名单（`ArticleDetailPage.vue:46-77`）
+- 禁止 JavaScript 协议链接（`ALLOWED_URI_REGEXP`）
+- 禁止 `data-*` 属性（`ALLOW_DATA_ATTR: false`）
+
+**路径遍历防护：**
+- `validateSlug()` 函数检查 `../`、`./`、`\\` 等模式（`src/utils/markdown.ts:28-39`）
+- 无效的 slug 返回 `null` 而非抛出错误
+
 ## 项目开发规范
+
+### 组件组织
+```
+src/components/
+├── effects/      # Canvas 动画特效组件
+├── article/      # 文章相关组件（卡片、元数据等）
+└── ui/          # 通用 UI 组件（按钮、加载状态等）
+```
 
 ### 代码质量
 - **简单易懂**：代码逻辑清晰，避免过度设计
@@ -137,3 +167,25 @@ npm run format:check
 - **禁止自动提交**：除非用户明确要求，否则不要执行 git commit
 - **纯人工提交信息**：提交日志中不包含任何 AI 相关内容（如 "Generated with Claude Code" 等）
 - **提交前确认**：提交前应展示改动内容，等待用户确认
+
+## 重要实现细节
+
+### 文章 slug 处理
+- 文件路径 `blogs/category/article.md` 转换为 slug `category/article`
+- URL 支持嵌套路径：`/article/:slug(.*)` 中的 `(.*)` 捕获包括斜杠在内的完整路径
+- 文章详情页使用 `decodeURIComponent()` 解码 URL 编码的 slug（`ArticleDetailPage.vue:81`）
+
+### 响应式雪花数量
+雪花动画根据屏幕宽度自动调整数量：
+- Mobile (< 768px): 30 个雪花
+- Tablet (768-1024px): 45 个雪花
+- Desktop (1024-1280px): 55 个雪花
+- Large (>= 1280px): 65 个雪花
+
+配置位置：`src/composables/snowfall/useConfig.ts:23-28`
+
+### TypeScript 配置
+- 严格模式已启用（`strict: true`）
+- 路径别名：`@/*` 映射到 `src/*`（在 `tsconfig.json` 和 `vite.config.ts` 中配置）
+- 未使用变量和参数会报错（`noUnusedLocals`、`noUnusedParameters`）
+- 使用 `@/` 导入模块而非相对路径（例如：`@/components/ui/Footer.vue`）
