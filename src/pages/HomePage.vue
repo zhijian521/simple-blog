@@ -4,20 +4,22 @@
             <h1 class="hero-title">耶温博客</h1>
             <p class="hero-subtitle">记录思考，分享知识</p>
             <div class="hero-actions">
-                <router-link to="/articles" class="btn-view-articles">查看文章</router-link>
+                <ViewArticleButton to="/articles" text="查看文章" />
             </div>
         </section>
     </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import ViewArticleButton from '@/components/common/ViewArticleButton.vue'
+</script>
 
 <style scoped>
 .home-page {
     max-width: var(--container-max-width);
     margin: 0 auto;
     padding: 0 var(--spacing-lg);
-    min-height: calc(100vh - 80px);
+    height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -43,29 +45,12 @@
 }
 
 .hero-actions {
-    margin-top: var(--spacing-xl);
-}
-
-.btn-view-articles {
-    display: inline-block;
-    color: var(--color-text);
-    text-decoration: none;
-    font-weight: var(--font-weight-medium);
-    padding: var(--spacing-btn-vertical) var(--spacing-xl);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm);
-    transition: all var(--transition-base);
-}
-
-.btn-view-articles:hover {
-    background: var(--color-accent);
-    color: var(--color-bg);
-    border-color: var(--color-accent);
+    margin-top: var(--spacing-2xl);
 }
 
 @media (max-width: 768px) {
     .home-page {
-        min-height: calc(100vh - 70px);
+        height: 100vh;
     }
 
     .hero-title {
