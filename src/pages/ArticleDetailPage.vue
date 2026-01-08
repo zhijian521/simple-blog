@@ -32,9 +32,9 @@ import { ref, onMounted, watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import DOMPurify from 'dompurify'
 import { getArticleBySlug } from '@/utils/markdown'
-import ArticleMeta from '@/components/common/ArticleMeta.vue'
-import LoadingState from '@/components/common/LoadingState.vue'
-import EmptyState from '@/components/common/EmptyState.vue'
+import ArticleMeta from '@/components/article/ArticleMeta.vue'
+import LoadingState from '@/components/ui/LoadingState.vue'
+import EmptyState from '@/components/ui/EmptyState.vue'
 import type { Article } from '@/types/article'
 
 const route = useRoute()

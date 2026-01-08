@@ -15,9 +15,9 @@
 </template>
 
 <script setup lang="ts">
-import ViewArticleButton from '@/components/common/ViewArticleButton.vue'
-import InkBackground from '@/components/common/InkBackground.vue'
-import SnowfallEffect from '@/components/common/SnowfallEffect.vue'
+import ViewArticleButton from '@/components/ui/ViewArticleButton.vue'
+import InkBackground from '@/components/effects/InkBackground.vue'
+import SnowfallEffect from '@/components/effects/SnowfallEffect.vue'
 </script>
 
 <style scoped>

@@ -19,9 +19,9 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { getArticles } from '@/utils/markdown'
-import ArticleCard from '@/components/common/ArticleCard.vue'
-import LoadingState from '@/components/common/LoadingState.vue'
-import EmptyState from '@/components/common/EmptyState.vue'
+import ArticleCard from '@/components/article/ArticleCard.vue'
+import LoadingState from '@/components/ui/LoadingState.vue'
+import EmptyState from '@/components/ui/EmptyState.vue'
 import type { Article } from '@/types/article'
 
 const articles = ref<Article[]>([])

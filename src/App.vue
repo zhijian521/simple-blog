@@ -10,7 +10,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import Footer from '@/components/common/Footer.vue'
+import Footer from '@/components/ui/Footer.vue'
 
 const route = useRoute()
 const isHomePage = computed(() => route.path === '/')
