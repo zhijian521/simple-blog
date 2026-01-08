@@ -1,6 +1,7 @@
 <template>
     <div class="home-page">
         <InkBackground />
+        <SnowfallEffect />
         <div class="home-content">
             <section class="hero">
                 <h1 class="hero-title">耶温博客</h1>
@@ -16,6 +17,7 @@
 <script setup lang="ts">
 import ViewArticleButton from '@/components/common/ViewArticleButton.vue'
 import InkBackground from '@/components/common/InkBackground.vue'
+import SnowfallEffect from '@/components/common/SnowfallEffect.vue'
 </script>
 
 <style scoped>

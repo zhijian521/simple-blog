@@ -11,7 +11,9 @@
       "Bash(dir:*)",
       "Bash(npm run format:check:*)",
       "Bash(npm run build)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(git mv:*)",
+      "Bash(grep:*)"
     ]
   }
 }

@@ -2,273 +2,309 @@ import type { Ripple } from '@/types/ripple'
 import { RIPPLE_CONFIG, getSizeMultiplier, getWaveCount } from './useConfig'
 
 /**
- * 创建涟漪对象
+ * 创建单个涟漪对象
+ * @returns 初始化的涟漪
  */
 export function createRipple(
-    x: number,
-    y: number,
-    intensity: number,
-    canvas: HTMLCanvasElement
+  x: number,
+  y: number,
+  intensity: number,
+  canvas: HTMLCanvasElement
 ): Ripple {
-    const sizeMultiplier = getSizeMultiplier(intensity)
-    const { BASE_MAX_RADIUS_RATIO, INITIAL_RADIUS, LIFETIME, BASE_SPEED, OPACITY } = RIPPLE_CONFIG
+  const sizeMultiplier = getSizeMultiplier(intensity)
+  const { BASE_MAX_RADIUS_RATIO, INITIAL_RADIUS, LIFETIME, BASE_SPEED, OPACITY } = RIPPLE_CONFIG
 
-    const baseMaxRadius = Math.max(canvas.width, canvas.height) * BASE_MAX_RADIUS_RATIO
-    const maxRadius = baseMaxRadius * sizeMultiplier + Math.random() * 50 * sizeMultiplier
-    const maxLife = (LIFETIME.min + Math.random() * (LIFETIME.max - LIFETIME.min)) * sizeMultiplier
-    const baseSpeed = BASE_SPEED.min + Math.random() * (BASE_SPEED.max - BASE_SPEED.min)
-    const speed = baseSpeed * (1 + sizeMultiplier * 0.15)
+  // 计算最大半径（基于画布尺寸和强度）
+  const baseMaxRadius = Math.max(canvas.width, canvas.height) * BASE_MAX_RADIUS_RATIO
+  const maxRadius = baseMaxRadius * sizeMultiplier + Math.random() * 50 * sizeMultiplier
 
-    return {
-        x,
-        y,
-        radius: INITIAL_RADIUS.min + Math.random() * (INITIAL_RADIUS.max - INITIAL_RADIUS.min),
-        maxRadius,
-        opacity: (OPACITY.min + Math.random() * (OPACITY.max - OPACITY.min)) * (0.85 + intensity * 0.15),
-        life: maxLife,
-        maxLife,
-        speed,
-        intensity,
-        waveCount: getWaveCount(intensity),
-        phase: Math.random() * Math.PI * 2,
-    }
+  // 计算生命周期（强度越大，持续时间越长）
+  const maxLife = (LIFETIME.min + Math.random() * (LIFETIME.max - LIFETIME.min)) * sizeMultiplier
+
+  // 计算扩散速度
+  const baseSpeed = BASE_SPEED.min + Math.random() * (BASE_SPEED.max - BASE_SPEED.min)
+  const speed = baseSpeed * (1 + sizeMultiplier * 0.15)
+
+  return {
+    x,
+    y,
+    radius: INITIAL_RADIUS.min + Math.random() * (INITIAL_RADIUS.max - INITIAL_RADIUS.min),
+    maxRadius,
+    opacity: (OPACITY.min + Math.random() * (OPACITY.max - OPACITY.min)) * (0.85 + intensity * 0.15),
+    life: maxLife,
+    maxLife,
+    speed,
+    intensity,
+    waveCount: getWaveCount(intensity),
+    phase: Math.random() * Math.PI * 2,
+  }
 }
 
 /**
- * 创建多个涟漪（用于点击和交互）
+ * 创建多个涟漪（用于点击和交互事件）
+ * 多个涟漪形成同心圆效果
  */
 export function createRipples(
-    x: number,
-    y: number,
-    intensity: number,
-    canvas: HTMLCanvasElement,
-    ripples: Ripple[]
-) {
-    const rippleCount = getWaveCount(intensity)
-    for (let i = 0; i < rippleCount; i++) {
-        const ripple = createRipple(x, y, intensity, canvas)
-        ripple.radius = i * (6 + intensity * 10)
-        ripple.speed = (0.4 + i * 0.1) * (1 + intensity * 0.15)
-        ripple.phase = i * Math.PI * 0.5
-        ripples.push(ripple)
-    }
+  x: number,
+  y: number,
+  intensity: number,
+  canvas: HTMLCanvasElement,
+  ripples: Ripple[]
+): void {
+  const rippleCount = getWaveCount(intensity)
+
+  for (let i = 0; i < rippleCount; i++) {
+    const ripple = createRipple(x, y, intensity, canvas)
+
+    // 每个波纹圈的初始半径和速度略有不同，形成扩散效果
+    ripple.radius = i * (RIPPLE_CONFIG.WAVE_SPACING_BASE + intensity * RIPPLE_CONFIG.WAVE_SPACING_INTENSITY_FACTOR)
+    ripple.speed = (0.4 + i * 0.1) * (1 + intensity * 0.15)
+    ripple.phase = i * Math.PI * 0.5
+
+    ripples.push(ripple)
+  }
 }
 
 /**
- * 动画渲染循环
+ * 启动涟漪动画循环
+ * @returns 动画帧 ID，用于取消动画
  */
-export function animateRipples(
-    canvas: HTMLCanvasElement,
-    ctx: CanvasRenderingContext2D,
-    ripples: Ripple[],
-    lastRippleTime: { value: number }
+export function startAnimationLoop(
+  canvas: HTMLCanvasElement,
+  ctx: CanvasRenderingContext2D,
+  ripples: Ripple[],
+  lastRippleTime: { value: number }
 ): number {
+  function animate(): number {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
     const currentTime = Date.now()
-    const { GENERATION_INTERVAL } = RIPPLE_CONFIG
+    const { GENERATION_INTERVAL, MAX_RIPPLES } = RIPPLE_CONFIG
 
-    // 自动生成涟漪
-    if (
-        currentTime - lastRippleTime.value >
-        GENERATION_INTERVAL.min + Math.random() * (GENERATION_INTERVAL.max - GENERATION_INTERVAL.min)
-    ) {
-        // 检查波纹数量，防止性能问题
-        if (ripples.length < RIPPLE_CONFIG.MAX_RIPPLES) {
-            const centerX = Math.random() * canvas.width
-            const centerY = Math.random() * canvas.height
-            createRipples(centerX, centerY, Math.random(), canvas, ripples)
-            lastRippleTime.value = currentTime
-        }
+    // 自动生成涟漪（在随机位置）
+    const shouldGenerate =
+      currentTime - lastRippleTime.value >
+      GENERATION_INTERVAL.min + Math.random() * (GENERATION_INTERVAL.max - GENERATION_INTERVAL.min)
+
+    if (shouldGenerate && ripples.length < MAX_RIPPLES) {
+      const centerX = Math.random() * canvas.width
+      const centerY = Math.random() * canvas.height
+      createRipples(centerX, centerY, Math.random(), canvas, ripples)
+      lastRippleTime.value = currentTime
     }
 
-    // 更新和绘制涟漪
+    // 更新和绘制所有涟漪
     renderRipples(ctx, ripples)
 
-    return requestAnimationFrame(() => animateRipples(canvas, ctx, ripples, lastRippleTime))
+    return requestAnimationFrame(animate)
+  }
+
+  return animate()
 }
 
 /**
  * 渲染所有涟漪
+ * 倒序遍历以便安全删除元素
  */
-function renderRipples(ctx: CanvasRenderingContext2D, ripples: Ripple[]) {
-    // 使用倒序遍历，方便删除元素
-    for (let i = ripples.length - 1; i >= 0; i--) {
-        const ripple = ripples[i]
+function renderRipples(ctx: CanvasRenderingContext2D, ripples: Ripple[]): void {
+  const {
+    PHASE_INCREMENT,
+    MIN_OPACITY_THRESHOLD,
+    LIFE_DECAY_POWER,
+    RADIUS_DECAY_POWER,
+    WAVE_MODULATION_AMPLITUDE,
+  } = RIPPLE_CONFIG
 
-        ripple.radius += ripple.speed
-        ripple.life--
-        ripple.phase += 0.08
+  for (let i = ripples.length - 1; i >= 0; i--) {
+    const ripple = ripples[i]
 
-        const lifeRatio = ripple.life / ripple.maxLife
-        const radiusRatio = ripple.radius / ripple.maxRadius
+    // 更新状态
+    ripple.radius += ripple.speed
+    ripple.life--
+    ripple.phase += PHASE_INCREMENT
 
-        const lifeDecay = Math.pow(lifeRatio, 0.7)
-        const radiusDecay = 1 - Math.pow(radiusRatio, 0.8)
-        const waveModulation = Math.sin(ripple.phase) * 0.1 + 0.9
+    // 计算衰减因子
+    const lifeRatio = ripple.life / ripple.maxLife
+    const radiusRatio = ripple.radius / ripple.maxRadius
 
-        const currentOpacity = ripple.opacity * lifeDecay * radiusDecay * waveModulation
+    // 透明度 = 初始透明度 × 生命周期衰减 × 半径衰减 × 波纹调制
+    const lifeDecay = Math.pow(lifeRatio, LIFE_DECAY_POWER)
+    const radiusDecay = 1 - Math.pow(radiusRatio, RADIUS_DECAY_POWER)
+    const waveModulation = Math.sin(ripple.phase) * WAVE_MODULATION_AMPLITUDE + 0.9
 
-        if (currentOpacity <= 0.005 || ripple.radius > ripple.maxRadius) {
-            ripples.splice(i, 1)
-            continue
-        }
+    const currentOpacity = ripple.opacity * lifeDecay * radiusDecay * waveModulation
 
-        drawRipple(ctx, ripple, radiusRatio, currentOpacity)
+    // 移除不可见的涟漪
+    if (currentOpacity <= MIN_OPACITY_THRESHOLD || ripple.radius > ripple.maxRadius) {
+      ripples.splice(i, 1)
+      continue
     }
+
+    drawRipple(ctx, ripple, radiusRatio, currentOpacity)
+  }
 }
 
 /**
- * 绘制单个涟漪
+ * 绘制单个涟漪（包含多个波纹圈和中心点）
  */
 function drawRipple(
-    ctx: CanvasRenderingContext2D,
-    ripple: Ripple,
-    radiusRatio: number,
-    currentOpacity: number
-) {
-    const { HIGHLIGHT } = RIPPLE_CONFIG
-    const baseLineWidth = (0.8 + ripple.intensity * 1.2) * (1 - radiusRatio * 0.7)
+  ctx: CanvasRenderingContext2D,
+  ripple: Ripple,
+  radiusRatio: number,
+  currentOpacity: number
+): void {
+  const { WAVE_SPACING_BASE, WAVE_SPACING_INTENSITY_FACTOR, CENTER_MAX_RADIUS_RATIO } = RIPPLE_CONFIG
 
-    // 绘制多重波纹
-    for (let wave = 0; wave < ripple.waveCount; wave++) {
-        const waveOffset = wave * (12 + ripple.intensity * 8)
-        const waveRadius = ripple.radius - waveOffset * radiusRatio
-        if (waveRadius <= 0) continue
+  const baseLineWidth = (0.8 + ripple.intensity * 1.2) * (1 - radiusRatio * 0.7)
 
-        const waveOpacity = currentOpacity * (1 - wave * 0.2) * (1 - radiusRatio * 0.5)
-        if (waveOpacity <= 0.005) continue
+  // 绘制多个同心波纹圈
+  for (let wave = 0; wave < ripple.waveCount; wave++) {
+    const waveOffset = wave * (WAVE_SPACING_BASE + ripple.intensity * WAVE_SPACING_INTENSITY_FACTOR)
+    const waveRadius = ripple.radius - waveOffset * radiusRatio
 
-        drawWaveCircle(ctx, ripple, waveRadius, waveOpacity, baseLineWidth, HIGHLIGHT, radiusRatio)
-    }
+    if (waveRadius <= 0) continue
 
-    // 绘制中心点
-    if (radiusRatio < 0.25) {
-        drawCenterPoint(ctx, ripple, radiusRatio, currentOpacity, HIGHLIGHT)
-    }
+    // 外层波纹透明度递减
+    const waveOpacity = currentOpacity * (1 - wave * 0.2) * (1 - radiusRatio * 0.5)
+    if (waveOpacity <= RIPPLE_CONFIG.MIN_OPACITY_THRESHOLD) continue
+
+    drawWaveCircle(ctx, ripple, waveRadius, waveOpacity, baseLineWidth, radiusRatio)
+  }
+
+  // 绘制中心点（仅在涟漪较小时显示）
+  if (radiusRatio < CENTER_MAX_RADIUS_RATIO) {
+    drawCenterPoint(ctx, ripple, radiusRatio, currentOpacity)
+  }
 }
 
 /**
  * 绘制波纹圆圈
  */
 function drawWaveCircle(
-    ctx: CanvasRenderingContext2D,
-    ripple: Ripple,
-    waveRadius: number,
-    waveOpacity: number,
-    baseLineWidth: number,
-    HIGHLIGHT: typeof RIPPLE_CONFIG.HIGHLIGHT,
-    radiusRatio: number
-) {
-    const gradient = ctx.createRadialGradient(
-        ripple.x,
-        ripple.y,
-        waveRadius * 0.8,
-        ripple.x,
-        ripple.y,
-        waveRadius * 1.15
-    )
+  ctx: CanvasRenderingContext2D,
+  ripple: Ripple,
+  waveRadius: number,
+  waveOpacity: number,
+  baseLineWidth: number,
+  radiusRatio: number
+): void {
+  const { GRADIENT_WIDTH_RATIO, HIGHLIGHT } = RIPPLE_CONFIG
 
-    const edgeOpacity = waveOpacity * 0.08
-    const midOpacity = waveOpacity * 0.6
-    const peakOpacity = waveOpacity * 0.85
+  // 创建径向渐变（使波纹边缘柔和）
+  const gradient = ctx.createRadialGradient(
+    ripple.x,
+    ripple.y,
+    waveRadius * 0.8,
+    ripple.x,
+    ripple.y,
+    waveRadius * (1 + GRADIENT_WIDTH_RATIO)
+  )
 
-    gradient.addColorStop(0, `rgba(0, 0, 0, ${edgeOpacity})`)
-    gradient.addColorStop(0.25, `rgba(0, 0, 0, ${midOpacity})`)
-    gradient.addColorStop(0.45, `rgba(0, 0, 0, ${peakOpacity})`)
-    gradient.addColorStop(0.55, `rgba(0, 0, 0, ${peakOpacity * 0.95})`)
-    gradient.addColorStop(0.75, `rgba(0, 0, 0, ${midOpacity})`)
-    gradient.addColorStop(1, `rgba(0, 0, 0, ${edgeOpacity})`)
+  // 渐变透明度分布（中间深，两边浅）
+  const edgeOpacity = waveOpacity * 0.08
+  const midOpacity = waveOpacity * 0.6
+  const peakOpacity = waveOpacity * 0.85
 
-    ctx.strokeStyle = gradient
-    ctx.lineWidth = Math.max(0.3, baseLineWidth * (1 - 0 * 0.2))
-    ctx.lineCap = 'round'
-    ctx.lineJoin = 'round'
-    ctx.beginPath()
-    ctx.arc(ripple.x, ripple.y, waveRadius, 0, Math.PI * 2)
-    ctx.stroke()
+  gradient.addColorStop(0, `rgba(0, 0, 0, ${edgeOpacity})`)
+  gradient.addColorStop(0.25, `rgba(0, 0, 0, ${midOpacity})`)
+  gradient.addColorStop(0.45, `rgba(0, 0, 0, ${peakOpacity})`)
+  gradient.addColorStop(0.55, `rgba(0, 0, 0, ${peakOpacity * 0.95})`)
+  gradient.addColorStop(0.75, `rgba(0, 0, 0, ${midOpacity})`)
+  gradient.addColorStop(1, `rgba(0, 0, 0, ${edgeOpacity})`)
 
-    // 高光效果
-    if (HIGHLIGHT.enabled && radiusRatio < 0.4) {
-        drawHighlight(ctx, ripple, waveRadius, waveOpacity, baseLineWidth, HIGHLIGHT, radiusRatio)
-    }
+  ctx.strokeStyle = gradient
+  ctx.lineWidth = Math.max(0.3, baseLineWidth)
+  ctx.lineCap = 'round'
+  ctx.lineJoin = 'round'
+  ctx.beginPath()
+  ctx.arc(ripple.x, ripple.y, waveRadius, 0, Math.PI * 2)
+  ctx.stroke()
+
+  // 绘制高光（仅在涟漪较新时显示）
+  if (HIGHLIGHT.enabled && radiusRatio < 0.4) {
+    drawHighlight(ctx, ripple, waveRadius, waveOpacity, baseLineWidth, radiusRatio)
+  }
 }
 
 /**
- * 绘制高光
+ * 绘制高光效果
  */
 function drawHighlight(
-    ctx: CanvasRenderingContext2D,
-    ripple: Ripple,
-    waveRadius: number,
-    waveOpacity: number,
-    baseLineWidth: number,
-    HIGHLIGHT: typeof RIPPLE_CONFIG.HIGHLIGHT,
-    radiusRatio: number
-) {
-    const highlightRadius = waveRadius * (1 + HIGHLIGHT.offset)
-    const highlightGradient = ctx.createRadialGradient(
-        ripple.x - highlightRadius * 0.3,
-        ripple.y - highlightRadius * 0.3,
-        0,
-        ripple.x,
-        ripple.y,
-        highlightRadius
-    )
+  ctx: CanvasRenderingContext2D,
+  ripple: Ripple,
+  waveRadius: number,
+  waveOpacity: number,
+  baseLineWidth: number,
+  radiusRatio: number
+): void {
+  const { HIGHLIGHT } = RIPPLE_CONFIG
 
-    const highlightOpacity = waveOpacity * HIGHLIGHT.opacity * (1 - radiusRatio * 2)
-    highlightGradient.addColorStop(0, `rgba(255, 255, 255, ${highlightOpacity})`)
-    highlightGradient.addColorStop(0.3, `rgba(255, 255, 255, ${highlightOpacity * 0.5})`)
-    highlightGradient.addColorStop(1, 'rgba(255, 255, 255, 0)')
+  const highlightRadius = waveRadius * (1 + HIGHLIGHT.offset)
+  const highlightGradient = ctx.createRadialGradient(
+    ripple.x - highlightRadius * 0.3,
+    ripple.y - highlightRadius * 0.3,
+    0,
+    ripple.x,
+    ripple.y,
+    highlightRadius
+  )
 
-    ctx.strokeStyle = highlightGradient
-    ctx.lineWidth = baseLineWidth * 0.6
-    ctx.beginPath()
-    ctx.arc(ripple.x, ripple.y, highlightRadius, 0, Math.PI * 2)
-    ctx.stroke()
+  // 高光从左上角照射
+  const highlightOpacity = waveOpacity * HIGHLIGHT.opacity * (1 - radiusRatio * 2)
+  highlightGradient.addColorStop(0, `rgba(255, 255, 255, ${highlightOpacity})`)
+  highlightGradient.addColorStop(0.3, `rgba(255, 255, 255, ${highlightOpacity * 0.5})`)
+  highlightGradient.addColorStop(1, 'rgba(255, 255, 255, 0)')
+
+  ctx.strokeStyle = highlightGradient
+  ctx.lineWidth = baseLineWidth * 0.6
+  ctx.beginPath()
+  ctx.arc(ripple.x, ripple.y, highlightRadius, 0, Math.PI * 2)
+  ctx.stroke()
 }
 
 /**
  * 绘制中心点
  */
 function drawCenterPoint(
-    ctx: CanvasRenderingContext2D,
-    ripple: Ripple,
-    radiusRatio: number,
-    currentOpacity: number,
-    HIGHLIGHT: typeof RIPPLE_CONFIG.HIGHLIGHT
-) {
-    const centerSize = (3 + ripple.intensity * 3) * (1 - radiusRatio * 4)
-    const centerGradient = ctx.createRadialGradient(ripple.x, ripple.y, 0, ripple.x, ripple.y, centerSize)
+  ctx: CanvasRenderingContext2D,
+  ripple: Ripple,
+  radiusRatio: number,
+  currentOpacity: number
+): void {
+  const { HIGHLIGHT } = RIPPLE_CONFIG
 
-    const centerOpacity = currentOpacity * 0.8 * (1 - radiusRatio * 3)
-    centerGradient.addColorStop(0, `rgba(0, 0, 0, ${centerOpacity * 0.9})`)
-    centerGradient.addColorStop(0.4, `rgba(0, 0, 0, ${centerOpacity * 0.5})`)
-    centerGradient.addColorStop(1, 'rgba(0, 0, 0, 0)')
+  const centerSize = (3 + ripple.intensity * 3) * (1 - radiusRatio * 4)
+  const centerGradient = ctx.createRadialGradient(ripple.x, ripple.y, 0, ripple.x, ripple.y, centerSize)
 
-    ctx.fillStyle = centerGradient
+  const centerOpacity = currentOpacity * 0.8 * (1 - radiusRatio * 3)
+  centerGradient.addColorStop(0, `rgba(0, 0, 0, ${centerOpacity * 0.9})`)
+  centerGradient.addColorStop(0.4, `rgba(0, 0, 0, ${centerOpacity * 0.5})`)
+  centerGradient.addColorStop(1, 'rgba(0, 0, 0, 0)')
+
+  ctx.fillStyle = centerGradient
+  ctx.beginPath()
+  ctx.arc(ripple.x, ripple.y, centerSize, 0, Math.PI * 2)
+  ctx.fill()
+
+  // 中心点高光
+  if (HIGHLIGHT.enabled) {
+    const highlightGradient = ctx.createRadialGradient(
+      ripple.x - centerSize * 0.3,
+      ripple.y - centerSize * 0.3,
+      0,
+      ripple.x,
+      ripple.y,
+      centerSize * 0.8
+    )
+
+    const hlOpacity = centerOpacity * HIGHLIGHT.opacity * 1.5
+    highlightGradient.addColorStop(0, `rgba(255, 255, 255, ${hlOpacity})`)
+    highlightGradient.addColorStop(0.5, `rgba(255, 255, 255, ${hlOpacity * 0.4})`)
+    highlightGradient.addColorStop(1, 'rgba(255, 255, 255, 0)')
+
+    ctx.fillStyle = highlightGradient
     ctx.beginPath()
-    ctx.arc(ripple.x, ripple.y, centerSize, 0, Math.PI * 2)
+    ctx.arc(ripple.x, ripple.y, centerSize * 0.6, 0, Math.PI * 2)
     ctx.fill()
-
-    if (HIGHLIGHT.enabled) {
-        const highlightGradient = ctx.createRadialGradient(
-            ripple.x - centerSize * 0.3,
-            ripple.y - centerSize * 0.3,
-            0,
-            ripple.x,
-            ripple.y,
-            centerSize * 0.8
-        )
-
-        const hlOpacity = centerOpacity * HIGHLIGHT.opacity * 1.5
-        highlightGradient.addColorStop(0, `rgba(255, 255, 255, ${hlOpacity})`)
-        highlightGradient.addColorStop(0.5, `rgba(255, 255, 255, ${hlOpacity * 0.4})`)
-        highlightGradient.addColorStop(1, 'rgba(255, 255, 255, 0)')
-
-        ctx.fillStyle = highlightGradient
-        ctx.beginPath()
-        ctx.arc(ripple.x, ripple.y, centerSize * 0.6, 0, Math.PI * 2)
-        ctx.fill()
-    }
+  }
 }
