@@ -2,9 +2,6 @@
     <div class="article-meta">
         <span v-if="article.date" class="article-date">{{ formatDate(article.date) }}</span>
         <span v-if="article.author" class="article-author">{{ article.author }}</span>
-        <span v-if="article.readingTime" class="article-reading-time">
-            {{ article.readingTime }} 分钟阅读
-        </span>
     </div>
 </template>
 
