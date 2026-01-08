@@ -1,3 +1,17 @@
+<!--
+  LoadingState - 加载状态提示组件
+
+  用途：
+  - 用于显示数据加载中的状态
+  - 提供统一的加载体验
+
+  功能：
+  - 显示旋转加载动画
+  - 支持自定义加载提示文本
+
+  Props:
+  - message?: string - 加载提示文本（默认："加载中..."）
+-->
 <template>
     <div class="loading-state">
         <div class="loading-spinner"></div>

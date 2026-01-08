@@ -1,3 +1,29 @@
+<!--
+  InkBackground - 水滴涟漪背景特效组件
+
+  用途：
+  - 用于首页背景装饰
+  - 创建交互式水滴涟漪动画效果
+
+  功能：
+  - 点击画布生成涟漪效果
+  - 鼠标移动自动生成小涟漪
+  - 支持多种涟漪颜色和透明度
+  - 自动画布尺寸调整
+  - 完整的资源清理机制
+
+  技术实现：
+  - 使用 Canvas 2D API 绘制
+  - requestAnimationFrame 实现平滑动画
+  - 模块化 Composables 架构（useAnimation、useEvents、useConfig）
+  - 防抖优化 resize 性能
+  - 移动端方向变化监听
+
+  性能优化：
+  - 最大涟漪数量限制
+  - 鼠标事件节流
+  - 自动清理过期涟漪
+-->
 <template>
   <canvas ref="canvasRef" class="ink-background"></canvas>
 </template>

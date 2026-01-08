@@ -1,3 +1,21 @@
+<!--
+  ArticleCard - 文章卡片组件
+
+  用途：
+  - 用于文章列表页展示文章摘要信息
+  - 提供统一的文章卡片样式
+
+  功能：
+  - 显示文章标题、元数据、摘要和标签
+  - 支持点击跳转到文章详情页
+  - 可控制是否显示摘要和标签
+  - Hover 显示边框高亮和阴影效果
+
+  Props:
+  - article: Article - 文章对象
+  - showExcerpt?: boolean - 是否显示摘要（默认：true）
+  - showTags?: boolean - 是否显示标签（默认：true）
+-->
 <template>
     <article class="article-card">
         <router-link :to="`/article/${article.slug}`" class="article-link">

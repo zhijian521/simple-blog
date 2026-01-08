@@ -1,23 +1,42 @@
 /// <reference types="vite/client" />
 
+/**
+ * Vite 环境类型声明
+ * 扩展 ImportMeta 接口以支持 Vite 的 glob 功能
+ */
+
 declare module '*.vue' {
     import type { DefineComponent } from 'vue'
-    const component: DefineComponent<{}, {}, any>
+    const component: DefineComponent<object, object, unknown>
     export default component
 }
 
 declare module 'front-matter' {
-    interface FrontMatterResult<T = any> {
+    interface FrontMatterResult<T = unknown> {
         attributes: T
         body: string
         bodyBegin: string
     }
-    function frontMatter<T = any>(content: string): FrontMatterResult<T>
+    function frontMatter<T = unknown>(content: string): FrontMatterResult<T>
     export = frontMatter
 }
 
 interface ImportMetaEnv {
-    // 只定义自定义的环境变量
-    // Vite 自带的 BASE_URL, MODE, DEV, PROD, SSR 已由 @vite/client 提供
     readonly VITE_APP_TITLE?: string
+    // Vite 自带的环境变量（由 @vite/client 提供）
+    // readonly BASE_URL: string
+    // readonly MODE: string
+    // readonly DEV: boolean
+    // readonly PROD: boolean
+    // readonly SSR: boolean
+}
+
+interface ImportMeta {
+    readonly env: ImportMetaEnv
+    readonly glob: (pattern: string, options?: {
+        query?: string
+        import?: string
+        eager?: boolean
+    }) => Record<string, unknown>
+    readonly globEager: (pattern: string) => Record<string, unknown>
 }

@@ -42,38 +42,37 @@ const article = ref<Article | null>(null)
 const loading = ref(true)
 
 // 净化 HTML 内容，防止 XSS 攻击
+// 使用保守的标签白名单，仅保留 Markdown 渲染必需的基础标签
 const sanitizedContent = computed(() => {
     if (!article.value) return ''
     return DOMPurify.sanitize(article.value.content, {
+        // 基础文本和格式
         ALLOWED_TAGS: [
-            'p',
-            'br',
-            'strong',
-            'em',
-            'u',
-            's',
-            'a',
-            'code',
-            'pre',
-            'blockquote',
-            'ul',
-            'ol',
-            'li',
-            'h1',
-            'h2',
-            'h3',
-            'h4',
-            'h5',
-            'h6',
-            'table',
-            'thead',
-            'tbody',
-            'tr',
-            'th',
-            'td',
+            'p',           // 段落
+            'br',          // 换行
+            'strong',      // 粗体
+            'em',          // 斜体
+            'u',           // 下划线
+            's',           // 删除线
+            'code',        // 行内代码
+            'pre',         // 代码块
+            'blockquote',  // 引用
+            // 列表
+            'ul',          // 无序列表
+            'ol',          // 有序列表
+            'li',          // 列表项
+            // 标题
+            'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+            // 链接和图片
+            'a',           // 链接
+            'img',         // 图片
+            // 分隔线
+            'hr',
         ],
-        ALLOWED_ATTR: ['href', 'title', 'class', 'id'],
+        ALLOWED_ATTR: ['href', 'title', 'src', 'alt', 'class'],
         ALLOW_DATA_ATTR: false,
+        // 禁止 JavaScript 协议链接
+        ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp):|[^a-z]|[a-z+.-]+(?:[^a-z+.\-:]|$))/i,
     })
 })
 

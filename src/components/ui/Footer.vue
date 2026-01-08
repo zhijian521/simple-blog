@@ -1,3 +1,18 @@
+<!--
+  Footer - 网站页脚组件
+
+  用途：
+  - 显示网站版权信息和 ICP 备案号
+  - 提供网站底部统一布局
+
+  功能：
+  - 自动计算版权年份范围
+  - 从配置读取 ICP 备案信息
+  - 响应式布局适配移动端
+
+  数据来源：
+  - SITE_CONFIG (src/constants/index.ts)
+-->
 <template>
     <footer class="site-footer">
         <div class="site-footer-content">
