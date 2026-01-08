@@ -13,7 +13,13 @@
       "Bash(npm run build)",
       "Bash(cat:*)",
       "Bash(git mv:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(chmod:*)",
+      "Bash(npm run fetch-git:*)",
+      "Bash(test:*)",
+      "Bash(git reset:*)",
+      "Bash(rm:*)",
+      "Bash(npm run dev)"
     ]
   }
 }

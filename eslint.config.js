@@ -16,6 +16,7 @@ export default [
       '*.min.js',
       'public/**',
       'env.d.ts',
+      'scripts/**',
     ],
   },
 

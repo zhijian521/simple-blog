@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "fetch-git": "node scripts/fetch-git-activity.cjs",
+    "dev": "npm run fetch-git && vite",
+    "build": "npm run fetch-git && vite build",
     "preview": "vite preview",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
@@ -12,7 +13,6 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "@types/dompurify": "^3.0.5",
     "dompurify": "^3.3.1",
     "front-matter": "^4.0.2",
     "markdown-it": "^14.0.0",
@@ -20,6 +20,7 @@
     "vue-router": "^4.2.0"
   },
   "devDependencies": {
+    "@types/dompurify": "^3.0.5",
     "@types/markdown-it": "^14.1.2",
     "@types/node": "^25.0.3",
     "@typescript-eslint/eslint-plugin": "^8.52.0",

@@ -11,17 +11,20 @@
                 </div>
             </section>
         </div>
+        <GitActivityChart />
     </div>
 </template>
 
 <script setup lang="ts">
 import ViewArticleButton from '@/components/ui/ViewArticleButton.vue'
+import GitActivityChart from '@/components/ui/GitActivityChart.vue'
 import InkBackground from '@/components/effects/InkBackground.vue'
 import SnowfallEffect from '@/components/effects/SnowfallEffect.vue'
 
 /**
  * 首页
  * 展示博客标题和导航，包含水滴涟漪和雪花飘落背景特效
+ * 底部展示最近一个月的 Git 提交活动热力图
  */
 </script>
 
@@ -31,8 +34,10 @@ import SnowfallEffect from '@/components/effects/SnowfallEffect.vue'
     width: 100%;
     height: 100%;
     display: flex;
-    align-items: center;
+    /* 使用 flex-start 配合 padding-top 为底部 Git 热力图预留空间 */
+    align-items: flex-start;
     justify-content: center;
+    padding-top: 32vh;
 }
 
 .home-content {
@@ -64,7 +69,11 @@ import SnowfallEffect from '@/components/effects/SnowfallEffect.vue'
 }
 
 /* 移动端响应式 */
-@media (max-width: var(--breakpoint-md)) {
+@media (max-width: 768px) {
+    .home-content {
+        padding: 0 var(--spacing-md);
+    }
+
     .hero-title {
         font-size: var(--font-size-2xl);
     }
@@ -72,13 +81,9 @@ import SnowfallEffect from '@/components/effects/SnowfallEffect.vue'
     .hero-subtitle {
         font-size: var(--font-size-sm);
     }
-
-    .home-content {
-        padding: 0 var(--spacing-md);
-    }
 }
 
-@media (max-width: var(--breakpoint-sm)) {
+@media (max-width: 640px) {
     .hero-title {
         font-size: var(--font-size-xl);
     }

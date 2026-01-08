@@ -39,3 +39,6 @@ build
 # Testing
 coverage
 .nyc_output
+
+# Generated files
+public/git-activity.json

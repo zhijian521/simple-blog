@@ -74,7 +74,7 @@ const currentYear = new Date().getFullYear()
     color: var(--color-text);
 }
 
-@media (max-width: var(--breakpoint-md)) {
+@media (max-width: 768px) {
     .site-footer {
         padding: var(--spacing-md) var(--spacing-md);
     }
