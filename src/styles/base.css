@@ -1,6 +1,6 @@
 /**
  * 基础样式
- * 重置 + 基础元素 + 滚动条
+ * 包含：CSS Reset、基础元素样式、滚动条、移动端优化
  */
 
 /* Reset */
@@ -30,6 +30,20 @@ body {
   overflow-x: hidden;
 }
 
+/* 移动端优化：提升触摸体验 */
+body {
+  /* 移除点击高亮和默认菜单 */
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+
+  /* 禁止文本选择（可选） */
+  -webkit-user-select: none;
+  user-select: none;
+
+  /* 启用平滑滚动 */
+  -webkit-overflow-scrolling: touch;
+}
+
 /* Elements */
 img {
   max-width: 100%;
@@ -41,6 +55,8 @@ a {
   color: var(--color-link);
   text-decoration: none;
   transition: color var(--transition-fast);
+  /* 移动端优化：移除链接点击高亮 */
+  -webkit-tap-highlight-color: transparent;
 }
 
 a:hover {
@@ -52,6 +68,10 @@ button {
   border: none;
   background: none;
   cursor: pointer;
+  /* 移动端优化：移除按钮点击高亮 */
+  -webkit-tap-highlight-color: transparent;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 code {

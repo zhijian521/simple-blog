@@ -74,18 +74,45 @@ export function setupRippleEvents(
  */
 export function setupCanvasResize(canvas: HTMLCanvasElement): () => void {
   const resize = () => {
-    canvas.width = window.innerWidth
-    canvas.height = window.innerHeight
+    // 获取父容器的实际尺寸
+    const parent = canvas.parentElement
+    if (parent) {
+      canvas.width = parent.clientWidth
+      canvas.height = parent.clientHeight
+    } else {
+      // 回退到窗口尺寸
+      canvas.width = window.innerWidth
+      canvas.height = window.innerHeight
+    }
   }
 
   // 初始设置
   resize()
 
-  // 监听窗口大小变化
-  window.addEventListener('resize', resize)
+  // 监听窗口大小变化（添加防抖）
+  let resizeTimer: number | null = null
+  const handleResize = () => {
+    if (resizeTimer !== null) {
+      clearTimeout(resizeTimer)
+    }
+    resizeTimer = window.setTimeout(() => {
+      resize()
+      resizeTimer = null
+    }, 100)
+  }
+
+  window.addEventListener('resize', handleResize)
+
+  // 移动端优化：监听方向变化
+  window.addEventListener('orientationchange', () => {
+    setTimeout(resize, 100)
+  })
 
   // 返回清理函数
   return () => {
-    window.removeEventListener('resize', resize)
+    window.removeEventListener('resize', handleResize)
+    if (resizeTimer !== null) {
+      clearTimeout(resizeTimer)
+    }
   }
 }
