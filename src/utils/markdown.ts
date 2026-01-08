@@ -1,6 +1,6 @@
 import MarkdownIt from 'markdown-it'
 import fm from 'front-matter'
-import type { Article } from '../types/article'
+import type { Article, ArticleFrontMatter } from '../types/article'
 
 /**
  * Markdown 渲染器配置
@@ -92,14 +92,7 @@ function extractSlug(path: string): string {
  */
 function parseArticle(markdownContent: string, slug: string): Article {
     try {
-        const { attributes, body } = fm<{
-            title?: string
-            date?: string
-            excerpt?: string
-            description?: string
-            author?: string
-            tags?: string[]
-        }>(markdownContent)
+        const { attributes, body } = fm<ArticleFrontMatter>(markdownContent)
 
         // 验证日期格式
         let validDate = attributes.date
@@ -119,7 +112,9 @@ function parseArticle(markdownContent: string, slug: string): Article {
         }
     } catch (error) {
         console.error(`Error parsing article "${slug}":`, error)
-        throw new Error(`解析文章 "${slug}" 失败: ${error instanceof Error ? error.message : '未知错误'}`)
+        throw new Error(
+            `解析文章 "${slug}" 失败: ${error instanceof Error ? error.message : '未知错误'}`
+        )
     }
 }
 

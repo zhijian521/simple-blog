@@ -13,7 +13,7 @@ export const SITE_CONFIG = {
     },
     // 版权信息
     copyright: {
-        startYear: 2026, // 建站年份
+        startYear: 2024, // 建站年份
         owner: '耶温博客',
     },
 } as const
@@ -26,10 +26,4 @@ export const ROUTES = {
 
 export const PAGINATION = {
     DEFAULT_PAGE_SIZE: 10,
-} as const
-
-export const DATE_FORMAT = {
-    FULL: 'YYYY年MM月DD日',
-    SHORT: 'YYYY-MM-DD',
-    MONTH_YEAR: 'YYYY年MM月',
 } as const
