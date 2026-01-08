@@ -1,6 +1,6 @@
-import { RIPPLE_CONFIG } from './useRippleConfig'
-import { createRipples } from './useRippleAnimation'
-import type { Ripple } from '../types/ripple'
+import { RIPPLE_CONFIG } from './useConfig'
+import { createRipples } from './useAnimation'
+import type { Ripple } from '@/types/ripple'
 
 /**
  * 设置事件监听器

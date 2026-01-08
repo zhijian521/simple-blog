@@ -4,9 +4,9 @@
 
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue'
-import { useRippleState } from '@/composables/useRippleState'
-import { animateRipples } from '@/composables/useRippleAnimation'
-import { setupRippleEvents, setupCanvasResize } from '@/composables/useRippleEvents'
+import { useRippleState } from '@/composables/ripple/useState'
+import { animateRipples } from '@/composables/ripple/useAnimation'
+import { setupRippleEvents, setupCanvasResize } from '@/composables/ripple/useEvents'
 
 const canvasRef = ref<HTMLCanvasElement | null>(null)
 let animationFrameId: number | null = null

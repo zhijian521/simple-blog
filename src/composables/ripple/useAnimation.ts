@@ -1,5 +1,5 @@
-import type { Ripple } from '../types/ripple'
-import { RIPPLE_CONFIG, getSizeMultiplier, getWaveCount } from './useRippleConfig'
+import type { Ripple } from '@/types/ripple'
+import { RIPPLE_CONFIG, getSizeMultiplier, getWaveCount } from './useConfig'
 
 /**
  * 创建涟漪对象
