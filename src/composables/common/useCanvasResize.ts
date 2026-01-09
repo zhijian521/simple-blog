@@ -2,7 +2,7 @@
  * Canvas 尺寸调整 Composable
  *
  * 功能：
- * - 自动设置 Canvas 尺寸为父容器大小
+ * - 自动设置 Canvas 尺寸为窗口大小（适用于 position: fixed 的 Canvas）
  * - 响应窗口大小变化（带防抖）
  * - 监听移动端屏幕旋转
  * - 支持可选的尺寸变化回调
@@ -13,16 +13,10 @@
  */
 export function setupCanvasResize(canvas: HTMLCanvasElement, onResize?: () => void): () => void {
     const resize = () => {
-        // 获取父容器的实际尺寸
-        const parent = canvas.parentElement
-        if (parent) {
-            canvas.width = parent.clientWidth
-            canvas.height = parent.clientHeight
-        } else {
-            // 回退到窗口尺寸
-            canvas.width = window.innerWidth
-            canvas.height = window.innerHeight
-        }
+        // 直接使用窗口尺寸（适用于 position: fixed 的 Canvas）
+        canvas.width = window.innerWidth
+        canvas.height = window.innerHeight
+
         // 触发回调（如果提供）
         onResize?.()
     }

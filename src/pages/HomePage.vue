@@ -34,15 +34,15 @@ import SnowfallEffect from '@/components/effects/SnowfallEffect.vue'
     width: 100%;
     height: 100%;
     display: flex;
-    /* 使用 flex-start 配合 padding-top 为底部 Git 热力图预留空间 */
-    align-items: flex-start;
     justify-content: center;
-    padding-top: 30vh;
+    align-items: center;
 }
 
 .home-content {
     max-width: var(--container-max-width);
     padding: 0 var(--spacing-lg);
+    /* 向上偏移，让内容位于中间偏上的位置 */
+    margin-top: -15vh;
 }
 
 .hero {
@@ -86,10 +86,6 @@ import SnowfallEffect from '@/components/effects/SnowfallEffect.vue'
 @media (max-width: 640px) {
     .hero-title {
         font-size: var(--font-size-xl);
-    }
-
-    .hero-subtitle {
-        font-size: var(--font-size-xs);
     }
 }
 </style>

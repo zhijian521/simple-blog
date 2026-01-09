@@ -33,10 +33,21 @@ const isHomePage = computed(() => route.path === '/')
     width: 100%;
 }
 
-/* 首页特殊处理：固定高度并禁用滚动（解决移动端 100vh 不稳定问题） */
+/* 首页特殊处理：使用 position: fixed 完全脱离文档流 */
 .app.is-home {
-    height: 100vh; /* 传统浏览器回退 */
-    height: 100dvh; /* 现代浏览器动态视口 */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.app.is-home .main {
+    height: 100%;
+    width: 100%;
     overflow: hidden;
 }
 </style>
