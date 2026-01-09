@@ -27,3 +27,6 @@ export const ROUTES = {
 export const PAGINATION = {
     DEFAULT_PAGE_SIZE: 10,
 } as const
+
+// PWA 配置
+export { pwaOptions } from './pwa.config'
