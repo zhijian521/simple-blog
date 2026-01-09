@@ -2,11 +2,7 @@
     <div class="article-detail">
         <LoadingState v-if="loading" />
 
-        <EmptyState v-else-if="!article" title="文章未找到" message="抱歉，您访问的文章不存在">
-            <template #actions>
-                <router-link to="/articles" class="btn">返回文章列表</router-link>
-            </template>
-        </EmptyState>
+        <NotFoundPage v-else-if="!article" />
 
         <article v-else class="article-content">
             <div class="article-header">
@@ -34,7 +30,7 @@ import DOMPurify from 'dompurify'
 import { getArticleById } from '@/utils/markdown'
 import ArticleMeta from '@/components/article/ArticleMeta.vue'
 import LoadingState from '@/components/ui/LoadingState.vue'
-import EmptyState from '@/components/ui/EmptyState.vue'
+import NotFoundPage from '@/pages/NotFoundPage.vue'
 import type { Article } from '@/types/article'
 
 const route = useRoute()
@@ -228,16 +224,5 @@ watch(
 
 .back-link:hover {
     color: var(--color-accent);
-}
-
-.btn {
-    display: inline-block;
-    padding: var(--spacing-btn-vertical) var(--spacing-lg);
-    background: var(--color-accent);
-    color: var(--color-bg);
-    border: none;
-    border-radius: var(--radius-sm);
-    text-decoration: none;
-    margin-top: var(--spacing-md);
 }
 </style>
