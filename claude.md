@@ -54,7 +54,7 @@ npm run format:check
 
 - 首页 `/` - `HomePage.vue`
 - 文章列表 `/articles` - `ArticlesPage.vue`
-- 文章详情 `/article/:slug(.*)` - `ArticleDetailPage.vue`（支持嵌套路径）
+- 文章详情 `/article/:id` - `ArticleDetailPage.vue`（使用文章 ID 作为路由参数）
 - 404 页面 `/:pathMatch(.*)*` - `NotFoundPage.vue`
 
 **首页特殊处理：**
@@ -190,11 +190,12 @@ src/components/
 
 ## 重要实现细节
 
-### 文章 slug 处理
+### 文章 ID 处理
 
-- 文件路径 `blogs/category/article.md` 转换为 slug `category/article`
-- URL 支持嵌套路径：`/article/:slug(.*)` 中的 `(.*)` 捕获包括斜杠在内的完整路径
-- 文章详情页使用 `decodeURIComponent()` 解码 URL 编码的 slug（`ArticleDetailPage.vue:81`）
+- 每篇文章在 front-matter 中必须有唯一的 `id` 字段（8位字母数字随机生成）
+- 文章路由使用 ID 作为参数：`/article/:id`
+- 文章列表和卡片使用 ID 进行路由跳转
+- 运行 `npm run ensure-ids` 可自动为缺失 ID 的文章添加 ID
 
 ### 响应式雪花数量
 

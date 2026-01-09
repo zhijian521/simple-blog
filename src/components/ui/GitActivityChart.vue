@@ -52,24 +52,12 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import type { DayCommit } from '@/types/git-activity'
+import { GIT_ACTIVITY } from '@/constants'
 
-const TOOLTIP_OFFSET = 60 // Tooltip 偏移量（px）
+const TOOLTIP_OFFSET = GIT_ACTIVITY.tooltipOffset
 
-const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
-const months = [
-    '1月',
-    '2月',
-    '3月',
-    '4月',
-    '5月',
-    '6月',
-    '7月',
-    '8月',
-    '9月',
-    '10月',
-    '11月',
-    '12月',
-]
+const weekdays = GIT_ACTIVITY.weekdays
+const months = GIT_ACTIVITY.months
 
 const containerRef = ref<HTMLElement | null>(null)
 const days = ref<DayCommit[]>([])

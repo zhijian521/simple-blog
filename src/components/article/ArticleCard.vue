@@ -18,7 +18,7 @@
 -->
 <template>
     <article class="article-card">
-        <router-link :to="`/article/${article.id}`" class="article-link">
+        <router-link :to="ROUTES.ARTICLE(article.id)" class="article-link">
             <h3 class="article-title">{{ article.title }}</h3>
             <ArticleMeta :article="article" />
             <p v-if="showExcerpt" class="article-excerpt">
@@ -34,6 +34,7 @@
 <script setup lang="ts">
 import ArticleMeta from './ArticleMeta.vue'
 import type { Article } from '@/types/article'
+import { ROUTES } from '@/constants'
 
 interface Props {
     article: Article

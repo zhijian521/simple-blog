@@ -83,21 +83,30 @@ const sanitizedContent = computed(() => {
 })
 
 const loadArticle = (id: string) => {
+    if (!id || typeof id !== 'string' || id.length === 0) {
+        console.error('Invalid article ID:', id)
+        article.value = null
+        loading.value = false
+        return
+    }
     loading.value = true
     article.value = getArticleById(id)
     loading.value = false
 }
 
 onMounted(() => {
-    const id = route.params.id as string
-    loadArticle(id)
+    const id = route.params.id
+    const validatedId = typeof id === 'string' ? id : Array.isArray(id) ? id[0] : ''
+    loadArticle(validatedId)
 })
 
 watch(
     () => route.params.id,
     newId => {
         if (newId) {
-            loadArticle(newId as string)
+            const validatedId =
+                typeof newId === 'string' ? newId : Array.isArray(newId) ? newId[0] : ''
+            loadArticle(validatedId)
         }
     }
 )

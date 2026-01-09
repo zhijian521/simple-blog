@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onUnmounted } from 'vue'
 
 interface Props {
     to: string
@@ -39,10 +39,20 @@ withDefaults(defineProps<Props>(), {
 })
 
 const isActive = ref(false)
+let timeoutId: ReturnType<typeof setTimeout> | null = null
 
 const handleClick = () => {
     isActive.value = true
+    if (timeoutId) clearTimeout(timeoutId)
+    timeoutId = setTimeout(() => {
+        isActive.value = false
+    }, 300)
 }
+
+onUnmounted(() => {
+    if (timeoutId) clearTimeout(timeoutId)
+    timeoutId = null
+})
 </script>
 
 <style scoped>

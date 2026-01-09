@@ -52,12 +52,3 @@
   margin-bottom: var(--spacing-xl);
   line-height: 1.2;
 }
-
-/* 加载和空状态 */
-.loading,
-.empty {
-  text-align: center;
-  padding: var(--spacing-2xl);
-  color: var(--color-text-light);
-  font-size: var(--font-size-lg);
-}
