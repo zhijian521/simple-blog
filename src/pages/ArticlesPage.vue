@@ -11,7 +11,7 @@
         />
 
         <div v-else class="articles-list">
-            <ArticleCard v-for="article in articles" :key="article.slug" :article="article" />
+            <ArticleCard v-for="article in articles" :key="article.id" :article="article" />
         </div>
     </div>
 </template>

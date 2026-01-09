@@ -18,7 +18,7 @@
 -->
 <template>
     <article class="article-card">
-        <router-link :to="`/article/${article.slug}`" class="article-link">
+        <router-link :to="`/article/${article.id}`" class="article-link">
             <h3 class="article-title">{{ article.title }}</h3>
             <ArticleMeta :article="article" />
             <p v-if="showExcerpt" class="article-excerpt">

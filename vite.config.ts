@@ -3,9 +3,10 @@ import vue from '@vitejs/plugin-vue'
 import { resolve } from 'path'
 import { VitePWA } from 'vite-plugin-pwa'
 import { pwaOptions } from './src/constants'
+import { blogWatcher } from './src/plugins/blog-watcher'
 
 export default defineConfig({
-    plugins: [vue(), VitePWA(pwaOptions)],
+    plugins: [vue(), VitePWA(pwaOptions), blogWatcher()],
     resolve: {
         alias: {
             '@': resolve(__dirname, 'src'),

@@ -31,7 +31,7 @@
 import { ref, onMounted, watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import DOMPurify from 'dompurify'
-import { getArticleBySlug } from '@/utils/markdown'
+import { getArticleById } from '@/utils/markdown'
 import ArticleMeta from '@/components/article/ArticleMeta.vue'
 import LoadingState from '@/components/ui/LoadingState.vue'
 import EmptyState from '@/components/ui/EmptyState.vue'
@@ -82,23 +82,22 @@ const sanitizedContent = computed(() => {
     })
 })
 
-const loadArticle = (slug: string) => {
+const loadArticle = (id: string) => {
     loading.value = true
-    const decodedSlug = decodeURIComponent(slug)
-    article.value = getArticleBySlug(decodedSlug)
+    article.value = getArticleById(id)
     loading.value = false
 }
 
 onMounted(() => {
-    const slug = route.params.slug as string
-    loadArticle(slug)
+    const id = route.params.id as string
+    loadArticle(id)
 })
 
 watch(
-    () => route.params.slug,
-    newSlug => {
-        if (newSlug) {
-            loadArticle(newSlug as string)
+    () => route.params.id,
+    newId => {
+        if (newId) {
+            loadArticle(newId as string)
         }
     }
 )

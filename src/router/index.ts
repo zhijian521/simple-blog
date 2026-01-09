@@ -14,7 +14,7 @@ const routes: RouteRecordRaw[] = [
         meta: { title: '文章列表' },
     },
     {
-        path: '/article/:slug(.*)',
+        path: '/article/:id',
         name: 'ArticleDetail',
         component: () => import('../pages/ArticleDetailPage.vue'),
         props: true,

@@ -3,9 +3,10 @@
  */
 
 /**
- * 文章完整信息（包含 slug 和渲染后的内容）
+ * 文章完整信息（包含 id、slug 和渲染后的内容）
  */
 export interface Article {
+    id: string
     slug: string
     title: string
     date: string
