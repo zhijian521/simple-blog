@@ -1,0 +1,12 @@
+# robots.txt - 爬虫配置
+
+User-agent: *
+Allow: /
+
+Disallow: /sw.js
+Disallow: /workbox-*.js
+Disallow: /worker-*.js
+Disallow: /assets/
+
+# 站点地图
+Sitemap: https://blog.yuwb.cn/sitemap.xml

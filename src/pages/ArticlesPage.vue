@@ -27,9 +27,18 @@ import type { Article } from '@/types/article'
 const articles = ref<Article[]>([])
 const loading = ref(true)
 
-onMounted(() => {
+// 立即加载文章列表（支持 SSR）
+// 在服务端渲染时同步执行，确保生成的 HTML 包含完整内容
+const loadArticles = () => {
     articles.value = getArticles()
     loading.value = false
+}
+
+loadArticles()
+
+onMounted(() => {
+    // 客户端导航时重新加载数据
+    loadArticles()
 })
 </script>
 

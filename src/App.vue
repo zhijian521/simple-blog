@@ -10,7 +10,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
+import { useHead } from '@vueuse/head'
 import Footer from '@/components/ui/Footer.vue'
+import { SITE_CONFIG } from '@/constants'
 
 /**
  * 根组件
@@ -19,6 +21,35 @@ import Footer from '@/components/ui/Footer.vue'
  */
 const route = useRoute()
 const isHomePage = computed(() => route.path === '/')
+
+const pageTitle = computed(() => {
+    const title = route.meta.title as string | undefined
+    return title ? `${title} - ${SITE_CONFIG.title}` : SITE_CONFIG.title
+})
+
+const pageUrl = computed(() => `${SITE_CONFIG.url}${route.path}`)
+
+useHead({
+    title: pageTitle,
+    htmlAttrs: { lang: 'zh-CN' },
+    link: [{ rel: 'canonical', href: pageUrl }],
+    meta: [
+        { name: 'description', content: SITE_CONFIG.description },
+        { name: 'author', content: SITE_CONFIG.author },
+        { name: 'keywords', content: SITE_CONFIG.keywords },
+        { property: 'og:title', content: pageTitle },
+        { property: 'og:description', content: SITE_CONFIG.description },
+        { property: 'og:type', content: 'website' },
+        { property: 'og:url', content: pageUrl },
+        { property: 'og:image', content: `${SITE_CONFIG.url}/logo.png` },
+        { property: 'og:locale', content: 'zh_CN' },
+        { property: 'og:site_name', content: SITE_CONFIG.title },
+        { name: 'twitter:card', content: 'summary_large_image' },
+        { name: 'twitter:title', content: pageTitle },
+        { name: 'twitter:description', content: SITE_CONFIG.description },
+        { name: 'twitter:image', content: `${SITE_CONFIG.url}/logo.png` },
+    ],
+})
 </script>
 
 <style scoped>

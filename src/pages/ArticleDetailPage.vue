@@ -26,8 +26,9 @@
 <script setup lang="ts">
 import { ref, onMounted, watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
-import DOMPurify from 'dompurify'
 import { getArticleById } from '@/utils/markdown'
+import { useArticleSeo } from '@/utils/seo'
+import { sanitizeHtmlWithSsr } from '@/utils/dompurify'
 import ArticleMeta from '@/components/article/ArticleMeta.vue'
 import LoadingState from '@/components/ui/LoadingState.vue'
 import NotFoundPage from '@/pages/NotFoundPage.vue'
@@ -37,45 +38,13 @@ const route = useRoute()
 const article = ref<Article | null>(null)
 const loading = ref(true)
 
+// SEO 优化：动态生成页面元数据和结构化数据，提升搜索引擎收录效果
+useArticleSeo(article)
+
 // 净化 HTML 内容，防止 XSS 攻击
-// 使用保守的标签白名单，仅保留 Markdown 渲染必需的基础标签
 const sanitizedContent = computed(() => {
     if (!article.value) return ''
-    return DOMPurify.sanitize(article.value.content, {
-        // 基础文本和格式
-        ALLOWED_TAGS: [
-            'p', // 段落
-            'br', // 换行
-            'strong', // 粗体
-            'em', // 斜体
-            'u', // 下划线
-            's', // 删除线
-            'code', // 行内代码
-            'pre', // 代码块
-            'blockquote', // 引用
-            // 列表
-            'ul', // 无序列表
-            'ol', // 有序列表
-            'li', // 列表项
-            // 标题
-            'h1',
-            'h2',
-            'h3',
-            'h4',
-            'h5',
-            'h6',
-            // 链接和图片
-            'a', // 链接
-            'img', // 图片
-            // 分隔线
-            'hr',
-        ],
-        ALLOWED_ATTR: ['href', 'title', 'src', 'alt', 'class'],
-        ALLOW_DATA_ATTR: false,
-        // 禁止 JavaScript 协议链接
-        ALLOWED_URI_REGEXP:
-            /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp):|[^a-z]|[a-z+.-]+(?:[^a-z+.\-:]|$))/i,
-    })
+    return sanitizeHtmlWithSsr(article.value.content)
 })
 
 const loadArticle = (id: string) => {
@@ -85,14 +54,19 @@ const loadArticle = (id: string) => {
         loading.value = false
         return
     }
-    loading.value = true
+    // getArticleById 是同步操作，直接获取数据并结束加载状态
     article.value = getArticleById(id)
     loading.value = false
 }
 
+// 立即加载文章数据（支持 SSR）
+// 在服务端渲染时同步执行，确保生成的 HTML 包含完整内容
+const id = route.params.id
+const validatedId = typeof id === 'string' ? id : Array.isArray(id) ? id[0] : ''
+loadArticle(validatedId)
+
 onMounted(() => {
-    const id = route.params.id
-    const validatedId = typeof id === 'string' ? id : Array.isArray(id) ? id[0] : ''
+    // 客户端导航时重新加载数据
     loadArticle(validatedId)
 })
 

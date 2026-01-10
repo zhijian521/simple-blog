@@ -1,4 +1,9 @@
-import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
+import {
+    createRouter,
+    createWebHistory,
+    createMemoryHistory,
+    type RouteRecordRaw,
+} from 'vue-router'
 
 const routes: RouteRecordRaw[] = [
     {
@@ -29,7 +34,7 @@ const routes: RouteRecordRaw[] = [
 ]
 
 const router = createRouter({
-    history: createWebHistory(),
+    history: import.meta.env.SSR ? createMemoryHistory() : createWebHistory(),
     routes,
     scrollBehavior(_to, _from, savedPosition) {
         if (savedPosition) {
@@ -39,4 +44,4 @@ const router = createRouter({
     },
 })
 
-export default router
+export { router }

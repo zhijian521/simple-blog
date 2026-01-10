@@ -20,7 +20,9 @@
       "Bash(git reset:*)",
       "Bash(rm:*)",
       "Bash(npm run dev)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(npm run generate-sitemap:*)",
+      "Bash(ls:*)"
     ]
   }
 }
