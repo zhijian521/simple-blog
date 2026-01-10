@@ -9,14 +9,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## 开发命令
 
 ```bash
-# 开发模式（端口 3000）
+# 开发模式（端口 3000，自动执行 Git 活动数据获取和文章 ID 检查）
 npm run dev
 
-# 生产构建
+# 生产构建（自动执行 Git 活动数据获取和文章 ID 检查）
 npm run build
 
 # 预览生产构建
 npm run preview
+
+# 获取 Git 提交活动数据（生成 public/git-activity.json）
+npm run fetch-git
+
+# 确保所有文章都有 ID 字段（自动为缺失 ID 的文章生成 8 位 ID）
+npm run ensure-ids
 
 # 代码检查
 npm run lint
@@ -41,12 +47,17 @@ npm run format:check
 - 在模块加载时自动执行 `loadArticles()`，将所有文章解析并缓存到内存
 - 文章通过 `front-matter` 解析元数据（标题、日期、作者等）
 - 使用 `markdown-it` 渲染 Markdown 内容为 HTML
-- **重要**：所有文章数据在应用启动时一次性加载，后续通过 `getArticles()` 和 `getArticleBySlug()` 从缓存读取
+- **重要**：所有文章数据在应用启动时一次性加载，后续通过 `getArticles()`、`getArticleBySlug()` 和 `getArticleById()` 从缓存读取
 
 **安全机制：**
 
 - `validateSlug()` 函数防止路径遍历攻击（检查 `../`、`./`、`\\` 等模式）
 - 无效的 slug 会导致返回 `null` 而不是抛出错误
+
+**文章 ID 管理（双重机制）：**
+
+1. **构建时脚本**：`scripts/ensure-article-ids.js` - 扫描所有文章，为缺失 ID 的文章生成 8 位字母数字 ID
+2. **开发时插件**：`src/plugins/blog-watcher.ts` - 自定义 Vite 插件，实时监听 `blogs/` 目录变化，自动为新文件添加 ID 并触发热更新
 
 ### 路由和页面结构
 
@@ -108,6 +119,38 @@ npm run format:check
 - 全局移除点击高亮：`-webkit-tap-highlight-color: transparent`
 - 禁用文本选择：`user-select: none`
 - 平滑滚动：`-webkit-overflow-scrolling: touch`
+
+### PWA 支持
+
+**关键文件：** `src/constants/pwa.config.ts`
+
+- 使用 `vite-plugin-pwa` 实现 PWA 功能
+- 支持离线访问、安装到桌面等 PWA 特性
+- 配置文件定义了 manifest、缓存策略等
+- 在 `vite.config.ts` 中注册插件
+
+### Git 活动展示
+
+**关键组件：** `src/components/ui/GitActivityChart.vue`
+
+- 首页展示类似 GitHub 的贡献图
+- 数据由 `scripts/fetch-git-activity.cjs` 脚本生成
+- 脚本获取最近 30 天的 Git 提交记录
+- 数据保存到 `public/git-activity.json`
+- 在 `npm run dev` 和 `npm run build` 前自动执行
+
+### 自定义 Vite 插件
+
+**关键文件：** `src/plugins/blog-watcher.ts`
+
+开发时使用的自定义插件，实现博客文章的实时监听和热更新：
+
+- 使用 `chokidar` 监听 `blogs/` 目录下的所有 `.md` 文件
+- 检测新文件、修改、删除事件
+- 自动为缺少 ID 的文章添加 8 位随机 ID
+- 触发客户端全页面热更新（`full-reload`）
+- 仅在开发模式（`NODE_ENV=development`）下启用调试日志
+- 在 `buildEnd` 钩子中正确关闭监听器，避免内存泄漏
 
 ## 类型系统
 
@@ -195,7 +238,10 @@ src/components/
 - 每篇文章在 front-matter 中必须有唯一的 `id` 字段（8位字母数字随机生成）
 - 文章路由使用 ID 作为参数：`/article/:id`
 - 文章列表和卡片使用 ID 进行路由跳转
-- 运行 `npm run ensure-ids` 可自动为缺失 ID 的文章添加 ID
+- **双重保障机制**：
+  - 构建时运行 `scripts/ensure-article-ids.js` 批量添加 ID
+  - 开发时 `blog-watcher` 插件自动为新文件添加 ID
+- 手动运行 `npm run ensure-ids` 可为缺失 ID 的文章添加 ID
 
 ### 响应式雪花数量
 
@@ -214,3 +260,29 @@ src/components/
 - 路径别名：`@/*` 映射到 `src/*`（在 `tsconfig.json` 和 `vite.config.ts` 中配置）
 - 未使用变量和参数会报错（`noUnusedLocals`、`noUnusedParameters`）
 - 使用 `@/` 导入模块而非相对路径（例如：`@/components/ui/Footer.vue`）
+
+### Vite 配置要点
+
+**关键文件：** `vite.config.ts`
+
+- 开发服务器端口：3000，启动时自动打开浏览器
+- 路径别名：`@` 映射到 `src` 目录
+- 已注册插件：
+  - `@vitejs/plugin-vue` - Vue 3 单文件组件支持
+  - `vite-plugin-pwa` - PWA 功能支持
+  - `blogWatcher()` - 自定义博客文章监听插件
+- 构建输出目录：`dist/`
+
+### 应用常量配置
+
+**关键文件：** `src/constants/index.ts`
+
+集中管理应用配置：
+
+- `SITE_CONFIG` - 站点基本信息（标题、描述、作者、ICP 备案、版权信息）
+- `ROUTES` - 路由路径常量
+- `PAGINATION` - 分页配置
+- `GIT_ACTIVITY` - Git 活动图配置（工作日、月份标签、提示框偏移量）
+- `pwaOptions` - PWA 配置（从 `pwa.config.ts` 导入）
+
+修改站点信息时，应更新 `SITE_CONFIG` 而非分散在各个文件中。
