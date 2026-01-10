@@ -4,10 +4,13 @@
 
 /** 每日提交统计 */
 export interface DayCommit {
-    /** 日期 (YYYY-MM-DD) */
     date: string
-    /** 提交数量 */
     count: number
-    /** 提交级别 (用于颜色深浅) */
-    level: 0 | 1 | 2 | 3 | 4
+}
+
+/** Git 活动数据响应 */
+export interface GitActivityData {
+    updated: string
+    total: number
+    commits: DayCommit[]
 }

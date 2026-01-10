@@ -2,14 +2,10 @@
   GitActivityChart - Git 提交活动热力图组件
 
   展示最近 30 天的项目提交活动，以单行热力图形式可视化每日提交频率。
-  读取预生成的 Git 提交数据 JSON 文件，根据提交数量显示不同黑灰色深浅。
+  实时计算从今天往前推 30 天的数据，JSON 文件只存储有提交的日期（紧凑格式）。
 
-  数据来源：
-  - 由 scripts/fetch-git-activity.cjs 脚本生成
-  - 在 dev/build 时自动执行
-  - 存储在 public/git-activity.json
-
-  颜色等级定义在组件 style 部分（level-0 到 level-4）
+  数据来源：scripts/fetch-git-activity.cjs
+  数据存储：public/git-activity.json
 -->
 <template>
     <div
@@ -19,12 +15,12 @@
         @mouseleave="handleMouseLeave"
     >
         <div v-if="loading" class="activity-loading"></div>
-        <div v-else-if="days.length" class="activity-grid">
+        <div v-else-if="displayDays.length" class="activity-grid">
             <div
-                v-for="day in days"
+                v-for="day in displayDays"
                 :key="day.date"
                 class="activity-day"
-                :class="`level-${day.level}`"
+                :class="`level-${calculateLevel(day.count)}`"
                 :data-date="day.date"
                 @mouseenter="handleMouseEnter($event, day)"
             ></div>
@@ -51,16 +47,14 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import type { DayCommit } from '@/types/git-activity'
 import { GIT_ACTIVITY } from '@/constants'
+import type { DayCommit, GitActivityData } from '@/types/git-activity'
 
-const TOOLTIP_OFFSET = GIT_ACTIVITY.tooltipOffset
-
-const weekdays = GIT_ACTIVITY.weekdays
-const months = GIT_ACTIVITY.months
+const { weekdays, months, tooltipOffset, daysToShow, levelThresholds } = GIT_ACTIVITY
 
 const containerRef = ref<HTMLElement | null>(null)
 const days = ref<DayCommit[]>([])
+const displayDays = ref<DayCommit[]>([])
 const loading = ref(true)
 
 const tooltip = ref({
@@ -71,9 +65,6 @@ const tooltip = ref({
     date: '',
 })
 
-/**
- * 格式化日期显示
- */
 const formattedDate = computed(() => {
     if (!tooltip.value.date) return ''
 
@@ -86,37 +77,68 @@ const formattedDate = computed(() => {
     return `${weekday}, ${year}年${month}${day}日`
 })
 
-/**
- * 从 JSON 文件加载提交数据
- */
+function calculateLevel(count: number): number {
+    if (count === 0) return 0
+    if (count <= levelThresholds[1]) return 1
+    if (count <= levelThresholds[2]) return 2
+    if (count <= levelThresholds[3]) return 3
+    return 4
+}
+
+function formatDate(date: Date): string {
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+}
+
+function generateDisplayDays(): void {
+    const commitMap = new Map<string, number>()
+
+    days.value.forEach(commit => {
+        commitMap.set(commit.date, commit.count)
+    })
+
+    const dates: DayCommit[] = []
+    const today = new Date()
+
+    for (let i = daysToShow - 1; i >= 0; i--) {
+        const date = new Date(today)
+        date.setDate(today.getDate() - i)
+        const dateStr = formatDate(date)
+        const count = commitMap.get(dateStr) || 0
+
+        dates.push({ date: dateStr, count })
+    }
+
+    displayDays.value = dates
+}
+
 const loadGitActivityData = async () => {
     loading.value = true
 
     try {
         const response = await fetch('/git-activity.json')
-        if (!response.ok) {
-            throw new Error('Failed to load git activity data')
-        }
+        if (!response.ok) throw new Error('Failed to load git activity data')
 
-        const data = await response.json()
-        days.value = data.days || []
+        const data = (await response.json()) as GitActivityData
+        days.value = data.commits || []
+        generateDisplayDays()
     } catch (error) {
         console.error('Failed to load git activity data:', error)
         days.value = []
+        displayDays.value = []
     } finally {
         loading.value = false
     }
 }
 
-/**
- * 处理鼠标进入格子
- */
 const handleMouseEnter = (event: MouseEvent, day: DayCommit) => {
     if (!day.date || !containerRef.value) return
 
     const rect = containerRef.value.getBoundingClientRect()
     const x = event.clientX - rect.left
-    const y = event.clientY - rect.top - TOOLTIP_OFFSET
+    const y = event.clientY - rect.top - tooltipOffset
 
     tooltip.value = {
         visible: true,
@@ -127,25 +149,16 @@ const handleMouseEnter = (event: MouseEvent, day: DayCommit) => {
     }
 }
 
-/**
- * 处理鼠标离开容器
- */
 const handleMouseLeave = () => {
     tooltip.value.visible = false
 }
 
-/**
- * 处理鼠标移动（更新 tooltip 位置）
- */
 const handleMouseMove = (event: MouseEvent) => {
     if (!tooltip.value.visible || !containerRef.value) return
 
     const rect = containerRef.value.getBoundingClientRect()
-    const x = event.clientX - rect.left
-    const y = event.clientY - rect.top - TOOLTIP_OFFSET
-
-    tooltip.value.x = x
-    tooltip.value.y = y
+    tooltip.value.x = event.clientX - rect.left
+    tooltip.value.y = event.clientY - rect.top - tooltipOffset
 }
 
 onMounted(() => {
