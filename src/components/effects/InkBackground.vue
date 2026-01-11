@@ -32,7 +32,8 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import type { Ripple } from '@/types/ripple'
 import { startAnimationLoop } from '@/composables/ripple/useAnimation'
-import { setupRippleEvents, setupCanvasResize } from '@/composables/ripple/useEvents'
+import { setupRippleEvents } from '@/composables/ripple/useEvents'
+import { setupCanvasResize } from '@/composables/common/useCanvasResize'
 
 /**
  * 水滴涟漪背景特效组件

@@ -69,13 +69,17 @@ const formattedDate = computed(() => {
     if (!tooltip.value.date) return ''
 
     const date = new Date(tooltip.value.date)
+    return formatChineseDate(date)
+})
+
+function formatChineseDate(date: Date): string {
     const weekday = weekdays[date.getDay()]
     const month = months[date.getMonth()]
     const day = date.getDate()
     const year = date.getFullYear()
 
     return `${weekday}, ${year}年${month}${day}日`
-})
+}
 
 function calculateLevel(count: number): number {
     if (count === 0) return 0

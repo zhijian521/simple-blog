@@ -1,7 +1,6 @@
 import { RIPPLE_CONFIG } from './useConfig'
 import { createRipples } from './useAnimation'
 import type { Ripple } from '@/types/ripple'
-import { setupCanvasResize as commonSetupCanvasResize } from '@/composables/common/useCanvasResize'
 
 /**
  * 设置涟漪交互事件监听器
@@ -67,13 +66,4 @@ export function setupRippleEvents(
         canvas.removeEventListener('click', handleClick, true)
         canvas.removeEventListener('mousemove', handleMouseMove, true)
     }
-}
-
-/**
- * 设置 Canvas 尺寸自动调整
- * 重新导出公共函数以保持向后兼容
- * @returns 清理函数
- */
-export function setupCanvasResize(canvas: HTMLCanvasElement): () => void {
-    return commonSetupCanvasResize(canvas)
 }

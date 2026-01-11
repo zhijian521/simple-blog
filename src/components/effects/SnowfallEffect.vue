@@ -14,7 +14,8 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import type { Snowflake } from '@/types/snowflake'
 import { getSnowflakeCount } from '@/composables/snowfall/useConfig'
 import { initializeSnowflakes, startAnimationLoop } from '@/composables/snowfall/useAnimation'
-import { setupCanvasResize, loadSnowflakeImage } from '@/composables/snowfall/useEvents'
+import { loadSnowflakeImage } from '@/composables/snowfall/useEvents'
+import { setupCanvasResize } from '@/composables/common/useCanvasResize'
 
 const canvasRef = ref<HTMLCanvasElement | null>(null)
 

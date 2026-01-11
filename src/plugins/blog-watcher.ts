@@ -7,16 +7,15 @@
  * - 触发客户端热更新文章数据
  */
 
-import { Plugin } from 'vite'
+import { Plugin, type ViteDevServer } from 'vite'
 import chokidar from 'chokidar'
 import path from 'path'
 import fs from 'fs'
 import matter from 'front-matter'
 import type { ArticleFrontMatter } from '../types/article'
+import { generateId as sharedGenerateId } from '../utils/article-id'
 
 // 常量配置
-const CHARACTERS = 'abcdefghijklmnopqrstuvwxyz0123456789'
-const ID_LENGTH = 8
 const MARKDOWN_EXTENSION = '.md'
 const RELOAD_DELAY_WITH_UPDATE = 200
 const RELOAD_DELAY_NORMAL = 100
@@ -26,14 +25,10 @@ const DEBUG = process.env.NODE_ENV === 'development'
 
 /**
  * 生成随机 8 位 ID（小写字母和数字）
+ * 使用共享的 ID 生成函数
  */
 function generateId(): string {
-    let id = ''
-    for (let i = 0; i < ID_LENGTH; i++) {
-        const randomIndex = Math.floor(Math.random() * CHARACTERS.length)
-        id += CHARACTERS[randomIndex]
-    }
-    return id
+    return sharedGenerateId()
 }
 
 /**
@@ -64,7 +59,7 @@ function ensureFileId(filePath: string): boolean {
         const newId = generateId()
 
         // 构建新的 front-matter
-        const newAttributes = { ...attributes, id: newId }
+        const newAttributes = { ...attributes, id: newId } as Record<string, unknown>
         const newFrontMatter = Object.keys(newAttributes)
             .map(key => {
                 const value = newAttributes[key]
@@ -103,20 +98,8 @@ function triggerReload(server: ViteDevServer, delay: number): void {
     }, delay)
 }
 
-/**
- * Vite 开发服务器类型（简化版）
- */
-interface ViteDevServer {
-    moduleGraph: {
-        invalidateAll(): void
-    }
-    ws: {
-        send(payload: { type: string; path?: string }): void
-    }
-}
-
 export function blogWatcher(): Plugin {
-    let watcher: chokidar.FSWatcher | null = null
+    let watcher: ReturnType<typeof chokidar.watch> | null = null
     let blogsDir: string
 
     return {
@@ -137,7 +120,6 @@ export function blogWatcher(): Plugin {
                 ignoreInitial: true,
                 persistent: true,
                 ignorePermissionErrors: true,
-                useFsEvents: false,
                 awaitWriteFinish: {
                     stabilityThreshold: WRITE_STABILITY_THRESHOLD,
                     pollInterval: WRITE_POLL_INTERVAL,
@@ -146,7 +128,7 @@ export function blogWatcher(): Plugin {
 
             // 监听所有事件（仅调试模式）
             if (DEBUG) {
-                watcher.on('all', (event, filePath) => {
+                watcher.on('all', (event: string, filePath: string) => {
                     if (isMarkdownFile(filePath)) {
                         console.log(`[BlogWatcher] 事件: ${event}, 文件: ${filePath}`)
                     }
@@ -154,7 +136,7 @@ export function blogWatcher(): Plugin {
             }
 
             // 文件添加
-            watcher.on('add', filePath => {
+            watcher.on('add', (filePath: string) => {
                 if (!isMarkdownFile(filePath)) return
 
                 if (DEBUG) {
@@ -166,7 +148,7 @@ export function blogWatcher(): Plugin {
             })
 
             // 文件修改
-            watcher.on('change', filePath => {
+            watcher.on('change', (filePath: string) => {
                 if (!isMarkdownFile(filePath)) return
 
                 if (DEBUG) {
@@ -178,7 +160,7 @@ export function blogWatcher(): Plugin {
             })
 
             // 文件删除
-            watcher.on('unlink', filePath => {
+            watcher.on('unlink', (filePath: string) => {
                 if (!isMarkdownFile(filePath)) return
 
                 if (DEBUG) {
@@ -189,7 +171,7 @@ export function blogWatcher(): Plugin {
             })
 
             // 错误处理
-            watcher.on('error', error => {
+            watcher.on('error', (error: unknown) => {
                 console.error(`[BlogWatcher] 监听器错误:`, error)
             })
 

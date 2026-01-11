@@ -59,6 +59,11 @@ npm run format:check
 1. **构建时脚本**：`scripts/ensure-article-ids.js` - 扫描所有文章，为缺失 ID 的文章生成 8 位字母数字 ID
 2. **开发时插件**：`src/plugins/blog-watcher.ts` - 自定义 Vite 插件，实时监听 `blogs/` 目录变化，自动为新文件添加 ID 并触发热更新
 
+**共享工具模块：**
+
+- `src/utils/article-id.ts` - 文章 ID 生成和验证（生成 8 位小写字母和数字）
+- `src/utils/scan-articles.ts` - 文章扫描工具（递归扫描 blogs 目录，提取文章信息）
+
 ### 路由和页面结构
 
 **关键文件：** `src/router/index.ts`
@@ -112,7 +117,8 @@ npm run format:check
 
 - `src/styles/base.css` - CSS Reset、基础元素样式、移动端优化
 - `src/styles/variables.css` - CSS 变量（颜色、字体、间距等）
-- `src/styles/mixins.css` - 可复用的样式模式
+- `src/styles/common.css` - 通用样式（标签、按钮、页面标题等）
+- `src/styles/index.css` - 全局样式入口文件
 
 **移动端优化（已实现）：**
 
@@ -159,7 +165,37 @@ npm run format:check
 - `src/types/article.d.ts` - `Article` 和 `ArticleFrontMatter` 接口
 - `src/types/ripple.d.ts` - 涟漪动画类型
 - `src/types/snowflake.d.ts` - 雪花动画类型
+- `src/types/git-activity.d.ts` - Git 活动数据类型
 - `src/vite-env.d.ts` - Vite 环境类型扩展（`import.meta.glob`、Vue 模块声明）
+
+## 工具函数模块
+
+**共享工具模块：**
+
+- `src/utils/article-id.ts` - 文章 ID 生成和验证
+  - `generateId()` - 生成 8 位随机 ID（小写字母和数字）
+  - `validateId()` - 验证 ID 格式
+
+- `src/utils/scan-articles.ts` - 文章扫描工具
+  - `scanArticles()` - 扫描指定目录下的所有 Markdown 文件
+  - `scanArticlesWithStats()` - 扫描文章并包含文件统计信息
+  - `scanArticleIds()` - 扫描 blogs 目录并提取文章 ID 列表
+
+- `src/utils/markdown.ts` - Markdown 解析和渲染
+  - `loadArticles()` - 加载并解析所有 Markdown 文章
+  - `getArticles()` - 获取所有文章列表
+  - `getArticleBySlug()` - 根据 slug 获取文章
+  - `getArticleById()` - 根据 ID 获取文章
+
+- `src/utils/date.ts` - 日期格式化工具
+  - `formatDate()` - 格式化日期（完整、简短、年月）
+
+- `src/utils/dompurify.ts` - HTML 净化工具
+  - `sanitizeHtml()` - 净化 HTML 内容（防止 XSS）
+  - `sanitizeHtmlWithSsr()` - SSR 兼容的净化函数
+
+- `src/utils/seo.ts` - SEO 优化工具
+  - `useArticleSeo()` - 为文章详情页生成 SEO 元数据
 
 ## 添加新功能时的注意事项
 
