@@ -1,26 +1,91 @@
 <template>
-    <div class="app" :class="{ 'is-home': isHomePage }">
-        <main class="main">
-            <router-view />
+    <div class="app" :class="{ 'is-home': isHomePage, 'is-loading': isLoading }">
+        <PageLoader ref="pageLoader" />
+        <main v-show="!isLoading" class="main">
+            <router-view v-slot="{ Component }">
+                <component :is="Component" :key="route.path" />
+            </router-view>
         </main>
-        <Footer v-if="!isHomePage" />
+        <Footer v-if="!isHomePage && !isLoading" />
     </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { computed, ref, onMounted, nextTick } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useHead } from '@vueuse/head'
 import Footer from '@/components/ui/Footer.vue'
+import PageLoader from '@/components/ui/PageLoader.vue'
 import { SITE_CONFIG } from '@/constants'
 
 /**
  * 根组件
  * 负责页面布局和 Footer 显示控制
  * 首页固定高度且禁用滚动（解决移动端 100vh 问题）
+ * 集成全局页面加载动画
  */
 const route = useRoute()
+const router = useRouter()
+const pageLoader = ref<InstanceType<typeof PageLoader> | null>(null)
+const isLoading = ref(false)
 const isHomePage = computed(() => route.path === '/')
+
+/**
+ * 显示加载动画
+ */
+const showLoader = () => {
+    isLoading.value = true
+    pageLoader.value?.show()
+    // 强制显示滚动条，防止页面加载时内容闪动
+    document.documentElement.style.overflowY = 'scroll'
+}
+
+/**
+ * 隐藏加载动画
+ */
+const hideLoader = () => {
+    pageLoader.value?.hide()
+    // 等待加载动画淡出后再显示页面
+    setTimeout(() => {
+        isLoading.value = false
+        // 恢复正常的滚动行为
+        document.documentElement.style.overflowY = ''
+    }, 500)
+}
+
+// 设置路由守卫
+router.beforeEach((to, from, next) => {
+    // 如果是首次加载，不显示加载动画（onMounted 会处理）
+    if (from.name === undefined && to.path === '/') {
+        next()
+        return
+    }
+
+    // 显示加载动画
+    showLoader()
+    next()
+})
+
+router.afterEach(() => {
+    // 等待 DOM 更新
+    nextTick(() => {
+        // 再等待一小段时间确保页面完全渲染
+        setTimeout(() => {
+            hideLoader()
+        }, 200)
+    })
+})
+
+// 组件挂载时显示加载动画（处理页面刷新）
+onMounted(() => {
+    showLoader()
+    // 页面刷新时隐藏加载动画
+    nextTick(() => {
+        setTimeout(() => {
+            hideLoader()
+        }, 500)
+    })
+})
 
 const pageTitle = computed(() => {
     const title = route.meta.title as string | undefined
@@ -80,5 +145,10 @@ useHead({
     height: 100%;
     width: 100%;
     overflow: hidden;
+}
+
+/* 加载期间强制显示滚动条，防止内容闪动 */
+.app.is-loading {
+    overflow-y: scroll !important;
 }
 </style>
