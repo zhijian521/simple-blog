@@ -16,7 +16,6 @@ export default [
       '*.min.js',
       'public/**',
       'env.d.ts',
-      'scripts/**',
     ],
   },
 
@@ -24,6 +23,30 @@ export default [
   ...pluginVue.configs['flat/recommended'],
   ...tseslint.configs.recommended,
   configPrettier,
+
+  // Scripts 目录 - Node.js 环境
+  {
+    files: ['scripts/**/*.{js,cjs,mjs}'],
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'commonjs',
+      globals: {
+        require: 'readonly',
+        module: 'readonly',
+        process: 'readonly',
+        __dirname: 'readonly',
+        __filename: 'readonly',
+        console: 'readonly',
+      },
+    },
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unused-vars': 'off',
+      '@typescript-eslint/no-require-imports': 'off',
+      'no-console': 'off',
+      'no-undef': 'off',
+    },
+  },
 
   {
     files: ['**/*.vue', '**/*.js', '**/*.ts'],

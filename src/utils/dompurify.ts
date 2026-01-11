@@ -39,7 +39,7 @@ const DOMPURIFY_CONFIG = {
     // 禁止 JavaScript 协议链接
     ALLOWED_URI_REGEXP:
         /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp):|[^a-z]|[a-z+.-]+(?:[^a-z+.\-:]|$))/i,
-} as const
+}
 
 /**
  * 净化 HTML 内容，防止 XSS 攻击

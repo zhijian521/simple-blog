@@ -3,12 +3,14 @@
  * 为路由元信息提供类型安全
  */
 
+import type { RouteMeta as BaseRouteMeta } from 'vue-router'
+
 declare module 'vue-router' {
     /**
-     * 路由元信息接口
+     * 路由元信息接口扩展
      * 在路由配置中使用 meta 字段时，TypeScript 会识别这些属性
      */
-    interface RouteMeta {
+    interface RouteMeta extends BaseRouteMeta {
         /**
          * 页面标题
          * 用于设置浏览器标签页标题
@@ -31,7 +33,5 @@ declare module 'vue-router' {
          * 是否显示在导航菜单中
          */
         showInNav?: boolean
-
-        // 可以根据需要添加更多元信息字段
     }
 }
