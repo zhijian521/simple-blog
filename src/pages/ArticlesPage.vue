@@ -1,6 +1,8 @@
 <template>
     <div class="articles-page">
-        <h1 class="page-title">文章列表</h1>
+        <header class="page-header">
+            <h1 class="page-title">文章列表</h1>
+        </header>
 
         <LoadingState v-if="loading" />
 
@@ -27,39 +29,58 @@ import type { Article } from '@/types/article'
 const articles = ref<Article[]>([])
 const loading = ref(true)
 
-// 立即加载文章列表（支持 SSR）
-// 在服务端渲染时同步执行，确保生成的 HTML 包含完整内容
-const loadArticles = () => {
-    articles.value = getArticles()
-    loading.value = false
-}
-
 loadArticles()
 
 onMounted(() => {
-    // 客户端导航时重新加载数据
     loadArticles()
 })
+
+function loadArticles() {
+    articles.value = getArticles()
+    loading.value = false
+}
 </script>
 
 <style scoped>
 .articles-page {
     max-width: var(--content-max-width);
     margin: 0 auto;
-    padding: var(--spacing-lg);
+    padding: var(--spacing-2xl) var(--spacing-lg);
+}
+
+.page-header {
+    margin: var(--spacing-md) 0;
+    padding: 0 var(--spacing-md);
+    border-bottom: 1px solid var(--color-border);
 }
 
 .page-title {
-    font-size: var(--font-size-4xl);
-    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-medium);
     color: var(--color-text);
-    margin-bottom: var(--spacing-xl);
-    line-height: 1.2;
+    margin-bottom: var(--spacing-md);
 }
 
 .articles-list {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-lg);
+}
+
+@media (max-width: 768px) {
+    .articles-page {
+        padding: var(--spacing-xl) var(--spacing-lg);
+    }
+}
+
+@media (max-width: 480px) {
+    .articles-page {
+        padding: var(--spacing-lg) var(--spacing-lg);
+    }
+}
+
+@media (max-width: 360px) {
+    .articles-page {
+        padding: var(--spacing-md) var(--spacing-md);
+    }
 }
 </style>
