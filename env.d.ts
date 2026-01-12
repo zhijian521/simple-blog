@@ -23,12 +23,11 @@ declare module 'front-matter' {
 
 interface ImportMetaEnv {
     readonly VITE_APP_TITLE?: string
-    // Vite 自带的环境变量（由 @vite/client 提供）
-    // readonly BASE_URL: string
-    // readonly MODE: string
-    // readonly DEV: boolean
-    // readonly PROD: boolean
-    // readonly SSR: boolean
+    readonly BASE_URL: string
+    readonly MODE: string
+    readonly DEV: boolean
+    readonly PROD: boolean
+    readonly SSR: boolean
 }
 
 interface ImportMeta {
