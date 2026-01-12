@@ -1,11 +1,11 @@
 <!--
-  ArticleCard - 文章卡片组件（时间线模式）
+  ArticleCard - 文章卡片组件
 
   用途：
   - 用于文章列表页展示文章摘要信息
-  - 采用时间线布局
+  - 采用卡片式布局，悬停时有微妙效果
 
- 功能：
+  功能：
    - 显示文章标题、日期、作者、摘要和标签
    - 支持点击跳转到文章详情页
    - 可控制是否显示摘要和标签
@@ -17,18 +17,25 @@
 -->
 <template>
     <article class="article-card">
-        <div class="timeline-dot"></div>
         <router-link :to="ROUTES.ARTICLE(article.id)" class="article-link">
-            <div class="article-header">
-                <h3 class="article-title">{{ article.title }}</h3>
-                <div class="article-date">{{ formatDate(article.date) }}</div>
-            </div>
-            <ArticleMeta :article="article" />
-            <p v-if="showExcerpt" class="article-excerpt">
-                {{ article.excerpt }}
-            </p>
-            <div v-if="showTags && article.tags && article.tags.length" class="article-tags">
-                <span v-for="tag in article.tags" :key="tag" class="tag">{{ tag }}</span>
+            <div class="article-content">
+                <div class="article-header">
+                    <h3 class="article-title">{{ article.title }}</h3>
+                    <time class="article-date">{{ formatDate(article.date) }}</time>
+                </div>
+
+                <ArticleMeta :article="article" />
+
+                <p v-if="showExcerpt" class="article-excerpt">
+                    {{ article.excerpt }}
+                </p>
+
+                <div v-if="showTags && article.tags && article.tags.length" class="article-footer">
+                    <div class="article-tags">
+                        <span v-for="tag in article.tags" :key="tag" class="tag">{{ tag }}</span>
+                    </div>
+                    <span class="read-more">阅读全文 →</span>
+                </div>
             </div>
         </router-link>
     </article>
@@ -59,71 +66,88 @@ function formatDate(date: string) {
 <style scoped>
 .article-card {
     position: relative;
-    padding-left: var(--spacing-xl);
-    padding-top: var(--spacing-md);
-    padding-bottom: var(--spacing-lg);
-}
-
-.article-card:not(:last-child)::before {
-    content: '';
-    position: absolute;
-    left: 5px;
-    top: 28px;
-    bottom: 0;
-    width: 1px;
-    background: linear-gradient(to bottom, var(--color-border) 0%, transparent 100%);
-}
-
-.timeline-dot {
-    position: absolute;
-    left: 0;
-    top: 6px;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: var(--color-border);
-    border: 2px solid var(--color-bg-page);
-    box-shadow: 0 0 0 2px var(--color-bg-page);
-}
-
-.article-card:hover .timeline-dot {
-    background: var(--color-accent);
 }
 
 .article-link {
+    display: block;
+    padding: var(--spacing-lg);
+    background: transparent;
+    backdrop-filter: blur(5px);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+    transition: all var(--transition-base);
     text-decoration: none;
     color: inherit;
-    display: block;
+    position: relative;
+    overflow: hidden;
+}
+
+/* 水墨风格背景 */
+.article-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60%;
+    background: var(--gradient-ink);
+    opacity: 0;
+    transition: opacity var(--transition-base);
+    pointer-events: none;
+}
+
+.article-link:hover::before {
+    opacity: 1;
+}
+
+.article-link:hover {
+    border-color: var(--color-text-light);
+    box-shadow: var(--shadow-ink);
+}
+
+.article-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    position: relative;
+    z-index: 1;
 }
 
 .article-header {
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
+    align-items: flex-start;
     gap: var(--spacing-md);
-    margin-bottom: var(--spacing-xs);
 }
 
 .article-title {
-    font-size: var(--font-size-base);
-    color: var(--color-text);
+    font-size: var(--font-size-lg);
     font-weight: var(--font-weight-medium);
+    color: var(--color-text);
     line-height: 1.4;
     flex: 1;
+    letter-spacing: 0.02em;
+    transition: color var(--transition-fast);
+}
+
+.article-link:hover .article-title {
+    color: var(--color-link-hover);
 }
 
 .article-date {
     font-size: var(--font-size-xs);
     color: var(--color-text-lighter);
-    font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-normal);
     white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.05em;
 }
 
 .article-excerpt {
     color: var(--color-text-light);
     font-size: var(--font-size-sm);
-    line-height: 1.7;
-    margin-top: var(--spacing-sm);
+    line-height: 1.8;
+    letter-spacing: 0.02em;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     line-clamp: 2;
@@ -131,37 +155,76 @@ function formatDate(date: string) {
     overflow: hidden;
 }
 
+.article-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: var(--spacing-sm);
+    border-top: 1px solid var(--color-bg-secondary);
+}
+
 .article-tags {
     display: flex;
     gap: var(--spacing-xs);
     flex-wrap: wrap;
-    margin-top: var(--spacing-sm);
 }
 
 .article-tags .tag {
     font-size: var(--font-size-xs);
     color: var(--color-text-light);
-    padding: 2px var(--spacing-sm);
-    background: var(--color-bg-secondary);
+    padding: 0.25rem var(--spacing-sm);
+    background: transparent;
+    border: 1px solid var(--color-border);
     border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+    letter-spacing: 0.03em;
 }
 
+.article-link:hover .article-tags .tag {
+    background: var(--color-bg-secondary);
+    border-color: var(--color-text-lighter);
+}
+
+.read-more {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-lighter);
+    font-weight: var(--font-weight-normal);
+    transition: all var(--transition-fast);
+    letter-spacing: 0.05em;
+}
+
+.article-link:hover .read-more {
+    color: var(--color-link-hover);
+}
+
+/* 移动端响应式 */
 @media (max-width: 768px) {
-    .article-card {
-        padding-left: var(--spacing-lg);
-        padding-top: var(--spacing-sm);
-        padding-bottom: var(--spacing-md);
+    .article-link {
+        padding: var(--spacing-md);
     }
 
-    .article-card:not(:last-child)::before {
-        left: 6px;
-        top: 24px;
+    .article-title {
+        font-size: var(--font-size-base);
     }
 
-    .timeline-dot {
-        top: 4px;
-        width: 10px;
-        height: 10px;
+    .article-excerpt {
+        font-size: 0.85rem;
+    }
+
+    .article-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-sm);
+    }
+
+    .read-more {
+        align-self: flex-end;
+    }
+}
+
+@media (max-width: 480px) {
+    .article-link {
+        padding: var(--spacing-md);
     }
 
     .article-header {
@@ -171,82 +234,25 @@ function formatDate(date: string) {
 
     .article-title {
         font-size: var(--font-size-sm);
-    }
-
-    .article-excerpt {
-        font-size: 0.85rem;
-        margin-top: var(--spacing-xs);
-    }
-
-    .article-tags .tag {
-        font-size: 0.75rem;
-        padding: 1px var(--spacing-xs);
-    }
-}
-
-@media (max-width: 480px) {
-    .article-card {
-        padding-left: var(--spacing-md);
-        padding-top: var(--spacing-xs);
-        padding-bottom: var(--spacing-sm);
-    }
-
-    .article-card:not(:last-child)::before {
-        left: 6px;
-        top: 22px;
-    }
-
-    .timeline-dot {
-        top: 3px;
-        width: 8px;
-        height: 8px;
-    }
-
-    .article-header {
-        gap: 2px;
-    }
-
-    .article-title {
-        font-size: var(--font-size-sm);
-        line-height: 1.3;
+        line-height: 1.4;
     }
 
     .article-date {
-        font-size: 0.65rem;
+        font-size: 0.7rem;
     }
 
     .article-excerpt {
         font-size: 0.8rem;
-        margin-top: 4px;
         line-height: 1.6;
     }
 
     .article-tags .tag {
         font-size: 0.7rem;
-    }
-}
-
-@media (max-width: 360px) {
-    .article-card {
-        padding-left: calc(var(--spacing-sm) + 4px);
-        padding-top: 2px;
-        padding-bottom: calc(var(--spacing-xs) + 2px);
+        padding: 2px var(--spacing-xs);
     }
 
-    .article-card:not(:last-child)::before {
-        left: 5px;
-        top: 20px;
-    }
-
-    .timeline-dot {
-        left: 1px;
-        top: 2px;
-        width: 7px;
-        height: 7px;
-    }
-
-    .article-excerpt {
-        font-size: 0.75rem;
+    .read-more {
+        font-size: 0.7rem;
     }
 }
 </style>

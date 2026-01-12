@@ -65,6 +65,14 @@
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
   --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
 
+  /* 水墨风格阴影 */
+  --shadow-ink: 0 2px 8px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.03);
+  --shadow-ink-hover: 0 4px 12px rgba(0, 0, 0, 0.06), 0 8px 24px rgba(0, 0, 0, 0.04);
+
+  /* 水墨渐变 */
+  --gradient-ink: radial-gradient(ellipse at top, rgba(0, 0, 0, 0.02) 0%, transparent 70%);
+  --gradient-ink-subtle: linear-gradient(180deg, rgba(0, 0, 0, 0.01) 0%, transparent 100%);
+
   /* === 布局系统 === */
   --container-max-width: 1200px;
   --content-max-width: 700px;

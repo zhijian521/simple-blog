@@ -45,42 +45,73 @@ function loadArticles() {
 .articles-page {
     max-width: var(--content-max-width);
     margin: 0 auto;
-    padding: var(--spacing-2xl) var(--spacing-lg);
+    padding: var(--spacing-xl) var(--spacing-lg);
+    min-height: 100vh;
+    position: relative;
+}
+
+/* 水墨风格装饰 */
+.articles-page::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 300px;
+    height: 300px;
+    background: var(--gradient-ink);
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.5;
+    pointer-events: none;
 }
 
 .page-header {
-    margin: var(--spacing-md) 0;
-    padding: 0 var(--spacing-md);
-    border-bottom: 1px solid var(--color-border);
+    margin-bottom: var(--spacing-xl);
 }
 
 .page-title {
-    font-size: var(--font-size-xl);
-    font-weight: var(--font-weight-medium);
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-normal);
     color: var(--color-text);
-    margin-bottom: var(--spacing-md);
+    letter-spacing: 0.08em;
 }
 
 .articles-list {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    gap: var(--spacing-lg);
 }
 
+/* 移动端响应式 */
 @media (max-width: 768px) {
     .articles-page {
         padding: var(--spacing-xl) var(--spacing-lg);
+    }
+
+    .articles-page::before {
+        width: 200px;
+        height: 200px;
+    }
+
+    .page-header {
+        margin-bottom: var(--spacing-lg);
+    }
+
+    .page-title {
+        font-size: var(--font-size-xl);
+    }
+
+    .articles-list {
+        gap: var(--spacing-xl);
     }
 }
 
 @media (max-width: 480px) {
     .articles-page {
-        padding: var(--spacing-lg) var(--spacing-lg);
+        padding: var(--spacing-lg) var(--spacing-md);
     }
-}
 
-@media (max-width: 360px) {
-    .articles-page {
-        padding: var(--spacing-md) var(--spacing-md);
+    .page-title {
+        font-size: var(--font-size-lg);
     }
 }
 </style>

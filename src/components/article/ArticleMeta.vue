@@ -28,12 +28,13 @@ defineProps<Props>()
 <style scoped>
 .article-meta {
     font-size: var(--font-size-xs);
-    color: var(--color-text-light);
+    color: var(--color-text-lighter);
+    font-weight: var(--font-weight-medium);
 }
 
 .author-prefix {
     color: var(--color-text-lighter);
-    margin-right: 4px;
+    margin-right: 0.25rem;
 }
 
 .author-name {
@@ -42,7 +43,7 @@ defineProps<Props>()
 
 @media (max-width: 480px) {
     .article-meta {
-        font-size: 0.65rem;
+        font-size: 0.7rem;
     }
 
     .author-prefix {
