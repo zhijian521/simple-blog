@@ -21,7 +21,7 @@ export const SITE_CONFIG = {
 export const ROUTES = {
     HOME: '/',
     ARTICLES: '/articles',
-    ARTICLE: (slug: string) => `/article/${slug}`,
+    ARTICLE: (id: string) => `/article/${id}`,
 } as const
 
 export const PAGINATION = {

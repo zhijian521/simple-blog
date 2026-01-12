@@ -58,11 +58,10 @@ function ensureFileId(filePath: string): boolean {
         // 生成新 ID
         const newId = generateId()
 
-        // 构建新的 front-matter
-        const newAttributes = { ...attributes, id: newId } as Record<string, unknown>
-        const newFrontMatter = Object.keys(newAttributes)
-            .map(key => {
-                const value = newAttributes[key]
+        // 构建新的 front-matter（ArticleFrontMatter 已支持索引签名）
+        const newAttributes: ArticleFrontMatter = { ...attributes, id: newId }
+        const newFrontMatter = Object.entries(newAttributes)
+            .map(([key, value]) => {
                 if (Array.isArray(value)) {
                     return `${key}:\n${value.map(v => `  - ${v}`).join('\n')}`
                 }

@@ -50,14 +50,34 @@ export function sanitizeHtml(html: string): string {
 
 /**
  * 净化 HTML 内容（SSR 兼容版本）
- * SSR 环境下直接返回内容（文章内容是可信的 Markdown 文件）
+ * SSR 环境下使用简化的净化逻辑，客户端使用 DOMPurify
  */
 export function sanitizeHtmlWithSsr(html: string): string {
-    // SSR 环境下直接返回内容（不需要净化）
     if (import.meta.env.SSR) {
-        return html
+        // SSR 环境下使用简化的标签过滤（移除危险标签和属性）
+        // 虽然文章是可信的 Markdown 文件，但为保证安全性统一进行基础净化
+        return sanitizeHtmlServer(html)
     }
 
-    // 客户端环境进行净化
+    // 客户端环境使用 DOMPurify 进行完整净化
     return sanitizeHtml(html)
+}
+
+/**
+ * 服务端简化的 HTML 净化函数
+ * 移除 script 标签和 on* 事件属性
+ */
+function sanitizeHtmlServer(html: string): string {
+    // 移除 script 标签
+    let sanitized = html.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+
+    // 移除 on* 事件属性（如 onclick、onload 等）
+    sanitized = sanitized.replace(/\s+on\w+="[^"]*"/gi, '')
+    sanitized = sanitized.replace(/\s+on\w+='[^']*'/gi, '')
+    sanitized = sanitized.replace(/\s+on\w+=[^\s>]*/gi, '')
+
+    // 移除 javascript: 协议
+    sanitized = sanitized.replace(/href\s*=\s*["']javascript:[^"']*["']/gi, '')
+
+    return sanitized
 }

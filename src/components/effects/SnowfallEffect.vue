@@ -22,8 +22,11 @@ const canvasRef = ref<HTMLCanvasElement | null>(null)
 // 本地状态管理
 const snowflakes = ref<Snowflake[]>([])
 const snowflakeImage = ref<HTMLImageElement | null>(null)
+const isVisible = ref(true)
+
 let animationFrameId: number | null = null
 let cleanupResize: (() => void) | null = null
+let cleanupVisibility: (() => void) | null = null
 
 /**
  * 根据屏幕尺寸重新初始化雪花
@@ -74,6 +77,22 @@ onMounted(async () => {
         // 设置画布大小调整监听
         cleanupResize = setupCanvasResize(canvas, restartAnimation)
 
+        // 监听页面可见性变化
+        const handleVisibilityChange = () => {
+            isVisible.value = document.visibilityState === 'visible'
+            if (isVisible.value) {
+                animationFrameId = startAnimationLoop(canvas, ctx, snowflakes.value, image)
+            } else if (animationFrameId !== null) {
+                cancelAnimationFrame(animationFrameId)
+                animationFrameId = null
+            }
+        }
+
+        document.addEventListener('visibilitychange', handleVisibilityChange)
+        cleanupVisibility = () => {
+            document.removeEventListener('visibilitychange', handleVisibilityChange)
+        }
+
         // 启动动画循环
         animationFrameId = startAnimationLoop(canvas, ctx, snowflakes.value, image)
     } catch (error) {
@@ -92,6 +111,11 @@ onUnmounted(() => {
     if (cleanupResize) {
         cleanupResize()
         cleanupResize = null
+    }
+
+    if (cleanupVisibility) {
+        cleanupVisibility()
+        cleanupVisibility = null
     }
 })
 </script>

@@ -48,10 +48,14 @@ const lastRippleTime = { value: 0 }
 const mousePosition = { x: 0, y: 0 }
 const lastMouseRippleTime = { value: 0 }
 
+// 可见性状态（用于性能优化）
+const isVisible = ref(true)
+
 // 清理函数
 let animationFrameId: number | null = null
 let cleanupEvents: (() => void) | null = null
 let cleanupResize: (() => void) | null = null
+let cleanupVisibility: (() => void) | null = null
 
 onMounted(() => {
     const canvas = canvasRef.value
@@ -63,6 +67,24 @@ onMounted(() => {
     // 初始化 Canvas 尺寸和事件监听
     cleanupResize = setupCanvasResize(canvas)
     cleanupEvents = setupRippleEvents(canvas, ripples, mousePosition, lastMouseRippleTime)
+
+    // 监听页面可见性变化
+    const handleVisibilityChange = () => {
+        isVisible.value = document.visibilityState === 'visible'
+        if (isVisible.value) {
+            animationFrameId = startAnimationLoop(canvas, ctx, ripples, lastRippleTime)
+        } else if (animationFrameId !== null) {
+            cancelAnimationFrame(animationFrameId)
+            animationFrameId = null
+        }
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    cleanupVisibility = () => {
+        document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
+
+    // 启动动画循环
     animationFrameId = startAnimationLoop(canvas, ctx, ripples, lastRippleTime)
 })
 
@@ -81,6 +103,11 @@ onUnmounted(() => {
     if (cleanupResize) {
         cleanupResize()
         cleanupResize = null
+    }
+
+    if (cleanupVisibility) {
+        cleanupVisibility()
+        cleanupVisibility = null
     }
 })
 </script>
