@@ -128,6 +128,11 @@ function formatDate(date: string) {
     flex: 1;
     letter-spacing: 0.02em;
     transition: color var(--transition-fast);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .article-link:hover .article-title {
@@ -212,13 +217,32 @@ function formatDate(date: string) {
     }
 
     .article-footer {
-        flex-direction: column;
-        align-items: flex-start;
+        flex-direction: row;
+        align-items: center;
         gap: var(--spacing-sm);
     }
 
+    .article-tags {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        gap: var(--spacing-xs);
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .article-tags::-webkit-scrollbar {
+        display: none;
+    }
+
+    .article-tags .tag {
+        flex-shrink: 0;
+    }
+
     .read-more {
-        align-self: flex-end;
+        flex-shrink: 0;
     }
 }
 
@@ -228,13 +252,19 @@ function formatDate(date: string) {
     }
 
     .article-header {
-        flex-direction: column;
-        gap: var(--spacing-xs);
+        flex-direction: row;
+        gap: var(--spacing-sm);
     }
 
     .article-title {
         font-size: var(--font-size-sm);
         line-height: 1.4;
+        min-width: 0;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
     }
 
     .article-date {
@@ -247,12 +277,12 @@ function formatDate(date: string) {
     }
 
     .article-tags .tag {
-        font-size: 0.7rem;
+        font-size: 0.65rem;
         padding: 2px var(--spacing-xs);
     }
 
     .read-more {
-        font-size: 0.7rem;
+        font-size: 0.65rem;
     }
 }
 </style>
