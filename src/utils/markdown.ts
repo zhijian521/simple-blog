@@ -77,16 +77,16 @@ async function loadLanguageIfNeeded(lang: string): Promise<void> {
     }
 
     // 加载语言
-    await highlighterInstance.loadLanguage(lang)
+    await highlighterInstance.loadLanguage(lang as (typeof SUPPORTED_LANGUAGES)[number])
     loadedLanguages.add(lang)
 }
 
 // ========== Markdown 渲染器 ==========
-const md = new MarkdownIt({
+const md: MarkdownIt = new MarkdownIt({
     html: true,
     linkify: true,
     typographer: true,
-    highlight: (str, lang) => {
+    highlight: (str: string, lang: string): string => {
         const language = lang || 'plaintext'
         return `<pre><code class="language-${language}">${md.utils.escapeHtml(str)}</code></pre>`
     },
