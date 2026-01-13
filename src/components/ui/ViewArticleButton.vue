@@ -1,19 +1,3 @@
-<!--
-  ViewArticleButton - 查看文章按钮组件
-
-  用途：
-  - 用于导航到文章列表页或详情页
-  - 提供统一的按钮样式和交互效果
-
-  功能：
-  - 支持自定义跳转路径和按钮文本
-  - Hover 显示下划线动画效果
-  - 点击激活状态反馈
-
-  Props:
-  - to: string - 路由跳转路径
-  - text?: string - 按钮文本（默认："查看文章"）
--->
 <template>
     <router-link
         :to="to"

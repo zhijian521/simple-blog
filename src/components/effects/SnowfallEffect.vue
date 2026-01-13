@@ -1,12 +1,10 @@
-<!--
-  雪花配置：
-  - 大小：三种尺寸（小、中、大）
-  - 速度：与大小成反比
-  - 数量：响应式（移动端 30，平板 45，桌面 55，大屏 65）
-  - 效果：风力、旋转、透明度变化
--->
 <template>
-    <canvas ref="canvasRef" class="snowfall-effect"></canvas>
+    <canvas
+        ref="canvasRef"
+        class="snowfall-effect"
+        aria-label="雪花飘落动画效果"
+        role="img"
+    ></canvas>
 </template>
 
 <script setup lang="ts">
@@ -16,29 +14,21 @@ import { getSnowflakeCount } from '@/composables/snowfall/useConfig'
 import { initializeSnowflakes, startAnimationLoop } from '@/composables/snowfall/useAnimation'
 import { loadSnowflakeImage } from '@/composables/snowfall/useEvents'
 import { setupCanvasResize } from '@/composables/common/useCanvasResize'
+import { useVisibilityChange } from '@/composables/common/useVisibility'
 
 const canvasRef = ref<HTMLCanvasElement | null>(null)
-
-// 本地状态管理
 const snowflakes = ref<Snowflake[]>([])
 const snowflakeImage = ref<HTMLImageElement | null>(null)
-const isVisible = ref(true)
 
 let animationFrameId: number | null = null
 let cleanupResize: (() => void) | null = null
 let cleanupVisibility: (() => void) | null = null
 
-/**
- * 根据屏幕尺寸重新初始化雪花
- */
 const resetSnowflakes = (canvasWidth: number, canvasHeight: number) => {
     const count = getSnowflakeCount(window.innerWidth)
     snowflakes.value = initializeSnowflakes(count, canvasWidth, canvasHeight)
 }
 
-/**
- * 重启动画循环（用于窗口大小变化后）
- */
 const restartAnimation = () => {
     const canvas = canvasRef.value
     const image = snowflakeImage.value
@@ -47,12 +37,10 @@ const restartAnimation = () => {
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    // 取消当前动画循环
     if (animationFrameId !== null) {
         cancelAnimationFrame(animationFrameId)
     }
 
-    // 重新初始化雪花并启动动画
     resetSnowflakes(canvas.width, canvas.height)
     animationFrameId = startAnimationLoop(canvas, ctx, snowflakes.value, image)
 }
@@ -65,49 +53,39 @@ onMounted(async () => {
     if (!ctx) return
 
     try {
-        // 加载雪花 SVG 图片
         const image = await loadSnowflakeImage(
             new URL('@/assets/snowflake.svg', import.meta.url).href
         )
         snowflakeImage.value = image
 
-        // 设置画布大小并初始化雪花
         resetSnowflakes(canvas.width, canvas.height)
-
-        // 设置画布大小调整监听
         cleanupResize = setupCanvasResize(canvas, restartAnimation)
 
-        // 监听页面可见性变化
-        const handleVisibilityChange = () => {
-            isVisible.value = document.visibilityState === 'visible'
-            if (isVisible.value) {
-                animationFrameId = startAnimationLoop(canvas, ctx, snowflakes.value, image)
-            } else if (animationFrameId !== null) {
+        const startAnimation = () => {
+            animationFrameId = startAnimationLoop(canvas, ctx, snowflakes.value, image)
+        }
+
+        const stopAnimation = () => {
+            if (animationFrameId !== null) {
                 cancelAnimationFrame(animationFrameId)
                 animationFrameId = null
             }
         }
 
-        document.addEventListener('visibilitychange', handleVisibilityChange)
-        cleanupVisibility = () => {
-            document.removeEventListener('visibilitychange', handleVisibilityChange)
-        }
+        cleanupVisibility = useVisibilityChange(startAnimation, stopAnimation)
 
-        // 启动动画循环
-        animationFrameId = startAnimationLoop(canvas, ctx, snowflakes.value, image)
+        startAnimation()
     } catch (error) {
         console.error('Failed to initialize snowfall effect:', error)
     }
 })
 
 onUnmounted(() => {
-    // 清理动画循环
     if (animationFrameId !== null) {
         cancelAnimationFrame(animationFrameId)
         animationFrameId = null
     }
 
-    // 清理事件监听
     if (cleanupResize) {
         cleanupResize()
         cleanupResize = null

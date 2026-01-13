@@ -109,7 +109,7 @@ export function startAnimationLoop(
 
 /**
  * 渲染所有涟漪
- * 倒序遍历以便安全删除元素
+ * 使用批量删除优化性能
  */
 function renderRipples(ctx: CanvasRenderingContext2D, ripples: Ripple[]): void {
     const {
@@ -120,33 +120,34 @@ function renderRipples(ctx: CanvasRenderingContext2D, ripples: Ripple[]): void {
         WAVE_MODULATION_AMPLITUDE,
     } = RIPPLE_CONFIG
 
+    const toRemove: number[] = []
+
     for (let i = ripples.length - 1; i >= 0; i--) {
         const ripple = ripples[i]
 
-        // 更新状态
         ripple.radius += ripple.speed
         ripple.life--
         ripple.phase += PHASE_INCREMENT
 
-        // 计算衰减因子
         const lifeRatio = ripple.life / ripple.maxLife
         const radiusRatio = ripple.radius / ripple.maxRadius
 
-        // 透明度 = 初始透明度 × 生命周期衰减 × 半径衰减 × 波纹调制
         const lifeDecay = Math.pow(lifeRatio, LIFE_DECAY_POWER)
         const radiusDecay = 1 - Math.pow(radiusRatio, RADIUS_DECAY_POWER)
         const waveModulation = Math.sin(ripple.phase) * WAVE_MODULATION_AMPLITUDE + 0.9
 
         const currentOpacity = ripple.opacity * lifeDecay * radiusDecay * waveModulation
 
-        // 移除不可见的涟漪
         if (currentOpacity <= MIN_OPACITY_THRESHOLD || ripple.radius > ripple.maxRadius) {
-            ripples.splice(i, 1)
+            toRemove.push(i)
             continue
         }
 
         drawRipple(ctx, ripple, radiusRatio, currentOpacity)
     }
+
+    // 批量删除过期的涟漪
+    toRemove.forEach(i => ripples.splice(i, 1))
 }
 
 /**

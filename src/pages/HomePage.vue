@@ -4,8 +4,8 @@
         <SnowfallEffect />
         <div class="home-content">
             <section class="hero">
-                <h1 class="hero-title">耶温博客</h1>
-                <p class="hero-subtitle">记录思考，分享知识</p>
+                <h1 class="hero-title">{{ SITE_CONFIG.title }}</h1>
+                <p class="hero-subtitle">{{ SITE_CONFIG.description }}</p>
                 <div class="hero-actions">
                     <ViewArticleButton to="/articles" text="查看文章" />
                 </div>
@@ -22,12 +22,7 @@ import LatestArticles from '@/components/ui/LatestArticles.vue'
 import GitActivityChart from '@/components/ui/GitActivityChart.vue'
 import InkBackground from '@/components/effects/InkBackground.vue'
 import SnowfallEffect from '@/components/effects/SnowfallEffect.vue'
-
-/**
- * 首页
- * 展示博客标题和导航，包含水滴涟漪和雪花飘落背景特效
- * 底部展示最新文章列表和 Git 提交活动热力图
- */
+import { SITE_CONFIG } from '@/constants'
 </script>
 
 <style scoped>
@@ -43,8 +38,7 @@ import SnowfallEffect from '@/components/effects/SnowfallEffect.vue'
 .home-content {
     max-width: var(--container-max-width);
     padding: 0 var(--spacing-lg);
-    /* 向上偏移，让内容位于中间偏上的位置 */
-    margin-top: -20vh;
+    margin-top: var(--hero-vertical-offset);
 }
 
 .hero {

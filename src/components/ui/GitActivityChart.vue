@@ -1,12 +1,3 @@
-<!--
-  GitActivityChart - Git 提交活动热力图组件
-
-  展示最近 30 天的项目提交活动，以单行热力图形式可视化每日提交频率。
-  实时计算从今天往前推 30 天的数据，JSON 文件只存储有提交的日期（紧凑格式）。
-
-  数据来源：scripts/fetch-git-activity.cjs
-  数据存储：public/git-activity.json
--->
 <template>
     <div
         ref="containerRef"

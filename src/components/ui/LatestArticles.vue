@@ -1,17 +1,18 @@
-<!--
-  LatestArticles - 最新文章列表组件
-
-  展示最新发布的 3 篇文章，位于首页底部与 Git 活动图之间。
-  采用极简设计风格，使用项目水墨阴影系统。
--->
 <template>
     <div class="latest-articles">
-        <div class="articles-list">
+        <div v-if="loading" class="articles-list">
+            <div v-for="i in 3" :key="i" class="article-item skeleton">
+                <span class="article-title skeleton-text"></span>
+                <time class="article-date skeleton-text skeleton-text-small"></time>
+            </div>
+        </div>
+        <div v-else class="articles-list">
             <RouterLink
                 v-for="article in latestArticles"
                 :key="article.id"
                 :to="`/article/${article.id}`"
                 class="article-item"
+                :aria-label="`查看文章：${article.title}`"
             >
                 <span class="article-title">{{ article.title }}</span>
                 <time class="article-date">{{ formattedDate(article.date) }}</time>
@@ -21,21 +22,28 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted } from 'vue'
 import { getArticles } from '@/utils/markdown'
 import type { Article } from '@/types/article'
 import { formatDate } from '@/utils/date'
 
-const latestArticles = getArticles().slice(0, 3)
+const loading = ref(true)
+const latestArticles = ref<Article[]>([])
 
 const formattedDate = (date: string): string => {
     return formatDate(date, 'short')
 }
+
+onMounted(() => {
+    latestArticles.value = getArticles().slice(0, 3)
+    loading.value = false
+})
 </script>
 
 <style scoped>
 .latest-articles {
     position: fixed;
-    bottom: 10vh;
+    bottom: var(--latest-articles-bottom);
     left: 0;
     right: 0;
     width: 100%;
@@ -144,6 +152,39 @@ const formattedDate = (date: string): string => {
 
 .article-item:hover .article-date {
     opacity: 1;
+}
+
+/* 骨架屏样式 */
+.skeleton {
+    pointer-events: none;
+    cursor: default;
+}
+
+.skeleton-text {
+    display: inline-block;
+    background: linear-gradient(
+        90deg,
+        rgba(0, 0, 0, 0.06) 25%,
+        rgba(0, 0, 0, 0.12) 50%,
+        rgba(0, 0, 0, 0.06) 75%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s ease-in-out infinite;
+    border-radius: 4px;
+    color: transparent !important;
+}
+
+.skeleton-text-small {
+    width: 80px;
+}
+
+@keyframes skeleton-loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
 }
 
 /* 移动端响应式 */
