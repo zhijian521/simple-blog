@@ -4,10 +4,8 @@
             <h1 class="page-title">文章列表</h1>
         </header>
 
-        <LoadingState v-if="loading" />
-
         <EmptyState
-            v-else-if="articles.length === 0"
+            v-if="articles.length === 0"
             title="暂无文章"
             message="还没有发布任何文章"
         />
@@ -19,26 +17,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
 import { getArticles } from '@/utils/markdown'
 import ArticleCard from '@/components/article/ArticleCard.vue'
-import LoadingState from '@/components/ui/LoadingState.vue'
 import EmptyState from '@/components/ui/EmptyState.vue'
 import type { Article } from '@/types/article'
 
-const articles = ref<Article[]>([])
-const loading = ref(true)
-
-loadArticles()
-
-onMounted(() => {
-    loadArticles()
-})
-
-function loadArticles() {
-    articles.value = getArticles()
-    loading.value = false
-}
+// 同步加载文章数据（从内存缓存读取，无需 loading 状态）
+const articles = getArticles() as Article[]
 </script>
 
 <style scoped>
@@ -101,7 +86,7 @@ function loadArticles() {
     }
 
     .articles-list {
-        gap: var(--spacing-xl);
+        gap: var(--spacing-md);
     }
 }
 

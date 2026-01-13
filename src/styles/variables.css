@@ -48,6 +48,9 @@
   --font-size-3xl: 1.875rem;
   --font-size-4xl: 2.25rem;
 
+  /* 扩展字体尺寸（用于移动端优化） */
+  --font-size-xxs: 0.65rem;
+
   /* 字重 */
   --font-weight-normal: 300;
   --font-weight-medium: 400;

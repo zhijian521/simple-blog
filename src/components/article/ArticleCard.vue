@@ -17,7 +17,11 @@
 -->
 <template>
     <article class="article-card">
-        <router-link :to="ROUTES.ARTICLE(article.id)" class="article-link">
+        <router-link
+            :to="ROUTES.ARTICLE(article.id)"
+            class="article-link"
+            :aria-label="`阅读全文：${article.title}`"
+        >
             <div class="article-content">
                 <div class="article-header">
                     <h3 class="article-title">{{ article.title }}</h3>
@@ -71,11 +75,11 @@ function formatDate(date: string) {
 .article-link {
     display: block;
     padding: var(--spacing-lg);
-    background: transparent;
+    background: var(--color-bg);
     backdrop-filter: blur(5px);
     border-radius: var(--radius-lg);
-    border: 1px solid var(--color-border);
-    transition: all var(--transition-base);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: box-shadow var(--transition-base), transform var(--transition-base);
     text-decoration: none;
     color: inherit;
     position: relative;
@@ -101,8 +105,8 @@ function formatDate(date: string) {
 }
 
 .article-link:hover {
-    border-color: var(--color-text-light);
-    box-shadow: var(--shadow-ink);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transform: translateY(-1px);
 }
 
 .article-content {
@@ -165,7 +169,6 @@ function formatDate(date: string) {
     justify-content: space-between;
     align-items: center;
     padding-top: var(--spacing-sm);
-    border-top: 1px solid var(--color-bg-secondary);
 }
 
 .article-tags {
@@ -177,24 +180,18 @@ function formatDate(date: string) {
 .article-tags .tag {
     font-size: var(--font-size-xs);
     color: var(--color-text-light);
-    padding: 0.25rem var(--spacing-sm);
-    background: transparent;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm);
-    transition: all var(--transition-fast);
-    letter-spacing: 0.03em;
-}
-
-.article-link:hover .article-tags .tag {
+    padding: 0.15rem 0.5rem;
     background: var(--color-bg-secondary);
-    border-color: var(--color-text-lighter);
+    border-radius: var(--radius-sm);
+    transition: color var(--transition-fast), background-color var(--transition-fast);
+    letter-spacing: 0.03em;
+    font-weight: var(--font-weight-medium);
 }
 
 .read-more {
     font-size: var(--font-size-xs);
     color: var(--color-text-lighter);
     font-weight: var(--font-weight-normal);
-    transition: all var(--transition-fast);
     letter-spacing: 0.05em;
 }
 
@@ -206,14 +203,15 @@ function formatDate(date: string) {
 @media (max-width: 768px) {
     .article-link {
         padding: var(--spacing-md);
+        backdrop-filter: none;
     }
 
     .article-title {
-        font-size: var(--font-size-base);
+        font-size: var(--font-size-lg);
     }
 
     .article-excerpt {
-        font-size: 0.85rem;
+        font-size: var(--font-size-sm);
     }
 
     .article-footer {
@@ -247,17 +245,12 @@ function formatDate(date: string) {
 }
 
 @media (max-width: 480px) {
-    .article-link {
-        padding: var(--spacing-md);
-    }
-
     .article-header {
-        flex-direction: row;
         gap: var(--spacing-sm);
     }
 
     .article-title {
-        font-size: var(--font-size-sm);
+        font-size: calc(var(--font-size-base) - 0.05rem);
         line-height: 1.4;
         min-width: 0;
         display: -webkit-box;
@@ -267,22 +260,18 @@ function formatDate(date: string) {
         overflow: hidden;
     }
 
-    .article-date {
-        font-size: 0.7rem;
-    }
-
     .article-excerpt {
-        font-size: 0.8rem;
+        font-size: calc(var(--font-size-sm) - 0.025rem);
         line-height: 1.6;
     }
 
     .article-tags .tag {
-        font-size: 0.65rem;
+        font-size: var(--font-size-xxs);
         padding: 2px var(--spacing-xs);
     }
 
     .read-more {
-        font-size: 0.65rem;
+        font-size: var(--font-size-xxs);
     }
 }
 </style>
