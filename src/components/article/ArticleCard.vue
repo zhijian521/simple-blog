@@ -77,7 +77,7 @@ function formatDate(date: string) {
     padding: var(--spacing-lg);
     background: var(--color-bg);
     backdrop-filter: blur(5px);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-xl);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     transition: box-shadow var(--transition-base), transform var(--transition-base);
     text-decoration: none;
@@ -180,7 +180,7 @@ function formatDate(date: string) {
 .article-tags .tag {
     font-size: var(--font-size-xs);
     color: var(--color-text-light);
-    padding: 0.15rem 0.5rem;
+    padding: var(--spacing-tag);
     background: var(--color-bg-secondary);
     border-radius: var(--radius-sm);
     transition: color var(--transition-fast), background-color var(--transition-fast);
@@ -202,12 +202,8 @@ function formatDate(date: string) {
 /* 移动端响应式 */
 @media (max-width: 768px) {
     .article-link {
-        padding: var(--spacing-md);
+        padding: var(--spacing-mobile);
         backdrop-filter: none;
-    }
-
-    .article-title {
-        font-size: var(--font-size-lg);
     }
 
     .article-excerpt {
@@ -251,13 +247,6 @@ function formatDate(date: string) {
 
     .article-title {
         font-size: calc(var(--font-size-base) - 0.05rem);
-        line-height: 1.4;
-        min-width: 0;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
     }
 
     .article-excerpt {

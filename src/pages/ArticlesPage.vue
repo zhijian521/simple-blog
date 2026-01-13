@@ -69,7 +69,7 @@ const articles = getArticles() as Article[]
 /* 移动端响应式 */
 @media (max-width: 768px) {
     .articles-page {
-        padding: var(--spacing-xl) var(--spacing-lg);
+        padding: var(--spacing-2xl) var(--spacing-mobile);
     }
 
     .articles-page::before {
@@ -92,7 +92,7 @@ const articles = getArticles() as Article[]
 
 @media (max-width: 480px) {
     .articles-page {
-        padding: var(--spacing-lg) var(--spacing-md);
+        padding: var(--spacing-xl) var(--spacing-mobile);
     }
 
     .page-title {

@@ -27,6 +27,7 @@ body {
   background: var(--color-bg-page);
   background-image: var(--bg-grid);
   background-size: var(--bg-grid-size);
+  background-attachment: fixed;
   color: var(--color-text);
   line-height: 1.6;
   overflow-x: hidden;

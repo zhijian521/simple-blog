@@ -13,6 +13,7 @@ export interface Article {
     excerpt: string
     content: string
     author?: string
+    category?: string
     tags?: string[]
 }
 

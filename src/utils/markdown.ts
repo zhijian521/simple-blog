@@ -123,6 +123,7 @@ function parseArticle(markdownContent: string, slug: string): Article {
             excerpt: attributes.excerpt || attributes.description || extractExcerpt(body),
             content: md.render(body),
             author: attributes.author,
+            category: attributes.category,
             tags: attributes.tags || [],
         }
     } catch (error) {
