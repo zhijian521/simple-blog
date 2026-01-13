@@ -25,9 +25,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch, computed } from 'vue'
+import { ref, onMounted, onUnmounted, watch, computed, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
-import { getArticleById } from '@/utils/markdown'
+import { getArticleById, highlightCodeBlocks, disposeHighlighter } from '@/utils/markdown'
 import { useArticleSeo } from '@/utils/seo'
 import { sanitizeHtmlWithSsr } from '@/utils/dompurify'
 import ArticleMeta from '@/components/article/ArticleMeta.vue'
@@ -40,6 +40,7 @@ import type { Article } from '@/types/article'
 const route = useRoute()
 const article = ref<Article | null>(null)
 const loading = ref(true)
+const highlighting = ref(false)
 
 // SEO 优化：动态生成页面元数据和结构化数据，提升搜索引擎收录效果
 useArticleSeo(article)
@@ -49,6 +50,24 @@ const sanitizedContent = computed(() => {
     if (!article.value) return ''
     return sanitizeHtmlWithSsr(article.value.content)
 })
+
+// 高亮代码块
+const highlightCode = async () => {
+    if (highlighting.value) return
+
+    highlighting.value = true
+    try {
+        await nextTick()
+        const container = document.querySelector('.article-body')
+        if (container) {
+            await highlightCodeBlocks(container as HTMLElement)
+        }
+    } catch (error) {
+        console.error('代码高亮失败:', error)
+    } finally {
+        highlighting.value = false
+    }
+}
 
 const loadArticle = (id: string) => {
     if (!id || typeof id !== 'string' || id.length === 0) {
@@ -71,15 +90,25 @@ loadArticle(validatedId)
 onMounted(() => {
     // 客户端导航时重新加载数据
     loadArticle(validatedId)
+    // 高亮代码块
+    highlightCode()
+})
+
+onUnmounted(() => {
+    // 清理 Shiki 高亮器实例，释放资源
+    disposeHighlighter()
 })
 
 watch(
     () => route.params.id,
-    newId => {
+    async newId => {
         if (newId) {
             const validatedId =
                 typeof newId === 'string' ? newId : Array.isArray(newId) ? newId[0] : ''
             loadArticle(validatedId)
+            // 等待 DOM 更新后高亮代码
+            await nextTick()
+            highlightCode()
         }
     }
 )
@@ -90,10 +119,6 @@ watch(
     max-width: var(--article-max-width);
     margin: 0 auto;
     padding: var(--spacing-xl) var(--spacing-lg);
-}
-
-.article-content {
-    /* 移除背景、边框和圆角，采用简洁的水墨风格 */
 }
 
 .article-header {
@@ -232,58 +257,18 @@ watch(
 
 /* 行内代码样式 */
 .article-body :deep(code) {
-    background: rgba(0, 0, 0, 0.04);
-    padding: var(--spacing-code-inline);
     border-radius: var(--radius-sm);
-    font-size: 0.875em;
+    font-size: var(--font-size-md);
     font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-    border: 1px solid rgba(0, 0, 0, 0.06);
     color: var(--color-text);
     word-wrap: break-word;
 }
 
 .article-body :deep(a code) {
     background: rgba(26, 26, 26, 0.08);
-    border-color: rgba(26, 26, 26, 0.12);
 }
 
-/* 代码块样式 */
-.article-body :deep(pre) {
-    background: var(--color-bg-page);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
-    padding: var(--spacing-md);
-    overflow-x: auto;
-    margin: var(--spacing-md) 0;
-    font-size: 0.875em;
-    line-height: 1.6;
-}
-
-.article-body :deep(pre::-webkit-scrollbar) {
-    height: 6px;
-}
-
-.article-body :deep(pre::-webkit-scrollbar-track) {
-    background: transparent;
-}
-
-.article-body :deep(pre::-webkit-scrollbar-thumb) {
-    background: var(--color-border);
-    border-radius: 3px;
-}
-
-.article-body :deep(pre::-webkit-scrollbar-thumb:hover) {
-    background: var(--color-text-lighter);
-}
-
-.article-body :deep(pre code) {
-    background: transparent;
-    padding: 0;
-    border-radius: 0;
-    border: none;
-    font-size: inherit;
-    color: inherit;
-}
+/* 代码块样式由全局 code-block.css 控制 */
 
 /* 图片样式 */
 .article-body :deep(img) {
@@ -383,11 +368,6 @@ watch(
 
     .article-body :deep(h3) {
         font-size: var(--font-size-lg);
-    }
-
-    .article-body :deep(pre) {
-        padding: var(--spacing-sm);
-        border-radius: var(--radius-sm);
     }
 
     .article-body :deep(table) {

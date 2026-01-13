@@ -10,3 +10,6 @@
 
 /* 通用样式（组件 + 工具类） */
 @import './common.css';
+
+/* 代码块样式 */
+@import './code-block.css';

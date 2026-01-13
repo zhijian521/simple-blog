@@ -33,9 +33,27 @@ const DOMPURIFY_CONFIG = {
         'img', // 图片
         // 分隔线
         'hr',
+        // 代码高亮需要（仅客户端）
+        'span', // 语法高亮标签
+        // 表格
+        'table',
+        'thead',
+        'tbody',
+        'tr',
+        'th',
+        'td',
     ],
-    ALLOWED_ATTR: ['href', 'title', 'src', 'alt', 'class'],
-    ALLOW_DATA_ATTR: false,
+    ALLOWED_ATTR: [
+        'href',
+        'title',
+        'src',
+        'alt',
+        'class',
+        'id',
+        'target',
+        'rel',
+    ],
+    ALLOW_DATA_ATTR: false, // 禁止 data-* 属性（安全考虑）
     // 禁止 JavaScript 协议链接
     ALLOWED_URI_REGEXP:
         /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp):|[^a-z]|[a-z+.-]+(?:[^a-z+.\-:]|$))/i,

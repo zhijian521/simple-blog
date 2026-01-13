@@ -1,4 +1,5 @@
 import type { Snowflake } from '@/types/snowflake'
+import type { Snowflake } from '@/types/snowflake'
 
 /**
  * 雪花动画配置

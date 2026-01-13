@@ -1,25 +1,98 @@
 import MarkdownIt from 'markdown-it'
 import fm from 'front-matter'
+import { createHighlighter, type Highlighter } from 'shiki'
 import type { Article, ArticleFrontMatter } from '../types/article'
 
-// 常量配置
+// ========== 常量配置 ==========
 const DEFAULT_EXCERPT_LENGTH = 200
 
+const SHIKI_THEME = 'github-light'
+
+// 常用语言列表（初始化时加载）
+const CORE_LANGUAGES = ['javascript', 'typescript', 'bash', 'json', 'html', 'css'] as const
+
+// 支持的所有语言（按需加载）
+const SUPPORTED_LANGUAGES = [
+    'bash',
+    'sh',
+    'javascript',
+    'typescript',
+    'js',
+    'ts',
+    'json',
+    'html',
+    'css',
+    'python',
+    'py',
+    'java',
+    'go',
+    'rust',
+    'markdown',
+    'md',
+    'yaml',
+    'toml',
+    'ini',
+    'xml',
+    'sql',
+    'dockerfile',
+    'plaintext',
+] as const
+
+// ========== Shiki 高亮器 ==========
+let highlighterInstance: Highlighter | null = null
+const loadedLanguages = new Set<string>()
+
 /**
- * Markdown 渲染器配置
- * - html: 允许 HTML 标签
- * - linkify: 自动转换 URL 为链接
- * - typographer: 启用印刷优化
+ * 初始化 Shiki 高亮器（懒加载）
  */
+export async function initHighlighter(): Promise<Highlighter> {
+    if (!highlighterInstance) {
+        highlighterInstance = await createHighlighter({
+            themes: [SHIKI_THEME],
+            langs: [...CORE_LANGUAGES],
+        })
+
+        // 记录已加载的语言
+        CORE_LANGUAGES.forEach(lang => loadedLanguages.add(lang))
+    }
+    return highlighterInstance
+}
+
+/**
+ * 按需加载语言
+ */
+async function loadLanguageIfNeeded(lang: string): Promise<void> {
+    if (!highlighterInstance) {
+        throw new Error('Highlighter not initialized')
+    }
+
+    // 检查是否支持该语言
+    if (!SUPPORTED_LANGUAGES.includes(lang as (typeof SUPPORTED_LANGUAGES)[number])) {
+        return
+    }
+
+    // 检查是否已加载
+    if (loadedLanguages.has(lang)) {
+        return
+    }
+
+    // 加载语言
+    await highlighterInstance.loadLanguage(lang)
+    loadedLanguages.add(lang)
+}
+
+// ========== Markdown 渲染器 ==========
 const md = new MarkdownIt({
     html: true,
     linkify: true,
     typographer: true,
+    highlight: (str, lang) => {
+        const language = lang || 'plaintext'
+        return `<pre><code class="language-${language}">${md.utils.escapeHtml(str)}</code></pre>`
+    },
 })
 
-/**
- * 文章数据缓存
- */
+// ========== 文章缓存 ==========
 interface ArticlesCache {
     bySlug: Map<string, Article>
     byId: Map<string, Article>
@@ -32,20 +105,64 @@ const articlesCache: ArticlesCache = {
     list: [],
 }
 
+// ========== 工具函数 ==========
+
 /**
  * 验证 slug 格式，防止路径遍历攻击
  */
 function validateSlug(slug: string): boolean {
-    // 检查是否包含路径遍历攻击字符
     const pathTraversalPatterns = ['../', './', '..\\']
-    const hasPathTraversal = pathTraversalPatterns.some(pattern => slug.includes(pattern))
-
-    if (hasPathTraversal) {
+    if (pathTraversalPatterns.some(pattern => slug.includes(pattern))) {
         console.error(`路径遍历攻击检测: ${slug}`)
         return false
     }
-
     return true
+}
+
+/**
+ * 从文件路径中提取文章 slug
+ */
+function extractSlug(filePath: string): string {
+    return filePath.replace(/^.*[/\\]blogs[/\\]/, '').replace(/\.md$/, '')
+}
+
+/**
+ * 提取文章摘要
+ */
+function extractExcerpt(content: string, maxLength = DEFAULT_EXCERPT_LENGTH): string {
+    const plainText = content.replace(/[#*`_[\]]/g, '').trim()
+    return plainText.slice(0, maxLength) + '...'
+}
+
+/**
+ * 解析 Markdown 文章内容
+ */
+function parseArticle(markdownContent: string, slug: string): Article {
+    const { attributes, body } = fm<ArticleFrontMatter>(markdownContent)
+
+    // 验证日期格式
+    let validDate = attributes.date
+    if (validDate && !Date.parse(validDate)) {
+        console.warn(`文章 "${slug}" 的日期格式无效: ${validDate}`)
+        validDate = undefined
+    }
+
+    // 验证 id 字段存在
+    if (!attributes.id) {
+        throw new Error(`文章 "${slug}" 缺少必需的 id 字段，请运行 npm run ensure-ids 生成 id`)
+    }
+
+    return {
+        id: attributes.id,
+        slug,
+        title: attributes.title || '无标题',
+        date: validDate || new Date().toISOString().split('T')[0],
+        excerpt: attributes.excerpt || attributes.description || extractExcerpt(body),
+        content: md.render(body),
+        author: attributes.author,
+        category: attributes.category,
+        tags: attributes.tags || [],
+    }
 }
 
 /**
@@ -62,7 +179,6 @@ function loadArticles(): void {
         Object.entries(markdownModules).forEach(([filePath, content]) => {
             try {
                 const slug = extractSlug(filePath)
-
                 if (!validateSlug(slug)) {
                     console.warn(`无效的 slug 格式: ${slug}，跳过...`)
                     return
@@ -89,59 +205,84 @@ function loadArticles(): void {
     }
 }
 
+// ========== 代码高亮函数 ==========
+
 /**
- * 从文件路径中提取文章 slug
+ * 检查代码块是否已经高亮
  */
-function extractSlug(filePath: string): string {
-    return filePath.replace(/^.*[/\\]blogs[/\\]/, '').replace(/\.md$/, '')
+function isAlreadyHighlighted(element: HTMLElement): boolean {
+    return element.closest('.shiki') !== null
 }
 
 /**
- * 解析 Markdown 文章内容
+ * 从 code 元素中提取语言
  */
-function parseArticle(markdownContent: string, slug: string): Article {
+function extractLanguage(element: HTMLElement): string {
+    const langClass = Array.from(element.classList).find(cls => cls.startsWith('language-'))
+    return langClass ? langClass.replace('language-', '') : 'plaintext'
+}
+
+/**
+ * 高亮单个代码元素
+ */
+async function highlightCodeElement(
+    codeElement: HTMLElement,
+    highlighter: Highlighter
+): Promise<void> {
+    const code = codeElement.textContent || ''
+    const lang = extractLanguage(codeElement)
+    const language = SUPPORTED_LANGUAGES.includes(lang as (typeof SUPPORTED_LANGUAGES)[number])
+        ? (lang as (typeof SUPPORTED_LANGUAGES)[number])
+        : 'plaintext'
+
     try {
-        const { attributes, body } = fm<ArticleFrontMatter>(markdownContent)
+        // 按需加载语言
+        await loadLanguageIfNeeded(language)
 
-        // 验证日期格式
-        let validDate = attributes.date
-        if (validDate && !Date.parse(validDate)) {
-            console.warn(`文章 "${slug}" 的日期格式无效: ${validDate}`)
-            validDate = undefined
-        }
+        const html = highlighter.codeToHtml(code, {
+            lang: language,
+            theme: SHIKI_THEME,
+        })
 
-        // 验证 id 字段存在
-        if (!attributes.id) {
-            throw new Error(`文章 "${slug}" 缺少必需的 id 字段，请运行 npm run ensure-ids 生成 id`)
-        }
+        const preElement = codeElement.parentElement as HTMLElement
+        if (!preElement) return
 
-        return {
-            id: attributes.id,
-            slug,
-            title: attributes.title || '无标题',
-            date: validDate || new Date().toISOString().split('T')[0],
-            excerpt: attributes.excerpt || attributes.description || extractExcerpt(body),
-            content: md.render(body),
-            author: attributes.author,
-            category: attributes.category,
-            tags: attributes.tags || [],
+        const temp = document.createElement('div')
+        temp.innerHTML = html
+        const highlightedPre = temp.firstChild as HTMLElement
+
+        if (highlightedPre) {
+            // 保留原始的 language class
+            const originalLangClass = Array.from(preElement.classList).find(cls =>
+                cls.startsWith('language-')
+            )
+            if (originalLangClass) {
+                highlightedPre.classList.add(originalLangClass)
+            }
+
+            preElement.replaceWith(highlightedPre)
         }
     } catch (error) {
-        console.error(`解析文章 "${slug}" 时出错:`, error)
-        throw error instanceof Error ? error : new Error(`解析文章 "${slug}" 失败`)
+        console.error('代码高亮失败:', error)
     }
 }
 
 /**
- * 提取文章摘要
+ * 高亮容器中的所有代码块
+ * 在文章详情页的 onMounted 钩子中调用此函数
  */
-function extractExcerpt(content: string, maxLength = DEFAULT_EXCERPT_LENGTH): string {
-    const plainText = content.replace(/[#*`_[\]]/g, '').trim()
-    return plainText.slice(0, maxLength) + '...'
+export async function highlightCodeBlocks(container: HTMLElement): Promise<void> {
+    const highlighter = await initHighlighter()
+    const codeElements = Array.from(container.querySelectorAll('pre > code'))
+
+    const highlightPromises = codeElements
+        .filter(element => !isAlreadyHighlighted(element as HTMLElement))
+        .map(element => highlightCodeElement(element as HTMLElement, highlighter))
+
+    await Promise.allSettled(highlightPromises)
 }
 
-// 初始化加载文章
-loadArticles()
+// ========== 导出的 API ==========
 
 /**
  * 获取所有文章列表
@@ -158,7 +299,6 @@ export function getArticleBySlug(slug: string): Article | null {
         console.error(`请求的 slug 格式无效: ${slug}`)
         return null
     }
-
     return articlesCache.bySlug.get(slug) || null
 }
 
@@ -175,3 +315,19 @@ export function getArticleById(id: string): Article | null {
 export function renderMarkdown(content: string): string {
     return md.render(content)
 }
+
+/**
+ * 清理 Shiki 高亮器实例
+ * 在应用卸载时调用，释放资源
+ */
+export function disposeHighlighter(): void {
+    if (highlighterInstance) {
+        // 注意：Shiki 的 Highlighter 实例不需要手动清理
+        // 这里我们只是清空引用，让 GC 可以回收
+        highlighterInstance = null
+        loadedLanguages.clear()
+    }
+}
+
+// ========== 初始化 ==========
+loadArticles()
