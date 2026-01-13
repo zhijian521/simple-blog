@@ -11,12 +11,14 @@
                 </div>
             </section>
         </div>
+        <LatestArticles />
         <GitActivityChart />
     </div>
 </template>
 
 <script setup lang="ts">
 import ViewArticleButton from '@/components/ui/ViewArticleButton.vue'
+import LatestArticles from '@/components/ui/LatestArticles.vue'
 import GitActivityChart from '@/components/ui/GitActivityChart.vue'
 import InkBackground from '@/components/effects/InkBackground.vue'
 import SnowfallEffect from '@/components/effects/SnowfallEffect.vue'
@@ -24,7 +26,7 @@ import SnowfallEffect from '@/components/effects/SnowfallEffect.vue'
 /**
  * 首页
  * 展示博客标题和导航，包含水滴涟漪和雪花飘落背景特效
- * 底部展示最近一个月的 Git 提交活动热力图
+ * 底部展示最新文章列表和 Git 提交活动热力图
  */
 </script>
 
@@ -42,7 +44,7 @@ import SnowfallEffect from '@/components/effects/SnowfallEffect.vue'
     max-width: var(--container-max-width);
     padding: 0 var(--spacing-lg);
     /* 向上偏移，让内容位于中间偏上的位置 */
-    margin-top: -15vh;
+    margin-top: -20vh;
 }
 
 .hero {
