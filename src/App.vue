@@ -44,13 +44,12 @@ const showLoader = () => {
  * 隐藏加载动画
  */
 const hideLoader = () => {
+    // 立即设置 isLoading 为 false，让页面内容开始渲染
+    isLoading.value = false
+    // PageLoader 的淡出动画会自动处理
     pageLoader.value?.hide()
-    // 等待加载动画淡出后再显示页面
-    setTimeout(() => {
-        isLoading.value = false
-        // 恢复正常的滚动行为
-        document.documentElement.style.overflowY = ''
-    }, 500)
+    // 恢复正常的滚动行为
+    document.documentElement.style.overflowY = ''
 }
 
 // 设置路由守卫
@@ -67,11 +66,12 @@ router.beforeEach((to, from, next) => {
 })
 
 router.afterEach(() => {
-    // 等待 DOM 更新
+    // 等待 DOM 更新，然后等待一小段时间再隐藏加载器
     nextTick(() => {
-        // 再等待一小段时间确保页面完全渲染
         setTimeout(() => {
-            hideLoader()
+            isLoading.value = false
+            pageLoader.value?.hide()
+            document.documentElement.style.overflowY = ''
         }, 200)
     })
 })
@@ -79,11 +79,13 @@ router.afterEach(() => {
 // 组件挂载时显示加载动画（处理页面刷新）
 onMounted(() => {
     showLoader()
-    // 页面刷新时隐藏加载动画
+    // 页面刷新时等待更长时间再隐藏加载器
     nextTick(() => {
         setTimeout(() => {
-            hideLoader()
-        }, 500)
+            isLoading.value = false
+            pageLoader.value?.hide()
+            document.documentElement.style.overflowY = ''
+        }, 200)
     })
 })
 

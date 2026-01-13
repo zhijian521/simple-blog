@@ -1,26 +1,3 @@
-<!--
-  PageLoader - 页面加载动画组件
-
-  用途：
-  - 全局页面加载动画，在路由切换时显示
-  - 提供流畅的页面切换体验
-
-  功能：
-  - 简洁优雅的横线扫过动画
-  - 项目名称展示
-  - 背景网格效果
-  - 最小展示时间 0.5s
-  - 黑白灰色调，符合项目风格
-
-  使用：
-  - 在 App.vue 中全局使用
-  - 监听路由变化自动显示/隐藏
-
-  设计参考：
-  - 来自 React 项目的加载动画设计
-  - 5条横线扫过效果
-  - 渐变网格背景
--->
 <template>
     <Transition name="loader-fade">
         <div v-if="visible" class="page-loader">
@@ -46,20 +23,14 @@ const visible = ref(false)
 let timer: number | null = null
 let startTime: number = 0
 
-/**
- * 显示加载动画
- */
 const show = () => {
     startTime = Date.now()
     visible.value = true
 }
 
-/**
- * 隐藏加载动画（确保最小展示时间）
- */
 const hide = () => {
     const elapsed = Date.now() - startTime
-    const remaining = Math.max(0, 500 - elapsed)
+    const remaining = Math.max(0, 200 - elapsed)
 
     timer = window.setTimeout(() => {
         visible.value = false
@@ -67,9 +38,14 @@ const hide = () => {
     }, remaining)
 }
 
-/**
- * 强制隐藏（用于快速页面切换）
- */
+const fadeOut = () => {
+    if (timer) {
+        clearTimeout(timer)
+        timer = null
+    }
+    visible.value = false
+}
+
 const forceHide = () => {
     if (timer) {
         clearTimeout(timer)
@@ -78,10 +54,10 @@ const forceHide = () => {
     visible.value = false
 }
 
-// 暴露方法供父组件调用
 defineExpose({
     show,
     hide,
+    fadeOut,
     forceHide,
 })
 </script>
