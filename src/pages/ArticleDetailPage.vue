@@ -16,10 +16,6 @@
 
             <!-- eslint-disable-next-line vue/no-v-html -->
             <div class="article-body" v-html="sanitizedContent"></div>
-
-            <div class="article-footer">
-                <ViewArticleButton to="/articles" text="返回列表" />
-            </div>
         </article>
     </div>
 </template>
@@ -32,7 +28,6 @@ import { useArticleSeo } from '@/utils/seo'
 import { sanitizeHtmlWithSsr } from '@/utils/dompurify'
 import ArticleMeta from '@/components/article/ArticleMeta.vue'
 import ArticleBreadcrumb from '@/components/article/ArticleBreadcrumb.vue'
-import ViewArticleButton from '@/components/ui/ViewArticleButton.vue'
 import LoadingState from '@/components/ui/LoadingState.vue'
 import NotFoundPage from '@/pages/NotFoundPage.vue'
 import type { Article } from '@/types/article'
@@ -258,7 +253,7 @@ watch(
 /* 行内代码样式 */
 .article-body :deep(code) {
     border-radius: var(--radius-sm);
-    font-size: var(--font-size-md);
+    font-size: var(--font-size-sm);
     font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
     color: var(--color-text);
     word-wrap: break-word;
@@ -340,12 +335,6 @@ watch(
 .article-body :deep(s) {
     color: var(--color-text-lighter);
     text-decoration: line-through;
-}
-
-.article-footer {
-    margin-top: var(--spacing-2xl);
-    padding-top: var(--spacing-lg);
-    border-top: 1px solid var(--color-bg-secondary);
 }
 
 /* 移动端响应式 */

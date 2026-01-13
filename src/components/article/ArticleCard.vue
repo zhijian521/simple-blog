@@ -79,7 +79,9 @@ function formatDate(date: string) {
     backdrop-filter: blur(5px);
     border-radius: var(--radius-xl);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    transition: box-shadow var(--transition-base), transform var(--transition-base);
+    transition:
+        box-shadow var(--transition-base),
+        transform var(--transition-base);
     text-decoration: none;
     color: inherit;
     position: relative;
@@ -183,7 +185,9 @@ function formatDate(date: string) {
     padding: var(--spacing-tag);
     background: var(--color-bg-secondary);
     border-radius: var(--radius-sm);
-    transition: color var(--transition-fast), background-color var(--transition-fast);
+    transition:
+        color var(--transition-fast),
+        background-color var(--transition-fast);
     letter-spacing: 0.03em;
     font-weight: var(--font-weight-medium);
 }
@@ -202,7 +206,7 @@ function formatDate(date: string) {
 /* 移动端响应式 */
 @media (max-width: 768px) {
     .article-link {
-        padding: var(--spacing-mobile);
+        padding: var(--spacing-md);
         backdrop-filter: none;
     }
 
