@@ -59,17 +59,22 @@ const formattedDate = (date: string): string => {
     align-items: center;
     justify-content: space-between;
     padding: 11px var(--spacing-md);
-    background: transparent;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.85) 0%,
+        rgba(255, 255, 255, 0.75) 100%
+    );
     backdrop-filter: blur(12px) saturate(180%);
     -webkit-backdrop-filter: blur(12px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.5);
     border-radius: 11px;
     text-decoration: none;
-    transition: border-color 0.3s ease, backdrop-filter 0.3s ease, box-shadow 0.3s ease, background 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow:
-        0 2px 10px rgba(0, 0, 0, 0.05),
-        0 4px 20px rgba(0, 0, 0, 0.03);
+        0 1px 6px rgba(0, 0, 0, 0.02),
+        0 2px 12px rgba(0, 0, 0, 0.015);
     overflow: hidden;
+    transform: translateZ(0);
 }
 
 .article-item::before {
@@ -78,21 +83,26 @@ const formattedDate = (date: string): string => {
     inset: 0;
     background: linear-gradient(
         135deg,
-        rgba(255, 255, 255, 0.15) 0%,
-        rgba(255, 255, 255, 0.05) 100%
+        rgba(255, 255, 255, 0.12) 0%,
+        rgba(255, 255, 255, 0.04) 100%
     );
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     pointer-events: none;
 }
 
 .article-item:hover {
-    border-color: rgba(255, 255, 255, 0.4);
-    backdrop-filter: blur(16px) saturate(190%);
-    -webkit-backdrop-filter: blur(16px) saturate(190%);
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.92) 0%,
+        rgba(255, 255, 255, 0.82) 100%
+    );
+    border-color: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(14px) saturate(185%);
+    -webkit-backdrop-filter: blur(14px) saturate(185%);
     box-shadow:
-        0 4px 16px rgba(0, 0, 0, 0.08),
-        0 8px 32px rgba(0, 0, 0, 0.05);
+        0 3px 12px rgba(0, 0, 0, 0.035),
+        0 6px 24px rgba(0, 0, 0, 0.02);
 }
 
 .article-item:hover::before {
@@ -148,7 +158,7 @@ const formattedDate = (date: string): string => {
     }
 
     .article-item {
-        padding: 9px var(--spacing-sm);
+        padding: 12px var(--spacing-md);
         backdrop-filter: blur(10px) saturate(170%);
         -webkit-backdrop-filter: blur(10px) saturate(170%);
         border-radius: 10px;
@@ -166,19 +176,20 @@ const formattedDate = (date: string): string => {
 
 @media (max-width: 640px) {
     .latest-articles {
-        padding: var(--spacing-xs) var(--spacing-2xl);
+        padding: var(--spacing-sm) var(--spacing-2xl);
     }
 
     .articles-list {
-        gap: 7px;
+        gap: 8px;
     }
 
     .article-item {
-        padding: 8px var(--spacing-sm);
+        padding: 11px var(--spacing-md);
     }
 
     .article-title {
-        font-size: 0.75rem;
+        font-size: var(--font-size-xs);
+        margin-right: var(--spacing-sm);
     }
 
     .article-date {
