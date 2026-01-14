@@ -4,15 +4,13 @@
             <h1 class="page-title">文章列表</h1>
         </header>
 
-        <EmptyState
-            v-if="articles.length === 0"
-            title="暂无文章"
-            message="还没有发布任何文章"
-        />
+        <EmptyState v-if="articles.length === 0" title="暂无文章" message="还没有发布任何文章" />
 
         <div v-else class="articles-list">
             <ArticleCard v-for="article in articles" :key="article.id" :article="article" />
         </div>
+
+        <FloatingActionButtons />
     </div>
 </template>
 
@@ -20,9 +18,9 @@
 import { getArticles } from '@/utils/markdown'
 import ArticleCard from '@/components/article/ArticleCard.vue'
 import EmptyState from '@/components/ui/EmptyState.vue'
+import FloatingActionButtons from '@/components/ui/FloatingActionButtons.vue'
 import type { Article } from '@/types/article'
 
-// 同步加载文章数据（从内存缓存读取，无需 loading 状态）
 const articles = getArticles() as Article[]
 </script>
 
