@@ -126,7 +126,7 @@ onMounted(() => {
 .article-title {
     position: relative;
     font-size: var(--font-size-sm);
-    font-weight: 500;
+    font-weight: var(--font-weight-medium);
     color: var(--color-text-light);
     flex: 1;
     overflow: hidden;
