@@ -206,7 +206,8 @@ onMounted(() => {
     }
 
     .article-title {
-        font-size: var(--font-size-xs);
+        font-size: var(--font-size-sm);
+        color: var(--color-text-light);
         margin-right: var(--spacing-sm);
     }
 
@@ -229,12 +230,13 @@ onMounted(() => {
     }
 
     .article-title {
-        font-size: var(--font-size-xs);
+        font-size: var(--font-size-sm);
+        color: var(--color-text-light);
         margin-right: var(--spacing-sm);
     }
 
     .article-date {
-        font-size: 9px;
+        font-size: 11px;
     }
 }
 </style>

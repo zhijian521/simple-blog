@@ -2,6 +2,7 @@
     <div class="home-page">
         <InkBackground />
         <SnowfallEffect />
+        <SearchButton @open="showSearch = true" />
         <div class="home-content">
             <section class="hero">
                 <h1 class="hero-title">{{ SITE_CONFIG.title }}</h1>
@@ -13,16 +14,22 @@
         </div>
         <LatestArticles />
         <GitActivityChart />
+        <SearchModal :visible="showSearch" @close="showSearch = false" />
     </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import ViewArticleButton from '@/components/ui/ViewArticleButton.vue'
 import LatestArticles from '@/components/ui/LatestArticles.vue'
 import GitActivityChart from '@/components/ui/GitActivityChart.vue'
+import SearchButton from '@/components/ui/SearchButton.vue'
+import SearchModal from '@/components/ui/SearchModal.vue'
 import InkBackground from '@/components/effects/InkBackground.vue'
 import SnowfallEffect from '@/components/effects/SnowfallEffect.vue'
 import { SITE_CONFIG } from '@/constants'
+
+const showSearch = ref(false)
 </script>
 
 <style scoped>

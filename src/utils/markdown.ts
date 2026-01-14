@@ -170,7 +170,7 @@ function parseArticle(markdownContent: string, slug: string): Article {
  */
 function loadArticles(): void {
     try {
-        const markdownModules = import.meta.glob('../../blogs/**/*.md', {
+        const markdownModules = import.meta.glob('/blogs/**/*.md', {
             query: '?raw',
             import: 'default',
             eager: true,
