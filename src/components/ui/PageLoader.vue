@@ -1,19 +1,17 @@
 <template>
-    <Transition name="loader-fade">
-        <div v-if="visible" class="page-loader">
-            <div class="page-loader-background"></div>
-            <div class="page-loader-content">
-                <p class="page-loader-text">耶温博客</p>
-                <div class="page-loader-lines">
-                    <span class="page-loader-line"></span>
-                    <span class="page-loader-line"></span>
-                    <span class="page-loader-line"></span>
-                    <span class="page-loader-line"></span>
-                    <span class="page-loader-line"></span>
-                </div>
+    <div v-if="visible" class="page-loader">
+        <div class="page-loader-background"></div>
+        <div class="page-loader-content">
+            <p class="page-loader-text">耶温博客</p>
+            <div class="page-loader-lines">
+                <span class="page-loader-line"></span>
+                <span class="page-loader-line"></span>
+                <span class="page-loader-line"></span>
+                <span class="page-loader-line"></span>
+                <span class="page-loader-line"></span>
             </div>
         </div>
-    </Transition>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -30,7 +28,7 @@ const show = () => {
 
 const hide = () => {
     const elapsed = Date.now() - startTime
-    const remaining = Math.max(0, 200 - elapsed)
+    const remaining = Math.max(0, 100 - elapsed)
 
     timer = window.setTimeout(() => {
         visible.value = false
@@ -170,17 +168,6 @@ defineExpose({
         opacity: 0.8;
         transform: scaleX(1);
     }
-}
-
-/* 淡入淡出动画 */
-.loader-fade-enter-active,
-.loader-fade-leave-active {
-    transition: opacity 0.5s ease-in-out;
-}
-
-.loader-fade-enter-from,
-.loader-fade-leave-to {
-    opacity: 0;
 }
 
 /* 移动端响应式 */

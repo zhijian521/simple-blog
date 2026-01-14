@@ -40,17 +40,6 @@ const showLoader = () => {
     document.documentElement.style.overflowY = 'scroll'
 }
 
-/**
- * 隐藏加载动画
- */
-const hideLoader = () => {
-    // 立即设置 isLoading 为 false，让页面内容开始渲染
-    isLoading.value = false
-    // PageLoader 的淡出动画会自动处理
-    pageLoader.value?.hide()
-    // 恢复正常的滚动行为
-    document.documentElement.style.overflowY = ''
-}
 
 // 设置路由守卫
 router.beforeEach((to, from, next) => {
