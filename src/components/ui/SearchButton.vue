@@ -2,7 +2,7 @@
   SearchButton - 搜索按钮组件
 
   位于首页右上角，点击打开搜索模态框
-  液态透明玻璃效果，支持快捷键 Cmd/Ctrl + K
+  液态透明玻璃效果，支持快捷键 Cmd/Ctrl + K 或 Q
 -->
 <template>
     <button
@@ -32,7 +32,7 @@ const isMac = computed(() => {
 })
 
 const shortcutHint = computed(() => {
-    return isMac.value ? '快捷键：⌘K' : '快捷键：Ctrl + K'
+    return isMac.value ? '快捷键：⌘K 或 Q' : '快捷键：Ctrl + K 或 Q'
 })
 
 const openSearch = () => {
@@ -41,9 +41,25 @@ const openSearch = () => {
 
 // 监听快捷键
 const handleKeydown = (e: KeyboardEvent) => {
+    // Cmd/Ctrl + K 快捷键
     if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault()
         openSearch()
+        return
+    }
+
+    // Q 快捷键（单独按下，不在输入框中）
+    if (e.key === 'q' || e.key === 'Q') {
+        // 检查是否在输入框、textarea 或可编辑元素中
+        const target = e.target as HTMLElement
+        const isInputFocused = target.tagName === 'INPUT' ||
+                             target.tagName === 'TEXTAREA' ||
+                             target.isContentEditable
+
+        if (!isInputFocused) {
+            e.preventDefault()
+            openSearch()
+        }
     }
 }
 
