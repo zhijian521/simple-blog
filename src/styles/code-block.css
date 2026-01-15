@@ -5,34 +5,34 @@
 
 /* ========== Shiki 代码块容器 ========== */
 pre.shiki {
-    position: relative;
-    margin: var(--spacing-md) 0;
-    border-radius: var(--radius-sm);
-    overflow: hidden;
-    overflow-x: auto;
-    line-height: 1.6;
-    font-size: var(--font-size-base);
+  position: relative;
+  margin: var(--spacing-md) 0;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  overflow-x: auto;
+  line-height: 1.6;
+  font-size: var(--font-size-base);
 }
 
 /* ========== 代码块内部样式 ========== */
 pre.shiki code {
-    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
 }
 
 /* ========== 滚动条样式 ========== */
 pre.shiki::-webkit-scrollbar {
-    height: 6px;
+  height: 6px;
 }
 
 pre.shiki::-webkit-scrollbar-track {
-    background: transparent;
+  background: transparent;
 }
 
 pre.shiki::-webkit-scrollbar-thumb {
-    background: var(--color-border);
-    border-radius: 3px;
+  background: var(--color-border);
+  border-radius: 3px;
 }
 
 pre.shiki::-webkit-scrollbar-thumb:hover {
-    background: var(--color-text-lighter);
+  background: var(--color-text-lighter);
 }

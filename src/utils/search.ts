@@ -18,19 +18,13 @@ export function searchArticles(query: string, articles: Article[]): Article[] {
         const tagsLower = article.tags.map(tag => tag.toLowerCase())
 
         // 搜索标题
-        const titleMatch = keywords.some(keyword =>
-            titleLower.includes(keyword)
-        )
+        const titleMatch = keywords.some(keyword => titleLower.includes(keyword))
 
         // 搜索标签
-        const tagsMatch = keywords.some(keyword =>
-            tagsLower.some(tag => tag.includes(keyword))
-        )
+        const tagsMatch = keywords.some(keyword => tagsLower.some(tag => tag.includes(keyword)))
 
         // 搜索简介
-        const excerptMatch = keywords.some(keyword =>
-            excerptLower.includes(keyword)
-        )
+        const excerptMatch = keywords.some(keyword => excerptLower.includes(keyword))
 
         return titleMatch || tagsMatch || excerptMatch
     })

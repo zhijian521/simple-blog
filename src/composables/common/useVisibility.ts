@@ -7,10 +7,7 @@
  * @param onHidden - 页面变为不可见时的回调
  * @returns 清理函数
  */
-export function useVisibilityChange(
-    onVisible: () => void,
-    onHidden: () => void
-): () => void {
+export function useVisibilityChange(onVisible: () => void, onHidden: () => void): () => void {
     const handleVisibilityChange = () => {
         if (document.visibilityState === 'visible') {
             onVisible()

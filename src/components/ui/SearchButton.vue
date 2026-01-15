@@ -5,15 +5,17 @@
   液态透明玻璃效果，支持快捷键 Cmd/Ctrl + K 或 Q
 -->
 <template>
-    <button
-        class="search-button"
-        @click="openSearch"
-        :title="shortcutHint"
-        aria-label="搜索文章"
-    >
-        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"/>
-            <path d="M21 21l-4.35-4.35"/>
+    <button class="search-button" :title="shortcutHint" aria-label="搜索文章" @click="openSearch">
+        <svg
+            class="search-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+        >
+            <circle cx="11" cy="11" r="8" />
+            <path d="M21 21l-4.35-4.35" />
         </svg>
     </button>
 </template>
@@ -52,9 +54,8 @@ const handleKeydown = (e: KeyboardEvent) => {
     if (e.key === 'q' || e.key === 'Q') {
         // 检查是否在输入框、textarea 或可编辑元素中
         const target = e.target as HTMLElement
-        const isInputFocused = target.tagName === 'INPUT' ||
-                             target.tagName === 'TEXTAREA' ||
-                             target.isContentEditable
+        const isInputFocused =
+            target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable
 
         if (!isInputFocused) {
             e.preventDefault()

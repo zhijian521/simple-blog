@@ -43,16 +43,7 @@ const DOMPURIFY_CONFIG = {
         'th',
         'td',
     ],
-    ALLOWED_ATTR: [
-        'href',
-        'title',
-        'src',
-        'alt',
-        'class',
-        'id',
-        'target',
-        'rel',
-    ],
+    ALLOWED_ATTR: ['href', 'title', 'src', 'alt', 'class', 'id', 'target', 'rel'],
     ALLOW_DATA_ATTR: false, // 禁止 data-* 属性（安全考虑）
     // 禁止 JavaScript 协议链接
     ALLOWED_URI_REGEXP:

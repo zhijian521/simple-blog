@@ -32,8 +32,8 @@
                     <button
                         v-if="searchQuery"
                         class="clear-button"
-                        @click="clearSearch"
                         aria-label="清除搜索"
+                        @click="clearSearch"
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"

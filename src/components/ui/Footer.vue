@@ -76,7 +76,7 @@ const currentYear = new Date().getFullYear()
 
 @media (max-width: 768px) {
     .site-footer {
-        padding: var(--spacing-md) var(--spacing-md);
+        padding: var(--spacing-sm) var(--spacing-md);
     }
 
     .site-footer-copyright {
