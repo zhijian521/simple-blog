@@ -12,20 +12,20 @@ export interface DockItem {
 }
 
 // 创建 Dock 配置工厂函数
-export function createDockItems(searchAction: () => void) {
+export function createDockItems(searchAction: () => void, listAction: () => void) {
     return {
         // 文章列表页 Dock 配置
         articleList: [
             { id: 'home', icon: HomeIcon, to: '/' },
             { id: 'search', icon: SearchIcon, action: searchAction },
-            { id: 'list', icon: GridIcon, to: '/articles' },
+            { id: 'list', icon: GridIcon, action: listAction },
         ] as DockItem[],
 
         // 文章详情页 Dock 配置
         articleDetail: [
             { id: 'home', icon: HomeIcon, to: '/' },
             { id: 'search', icon: SearchIcon, action: searchAction },
-            { id: 'list', icon: GridIcon, to: '/articles' },
+            { id: 'list', icon: GridIcon, action: listAction },
             { id: 'toc', icon: ListIcon },
         ] as DockItem[],
     }

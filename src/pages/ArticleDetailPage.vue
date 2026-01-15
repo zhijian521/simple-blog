@@ -23,6 +23,9 @@
 
         <!-- 搜索模态框 -->
         <SearchModal v-if="!loading && article" :visible="showSearch" @close="showSearch = false" />
+
+        <!-- 文档树模态框 -->
+        <DocumentTreeModal v-if="!loading && article" :visible="showDocumentTree" @close="showDocumentTree = false" />
     </div>
 </template>
 
@@ -38,6 +41,7 @@ import LoadingState from '@/components/ui/LoadingState.vue'
 import NotFoundPage from '@/pages/NotFoundPage.vue'
 import Dock from '@/components/ui/Dock.vue'
 import SearchModal from '@/components/ui/SearchModal.vue'
+import DocumentTreeModal from '@/components/ui/DocumentTreeModal.vue'
 import { createDockItems } from '@/constants/dock'
 import type { Article } from '@/types/article'
 
@@ -46,11 +50,17 @@ const article = ref<Article | null>(null)
 const loading = ref(true)
 const highlighting = ref(false)
 const showSearch = ref(false)
+const showDocumentTree = ref(false)
 
-// 创建 Dock 配置，传入搜索动作
-const dockItems = createDockItems(() => {
-    showSearch.value = true
-}).articleDetail
+// 创建 Dock 配置，传入搜索和列表动作
+const dockItems = createDockItems(
+    () => {
+        showSearch.value = true
+    },
+    () => {
+        showDocumentTree.value = true
+    }
+).articleDetail
 
 // SEO 优化：动态生成页面元数据和结构化数据，提升搜索引擎收录效果
 useArticleSeo(article)

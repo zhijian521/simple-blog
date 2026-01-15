@@ -1,154 +1,193 @@
 <div align="center">
 
-# ✨ Simple Blog
+# ✨ 耶温博客
 
-**A minimal, elegant static blog system built with modern web technologies**
+**简约优雅的静态博客系统，记录思考，分享知识**
 
 [![Vue](https://img.shields.io/badge/Vue-3.4-42b883?logo=vue.js&logoColor=white)](https://vuejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-3178c6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Vite-5.0-646cff?logo=vite&logoColor=white)](https://vitejs.dev/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-[![demo](https://img.shields.io/badge/demo-online-orange.svg)](https://your-demo-url.com)
-[![npm](https://img.shields.io/npm/v/simple-blog)](https://www.npmjs.com/package/simple-blog)
+[![demo](https://img.shields.io/badge/博客-在线访问-orange.svg)](https://blog.yuwb.cn)
 
 </div>
 
 ---
 
-## 📖 Overview
+## 📖 简介
 
-Simple Blog is a lightweight, performant static blog system that prioritizes simplicity and elegance. Built with Vue 3 and Vite, it offers a modern development experience with instant hot module replacement (HMR) and optimized production builds.
+耶温博客是一个轻量级、高性能的静态博客系统，采用 Vue 3 和 Vite 构建，提供现代化的开发体验和优化的生产构建。
 
-**Perfect for**: Personal blogs, technical writing, documentation sites, and anyone who values content over complexity.
-
----
-
-## ✨ Features
-
-- 🚀 **Blazing Fast** - Powered by Vite with instant HMR and optimized builds
-- 📝 **Markdown Support** - Write posts in Markdown with front-matter metadata
-- 🎨 **Minimal Design** - Clean, distraction-free reading experience
-- 📱 **Fully Responsive** - Perfect display on all devices
-- 🔒 **Secure by Default** - DOMPurify sanitization prevents XSS attacks
-- 🎯 **Type-Safe** - Built with TypeScript for better development experience
-- 🌙 **Theme System** - CSS variables for easy customization
-- ⚡ **Zero Config** - Works out of the box, minimal setup required
+**适用场景**：个人博客、技术写作、文档站点、以及所有重视内容而非复杂性的场景。
 
 ---
 
-## 🎯 Tech Stack
+## ✨ 特性
 
-| Technology                                                                      | Version | Purpose               |
-| :------------------------------------------------------------------------------ | :------ | :-------------------- |
-| ![Vue](https://img.shields.io/badge/-Vue-42b883?logo=vue.js)                    | 3.4+    | Progressive Framework |
-| ![TypeScript](https://img.shields.io/badge/-TypeScript-3178c6?logo=typescript)  | 5.3+    | Type Safety           |
-| ![Vite](https://img.shields.io/badge/-Vite-646cff?logo=vite)                    | 5.0+    | Build Tool            |
-| ![Vue Router](https://img.shields.io/badge/-Vue_Router-42b883?logo=vue.js)      | 4.2+    | Routing               |
-| ![Markdown-it](https://img.shields.io/badge/-Markdown--it-083fa1?logo=markdown) | 14.0+   | Markdown Parser       |
-| ![DOMPurify](https://img.shields.io/badge/-DOMPurify-4a5c6c?logo=html5)         | 3.3+    | XSS Protection        |
+### 核心功能
+
+- 📝 **Markdown 支持** - 使用 Markdown 编写文章，支持 front-matter 元数据
+- 🔍 **全文搜索** - 快速搜索文章标题、标签和简介，支持快捷键
+- 📱 **完全响应式** - 在所有设备上完美显示
+- 🔒 **安全优先** - DOMPurify 净化防止 XSS 攻击
+- 🎯 **类型安全** - 使用 TypeScript 提供更好的开发体验
+- ⚡ **开箱即用** - 零配置，无需繁琐设置
+
+### 视觉效果
+
+- 🎨 **水墨涟漪** - 首页水墨风格背景动画
+- ❄️ **雪花飘落** - 冬日主题雪花效果
+- 🪟 **透明玻璃** - macOS 风格 Dock 导航菜单
+- 🌊 **液态玻璃态** - 现代化的 Glassmorphism 设计语言
+- ✨ **平滑动画** - 精心设计的过渡和交互效果
+
+### 增强功能
+
+- 📊 **Git 活动图** - 类似 GitHub 的贡献度热力图
+- 📰 **最新文章** - 首页底部显示最新文章列表
+- 🔗 **智能路由** - 文章列表、详情页无缝导航
+- 🌐 **SEO 优化** - 自动生成 sitemap，优化搜索引擎收录
+- 📱 **PWA 支持** - 可安装到桌面，支持离线访问
 
 ---
 
-## 🚀 Quick Start
+## 🎯 技术栈
 
-### Prerequisites
+| 技术                                                                            | 版本  | 用途          |
+| :------------------------------------------------------------------------------ | :---- | :------------ |
+| ![Vue](https://img.shields.io/badge/-Vue-42b883?logo=vue.js)                    | 3.4+  | 渐进式框架    |
+| ![TypeScript](https://img.shields.io/badge/-TypeScript-3178c6?logo=typescript)  | 5.3+  | 类型安全      |
+| ![Vite](https://img.shields.io/badge/-Vite-646cff?logo=vite)                    | 5.0+  | 构建工具      |
+| ![Vue Router](https://img.shields.io/badge/-Vue_Router-42b883?logo=vue.js)      | 4.2+  | 路由管理      |
+| ![markdown-it](https://img.shields.io/badge/-Markdown--it-083fa1?logo=markdown) | 14.0+ | Markdown 解析 |
+| ![DOMPurify](https://img.shields.io/badge/-DOMPurify-4a5c6c?logo=html5)         | 3.3+  | XSS 防护      |
+| ![Shiki](https://img.shields.io/badge/-Shiki-21262a?logo=javascript)            | 3.21+ | 代码高亮      |
+
+---
+
+## 🚀 快速开始
+
+### 前置要求
 
 - Node.js >= 18.0.0
 - npm >= 9.0.0
 
-### Installation
+### 安装
 
 ```bash
-# Clone the repository
+# 克隆仓库
 git clone https://github.com/yourusername/simple-blog.git
 cd simple-blog
 
-# Install dependencies
+# 安装依赖
 npm install
 ```
 
-### Development
+### 开发
 
 ```bash
-# Start dev server
+# 启动开发服务器（端口 3000）
 npm run dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173) in your browser.
+访问 [http://localhost:3000](http://localhost:3000) 查看效果。
 
-### Build
+### 构建
 
 ```bash
-# Build for production
+# 生产构建
 npm run build
 
-# Preview production build
+# 预览生产构建
 npm run preview
 ```
 
 ---
 
-## 📝 Writing Articles
+## 📝 撰写文章
 
-Create a new Markdown file in the `blogs/` directory:
+在 `blogs/` 目录下创建 Markdown 文件：
 
 ```markdown
 ---
-title: Your Article Title
+id: a1b2c3d4
+title: 你的文章标题
 date: 2024-01-01
-excerpt: A brief summary of your article
-author: Your Name
+category: 技术
+excerpt: 文章简介
+author: 耶温
 tags:
   - JavaScript
   - Vue
 ---
 
-# Your Content Here
+# 文章内容
 
-Write your article in **Markdown** format.
+使用 **Markdown** 格式编写你的文章。
 ```
 
-**Article Location**:
+**注意**：
+
+- 每篇文章必须有唯一的 `id` 字段（8 位字母数字）
+- 使用 `npm run ensure-ids` 自动为文章生成 ID
+- 开发时创建新文件会自动添加 ID
+
+**文章目录结构**：
 
 ```
 blogs/
-├── Development/
+├── 技术/
 │   ├── Vue/
 │   │   └── vue-composition-api.md
 │   └── TypeScript/
 │       └── ts-best-practices.md
-└── Life/
+└── 生活/
     └── about-me.md
 ```
 
 ---
 
-## 📁 Project Structure
+## 📁 项目结构
 
 ```
 simple-blog/
-├── blogs/                  # 📝 Markdown articles
-├── public/                 # 🖼️ Static assets
+├── blogs/                  # 📝 Markdown 文章
+├── public/                 # 🖼️ 静态资源
+├── scripts/                # 🔧 构建脚本
+│   ├── fetch-git-activity.cjs     # Git 活动数据获取
+│   ├── ensure-article-ids.js      # 文章 ID 管理
+│   └── generate-sitemap.cjs        # Sitemap 生成
 ├── src/
-│   ├── components/         # 🧩 Reusable components
-│   │   ├── article/       # Article-related components
-│   │   ├── effects/       # Visual effects (snowfall, ink)
-│   │   └── ui/            # UI components
-│   ├── pages/             # 📄 Page components
-│   │   ├── HomePage.vue
-│   │   ├── ArticlesPage.vue
-│   │   └── ArticleDetailPage.vue
-│   ├── router/            # 🛣️ Vue Router config
-│   ├── styles/            # 🎨 Global styles
-│   │   ├── variables.css  # Design tokens
-│   │   ├── base.css       # Reset & base styles
-│   │   └── common.css     # Common components
-│   ├── types/             # 📋 TypeScript definitions
-│   ├── utils/             # 🛠️ Utility functions
-│   ├── constants/         # ⚙️ Configuration
-│   ├── App.vue            # Root component
-│   └── main.ts            # Entry point
+│   ├── components/
+│   │   ├── effects/       # ✨ Canvas 动画特效
+│   │   │   ├── InkBackground.vue      # 水墨涟漪效果
+│   │   │   └── SnowfallEffect.vue     # 雪花飘落效果
+│   │   ├── icons/         # 🎨 图标组件
+│   │   ├── article/       # 📄 文章相关组件
+│   │   └── ui/            # 🎛️ UI 组件
+│   │       ├── Dock.vue                # macOS 风格 Dock 导航
+│   │       ├── SearchModal.vue        # 搜索模态框
+│   │       ├── GitActivityChart.vue   # Git 活动图
+│   │       └── LatestArticles.vue     # 最新文章列表
+│   ├── composables/     # 🔧 Vue Composition 函数
+│   │   ├── ripple/        # 涟漪动画逻辑
+│   │   ├── snowfall/      # 雪花动画逻辑
+│   │   └── common/       # 共享 composables
+│   ├── pages/            # 📄 页面组件
+│   │   ├── HomePage.vue            # 首页
+│   │   ├── ArticlesPage.vue         # 文章列表页
+│   │   └── ArticleDetailPage.vue    # 文章详情页
+│   ├── router/          # 🛣️ Vue Router 配置
+│   ├── styles/          # 🎨 全局样式
+│   │   ├── variables.css  # 设计变量
+│   │   ├── base.css       # Reset 和基础样式
+│   │   └── common.css     # 通用组件样式
+│   ├── types/           # 📋 TypeScript 类型定义
+│   ├── utils/           # 🛠️ 工具函数
+│   ├── constants/       # ⚙️ 应用配置
+│   ├── App.vue          # 根组件
+│   └── main.ts          # 入口文件
 ├── index.html
 ├── package.json
 └── vite.config.ts
@@ -156,138 +195,166 @@ simple-blog/
 
 ---
 
-## 🎨 Customization
+## 🎨 自定义
 
-### Site Configuration
+### 站点配置
 
-Edit `src/constants/index.ts`:
+编辑 `src/constants/index.ts`：
 
 ```typescript
 export const SITE_CONFIG = {
-  title: 'Your Blog Name',
-  description: 'Your blog description',
-  author: 'Your Name',
+  title: '你的博客名称',
+  description: '你的博客描述',
+  keywords: '关键词1, 关键词2',
+  author: '你的名字',
+  url: 'https://yourblog.com',
   icp: {
-    number: 'Your ICP Number',
+    number: '你的ICP备案号',
     url: 'https://beian.miit.gov.cn/',
   },
   copyright: {
     startYear: 2024,
-    owner: 'Your Website Name',
+    owner: '你的网站名称',
   },
 }
 ```
 
-### Theme Variables
+### 主题变量
 
-Edit `src/styles/variables.css`:
+编辑 `src/styles/variables.css`：
 
 ```css
 :root {
-  /* Colors */
+  /* 颜色 */
   --color-text: #3a3a3a;
+  --color-text-light: #666666;
   --color-bg: #ffffff;
   --color-accent: #1a1a1a;
 
-  /* Spacing */
+  /* 间距 */
   --spacing-md: 1rem;
   --spacing-lg: 1.5rem;
 
-  /* Typography */
+  /* 字体 */
   --font-size-base: 1rem;
   --font-weight-medium: 400;
 }
 ```
 
-See [docs/CONFIG.md](docs/CONFIG.md) for more details.
-
 ---
 
-## 🚢 Deployment
+## 🚢 部署
 
-### Static Hosting
+### 静态托管
 
-The project builds to static files in `dist/`, deployable anywhere:
+项目构建为 `dist/` 目录下的静态文件，可部署到任何静态托管服务：
 
-| Service              | Status         | Link                                   |
-| :------------------- | :------------- | :------------------------------------- |
-| **Vercel**           | ✅ Recommended | [Deploy](https://vercel.com)           |
-| **Netlify**          | ✅ Supported   | [Deploy](https://netlify.com)          |
-| **GitHub Pages**     | ✅ Supported   | [Guide](https://pages.github.com)      |
-| **Cloudflare Pages** | ✅ Supported   | [Deploy](https://pages.cloudflare.com) |
+| 服务                 | 状态    | 链接                                 |
+| :------------------- | :------ | :----------------------------------- |
+| **Vercel**           | ✅ 推荐 | [部署](https://vercel.com)           |
+| **Netlify**          | ✅ 支持 | [部署](https://netlify.com)          |
+| **Cloudflare Pages** | ✅ 支持 | [部署](https://pages.cloudflare.com) |
 
-### Deploy to Vercel
+### 部署到 Vercel
 
 ```bash
-# Install Vercel CLI
+# 安装 Vercel CLI
 npm i -g vercel
 
-# Deploy
+# 部署
 vercel
 ```
 
-### Deploy to Netlify
+### 部署到 Netlify
 
 ```bash
-# Install Netlify CLI
+# 安装 Netlify CLI
 npm i -g netlify-cli
 
-# Deploy
+# 部署
 netlify deploy --prod
 ```
 
 ---
 
-## 📜 Available Scripts
+## 📜 可用脚本
 
-| Command                | Description               |
-| :--------------------- | :------------------------ |
-| `npm run dev`          | Start development server  |
-| `npm run build`        | Build for production      |
-| `npm run preview`      | Preview production build  |
-| `npm run format`       | Format code with Prettier |
-| `npm run lint`         | Lint code with ESLint     |
-| `npm run format:check` | Check code formatting     |
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+| 命令                       | 说明                        |
+| :------------------------- | :-------------------------- |
+| `npm run dev`              | 启动开发服务器（端口 3000） |
+| `npm run build`            | 生产构建                    |
+| `npm run preview`          | 预览生产构建                |
+| `npm run fetch-git`        | 获取 Git 活动数据           |
+| `npm run ensure-ids`       | 确保所有文章都有 ID         |
+| `npm run generate-sitemap` | 生成 sitemap.xml            |
+| `npm run format`           | 使用 Prettier 格式化代码    |
+| `npm run format:check`     | 检查代码格式                |
+| `npm run lint`             | 使用 ESLint 检查代码        |
+| `npm run lint:fix`         | 自动修复代码问题            |
 
 ---
 
-## 📄 License
+## 🎯 核心特性详解
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+### Canvas 动画系统
+
+项目包含两个独立的 Canvas 动画模块：
+
+**水滴涟漪** (`InkBackground.vue`)
+
+- 模拟水墨在纸上晕染的效果
+- 粒子随机生成和扩散
+- 半透明叠加产生层次感
+
+**雪花飘落** (`SnowfallEffect.vue`)
+
+- 自然的雪花下落动画
+- 响应式雪花数量（根据屏幕宽度自动调整）
+- 不同大小的雪花营造景深感
+
+### 搜索功能
+
+- **快捷键支持**：
+  - `Cmd/Ctrl + K` - 全局快捷键
+  - `Q` - 独立快捷键（智能检测输入状态）
+- **搜索范围**：文章标题、标签、简介
+- **性能优化**：300ms 防抖，预转换小写
+- **用户体验**：自动聚焦、ESC 关闭、点击跳转
+
+### Git 活动图
+
+- 类似 GitHub 的贡献度热力图
+- 显示最近 30 天的提交记录
+- 数据自动获取和更新
+
+### PWA 支持
+
+- 可安装到桌面
+- 支持离线访问
+- 自动更新机制
 
 ---
 
-## 🌟 Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=zhijian521/simple-blog&type=Date)](https://star-history.com/#zhijian521/simple-blog&Date)
+## 📄 许可证
+
+本项目采用 MIT 许可证 - 详见 [LICENSE](LICENSE) 文件
 
 ---
 
-## 💖 Acknowledgments
+## 💖 致谢
 
-- [Vue.js](https://vuejs.org/) - The Progressive Framework
-- [Vite](https://vitejs.dev/) - Next Generation Frontend Tooling
-- [markdown-it](https://github.com/markdown-it/markdown-it) - Markdown Parser
-- All contributors and supporters
+- [Vue.js](https://vuejs.org/) - 渐进式框架
+- [Vite](https://vitejs.dev/) - 新一代前端工具
+- [markdown-it](https://github.com/markdown-it/markdown-it) - Markdown 解析器
+- 所有贡献者和支持者
 
 ---
 
 <div align="center">
 
-**Made with ❤️ by [Your Name]**
+**Made with ❤️ by 耶温**
 
-[⬆ Back to Top](#-simple-blog)
+[⬆ 返回顶部](#-耶温博客)
 
 </div>

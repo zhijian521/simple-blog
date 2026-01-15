@@ -54,7 +54,7 @@ withDefaults(defineProps<Props>(), {
 
 .dock-container {
     display: flex;
-    gap: 1rem;
+    gap: 1.5rem;
     padding: 0.75rem 1.5rem;
     border-radius: 1.5rem;
     pointer-events: auto;
@@ -159,7 +159,7 @@ withDefaults(defineProps<Props>(), {
     }
 
     .dock-container {
-        gap: 0.75rem;
+        gap: 1rem;
         padding: 0.625rem 1rem;
         border-radius: 1.25rem;
     }
@@ -185,7 +185,7 @@ withDefaults(defineProps<Props>(), {
     }
 
     .dock-container {
-        gap: 0.5rem;
+        gap: 0.75rem;
         padding: 0.5rem 0.75rem;
         border-radius: 1rem;
     }

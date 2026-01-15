@@ -15,6 +15,9 @@
 
         <!-- 搜索模态框 -->
         <SearchModal :visible="showSearch" @close="showSearch = false" />
+
+        <!-- 文档树模态框 -->
+        <DocumentTreeModal :visible="showDocumentTree" @close="showDocumentTree = false" />
     </div>
 </template>
 
@@ -25,16 +28,23 @@ import ArticleCard from '@/components/article/ArticleCard.vue'
 import EmptyState from '@/components/ui/EmptyState.vue'
 import Dock from '@/components/ui/Dock.vue'
 import SearchModal from '@/components/ui/SearchModal.vue'
+import DocumentTreeModal from '@/components/ui/DocumentTreeModal.vue'
 import { createDockItems } from '@/constants/dock'
 import type { Article } from '@/types/article'
 
 const articles = getArticles() as Article[]
 const showSearch = ref(false)
+const showDocumentTree = ref(false)
 
-// 创建 Dock 配置，传入搜索动作
-const dockItems = createDockItems(() => {
-    showSearch.value = true
-}).articleList
+// 创建 Dock 配置，传入搜索和列表动作
+const dockItems = createDockItems(
+    () => {
+        showSearch.value = true
+    },
+    () => {
+        showDocumentTree.value = true
+    }
+).articleList
 </script>
 
 <style scoped>
