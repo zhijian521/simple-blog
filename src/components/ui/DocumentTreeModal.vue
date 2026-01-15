@@ -39,7 +39,6 @@ import TreeNode from './TreeNode.vue'
 import CloseIcon from '@/components/icons/CloseIcon.vue'
 import { getArticles } from '@/utils/markdown'
 import { sortTreeNodes } from '@/utils/tree-sort'
-import { lockScroll, unlockScroll } from '@/utils/scroll-lock'
 import type { TreeNode as TreeNodeType } from '@/utils/build-article-tree'
 import type { Article } from '@/types/article'
 
@@ -141,10 +140,8 @@ watch(
     (isVisible) => {
         if (isVisible) {
             document.addEventListener('keydown', handleEsc)
-            lockScroll()
         } else {
             document.removeEventListener('keydown', handleEsc)
-            unlockScroll()
         }
     }
 )
@@ -152,7 +149,6 @@ watch(
 // 组件卸载时清理
 onUnmounted(() => {
     document.removeEventListener('keydown', handleEsc)
-    unlockScroll()
 })
 </script>
 

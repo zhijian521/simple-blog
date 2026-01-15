@@ -105,7 +105,6 @@ import { getArticles } from '@/utils/markdown'
 import { searchArticles } from '@/utils/search'
 import type { Article } from '@/types/article'
 import { formatDate } from '@/utils/date'
-import { lockScroll, unlockScroll } from '@/utils/scroll-lock'
 import CloseIcon from '@/components/icons/CloseIcon.vue'
 
 interface Props {
@@ -189,13 +188,11 @@ watch(
     (isVisible) => {
         if (isVisible) {
             document.addEventListener('keydown', handleKeydown)
-            lockScroll()
             nextTick(() => {
                 searchInputRef.value?.focus()
             })
         } else {
             document.removeEventListener('keydown', handleKeydown)
-            unlockScroll()
             clearSearch()
         }
     }
@@ -204,7 +201,6 @@ watch(
 // 组件卸载时清理
 onUnmounted(() => {
     document.removeEventListener('keydown', handleKeydown)
-    unlockScroll()
     if (searchTimer) {
         clearTimeout(searchTimer)
     }
