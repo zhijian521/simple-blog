@@ -16,17 +16,17 @@ export function createDockItems(searchAction: () => void, listAction: () => void
     return {
         // 文章列表页 Dock 配置
         articleList: [
-            { id: 'home', icon: HomeIcon, to: '/' },
-            { id: 'search', icon: SearchIcon, action: searchAction },
             { id: 'list', icon: GridIcon, action: listAction },
+            { id: 'search', icon: SearchIcon, action: searchAction },
+            { id: 'home', icon: HomeIcon, to: '/' },
         ] as DockItem[],
 
         // 文章详情页 Dock 配置
         articleDetail: [
-            { id: 'home', icon: HomeIcon, to: '/' },
-            { id: 'search', icon: SearchIcon, action: searchAction },
-            { id: 'list', icon: GridIcon, action: listAction },
             { id: 'toc', icon: ListIcon },
+            { id: 'list', icon: GridIcon, action: listAction },
+            { id: 'search', icon: SearchIcon, action: searchAction },
+            { id: 'home', icon: HomeIcon, to: '/' },
         ] as DockItem[],
     }
 }

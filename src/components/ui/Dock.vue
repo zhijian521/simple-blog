@@ -79,10 +79,10 @@ onUnmounted(() => {
 <style scoped>
 .dock {
     position: fixed;
-    left: 0;
-    right: 0;
+    right: 1.5rem;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: flex-end;
     padding: 1.5rem;
     z-index: 1000;
     pointer-events: none;
@@ -98,9 +98,10 @@ onUnmounted(() => {
 
 .dock-container {
     display: flex;
-    gap: 1.5rem;
-    padding: 0.75rem 1.5rem;
-    border-radius: 1.5rem;
+    flex-direction: column;
+    gap: 0.625rem;
+    padding: 0.5rem 0.5rem;
+    border-radius: 1rem;
     pointer-events: auto;
     position: relative;
     background: rgba(255, 255, 255, 0.15);
@@ -138,15 +139,15 @@ onUnmounted(() => {
 }
 
 .dock-item:hover {
-    transform: translateY(-3px) scale(1.06);
+    transform: translateY(-2px) scale(1.06);
 }
 
 .dock-item-inner {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0.75rem;
-    border-radius: 1rem;
+    padding: 0.5rem;
+    border-radius: 0.625rem;
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.15);
     box-shadow:
@@ -164,8 +165,8 @@ onUnmounted(() => {
 }
 
 .dock-icon {
-    width: 1.25rem;
-    height: 1.25rem;
+    width: 1rem;
+    height: 1rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -180,11 +181,11 @@ onUnmounted(() => {
 
 .dock-reflection {
     position: absolute;
-    bottom: -4px;
+    bottom: -3px;
     left: 50%;
     transform: translateX(-50%);
-    width: 60%;
-    height: 3px;
+    width: 50%;
+    height: 2px;
     background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.1) 0%, transparent 70%);
     opacity: 0.6;
     filter: blur(2px);
@@ -192,30 +193,31 @@ onUnmounted(() => {
 }
 
 .dock-item:hover .dock-reflection {
-    bottom: -6px;
-    width: 75%;
+    bottom: -4px;
+    width: 65%;
     opacity: 0.5;
 }
 
 @media (max-width: 768px) {
     .dock {
-        padding: 1rem;
+        right: 1rem;
+        padding: 0.75rem;
     }
 
     .dock-container {
-        gap: 1rem;
-        padding: 0.625rem 1rem;
-        border-radius: 1.25rem;
+        gap: 0.5rem;
+        padding: 0.4375rem 0.4375rem;
+        border-radius: 0.875rem;
     }
 
     .dock-item-inner {
-        padding: 0.625rem;
-        border-radius: 0.75rem;
+        padding: 0.4375rem;
+        border-radius: 0.5rem;
     }
 
     .dock-icon {
-        width: 1.125rem;
-        height: 1.125rem;
+        width: 0.875rem;
+        height: 0.875rem;
     }
 
     .dock-item:hover {
@@ -225,27 +227,28 @@ onUnmounted(() => {
 
 @media (max-width: 480px) {
     .dock {
-        padding: 0.75rem;
+        right: 0.625rem;
+        padding: 0.625rem;
     }
 
     .dock-container {
-        gap: 0.75rem;
-        padding: 0.5rem 0.75rem;
-        border-radius: 1rem;
+        gap: 0.375rem;
+        padding: 0.375rem 0.375rem;
+        border-radius: 0.75rem;
     }
 
     .dock-item-inner {
-        padding: 0.5rem;
-        border-radius: 0.625rem;
+        padding: 0.375rem;
+        border-radius: 0.4375rem;
     }
 
     .dock-icon {
-        width: 1rem;
-        height: 1rem;
+        width: 0.75rem;
+        height: 0.75rem;
     }
 
     .dock-item:hover {
-        transform: translateY(-2px) scale(1.04);
+        transform: translateY(-1.5px) scale(1.04);
     }
 }
 </style>
