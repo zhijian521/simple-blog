@@ -19,16 +19,60 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted, onUnmounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import type { DockItem } from '@/constants/dock'
 
 interface Props {
     items: DockItem[]
     position?: 'bottom' | 'top'
+    searchVisible?: boolean
 }
 
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
     position: 'bottom',
+    searchVisible: false,
+})
+
+// 查找搜索项
+const searchItem = props.items.find(item => item.id === 'search')
+
+// 全局快捷键监听
+const handleKeydown = (e: KeyboardEvent) => {
+    // 如果搜索框已经打开，不处理快捷键（让 SearchModal 组件处理）
+    if (props.searchVisible) {
+        return
+    }
+
+    // Cmd/Ctrl + K 快捷键
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault()
+        searchItem?.action?.()
+        return
+    }
+
+    // Q 快捷键（单独按下，不在输入框中）
+    if (e.key === 'q' || e.key === 'Q') {
+        // 检查是否在输入框、textarea 或可编辑元素中
+        const target = e.target as HTMLElement
+        const isInputFocused =
+            target.tagName === 'INPUT' ||
+            target.tagName === 'TEXTAREA' ||
+            target.isContentEditable
+
+        if (!isInputFocused) {
+            e.preventDefault()
+            searchItem?.action?.()
+        }
+    }
+}
+
+onMounted(() => {
+    document.addEventListener('keydown', handleKeydown)
+})
+
+onUnmounted(() => {
+    document.removeEventListener('keydown', handleKeydown)
 })
 </script>
 

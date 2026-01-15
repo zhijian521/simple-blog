@@ -4,8 +4,6 @@
 
         <NotFoundPage v-else-if="!article" />
 
-        <SearchButton v-else @open="showSearch = true" />
-
         <article v-else class="article-content">
             <div class="article-header">
                 <h1 class="article-title">{{ article.title }}</h1>
@@ -21,7 +19,7 @@
         </article>
 
         <!-- macOS 风格 Dock 菜单栏 -->
-        <Dock v-if="!loading && article" :items="dockItems" position="bottom" />
+        <Dock v-if="!loading && article" :items="dockItems" position="bottom" :search-visible="showSearch" />
 
         <!-- 搜索模态框 -->
         <SearchModal v-if="!loading && article" :visible="showSearch" @close="showSearch = false" />
@@ -42,7 +40,6 @@ import ArticleBreadcrumb from '@/components/article/ArticleBreadcrumb.vue'
 import LoadingState from '@/components/ui/LoadingState.vue'
 import NotFoundPage from '@/pages/NotFoundPage.vue'
 import Dock from '@/components/ui/Dock.vue'
-import SearchButton from '@/components/ui/SearchButton.vue'
 import SearchModal from '@/components/ui/SearchModal.vue'
 import DocumentTreeModal from '@/components/ui/DocumentTreeModal.vue'
 import { createDockItems } from '@/constants/dock'

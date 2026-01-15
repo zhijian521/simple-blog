@@ -131,13 +131,19 @@ const handleEsc = (e: KeyboardEvent) => {
 watch(() => props.visible, (isVisible) => {
     if (isVisible) {
         document.addEventListener('keydown', handleEsc)
+        // 禁止背景滚动
+        document.body.style.overflow = 'hidden'
     } else {
         document.removeEventListener('keydown', handleEsc)
+        // 恢复背景滚动
+        document.body.style.overflow = ''
     }
 })
 
 onUnmounted(() => {
     document.removeEventListener('keydown', handleEsc)
+    // 确保恢复背景滚动
+    document.body.style.overflow = ''
 })
 </script>
 
@@ -153,6 +159,7 @@ onUnmounted(() => {
     justify-content: center;
     z-index: 9999;
     padding: 1rem;
+    background: transparent;
 }
 
 .modal-wrapper {

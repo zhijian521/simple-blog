@@ -165,9 +165,12 @@ const handleKeydown = (e: KeyboardEvent) => {
         return
     }
 
-    // Q 键关闭（避免按 Q 键打开搜索后又立即关闭）
+    // Q 键关闭（当搜索框没有焦点时）
     if ((e.key === 'q' || e.key === 'Q') && props.visible) {
-        handleClose()
+        // 检查搜索输入框是否有焦点
+        if (document.activeElement !== searchInputRef.value) {
+            handleClose()
+        }
     }
 }
 
@@ -175,17 +178,23 @@ const handleKeydown = (e: KeyboardEvent) => {
 watch(() => props.visible, (isVisible) => {
     if (isVisible) {
         document.addEventListener('keydown', handleKeydown)
+        // 禁止背景滚动
+        document.body.style.overflow = 'hidden'
         nextTick(() => {
             searchInputRef.value?.focus()
         })
     } else {
         document.removeEventListener('keydown', handleKeydown)
+        // 恢复背景滚动
+        document.body.style.overflow = ''
         clearSearch()
     }
 })
 
 onUnmounted(() => {
     document.removeEventListener('keydown', handleKeydown)
+    // 确保恢复背景滚动
+    document.body.style.overflow = ''
     if (searchTimer) {
         clearTimeout(searchTimer)
     }
@@ -204,6 +213,7 @@ onUnmounted(() => {
     justify-content: center;
     z-index: 9999;
     padding: 1rem;
+    background: transparent;
 }
 
 .modal-wrapper {
