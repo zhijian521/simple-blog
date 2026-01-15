@@ -55,18 +55,22 @@ const emit = defineEmits<{
 const router = useRouter()
 const articles = getArticles() as Article[]
 
+// 常量配置
+const BLOG_PATH_PREFIX = '/blogs/'
+const BLOG_FILE_SUFFIX = '.md'
+
 // 构建树形结构
 const treeNodes = computed(() => {
-    // 在客户端构建树
+    // SSR 环境下返回空数组
     if (typeof window === 'undefined') return []
 
-    // 使用虚拟模块路径
     const blogModules = import.meta.glob('/blogs/**/*.md', { query: '?raw' })
     const treeData: TreeNodeType[] = []
 
     for (const path in blogModules) {
-        // 移除 /blogs/ 前缀和 .md 后缀
-        const relativePath = path.replace(/^\/blogs\//, '').replace(/\.md$/, '')
+        const relativePath = path
+            .replace(new RegExp(`^${BLOG_PATH_PREFIX}`), '')
+            .replace(BLOG_FILE_SUFFIX, '')
         const parts = relativePath.split('/')
 
         let currentLevel = treeData
@@ -78,7 +82,6 @@ const treeNodes = computed(() => {
             const isFile = i === parts.length - 1
 
             if (isFile) {
-                // 文件节点
                 const article = articles.find(a => a.slug === relativePath)
                 currentLevel.push({
                     name: part,
@@ -87,8 +90,9 @@ const treeNodes = computed(() => {
                     id: article?.id,
                 })
             } else {
-                // 目录节点
-                let existingNode = currentLevel.find(n => n.name === part && n.type === 'directory')
+                let existingNode = currentLevel.find(
+                    n => n.name === part && n.type === 'directory'
+                )
 
                 if (!existingNode) {
                     const newNode: TreeNodeType = {
@@ -112,38 +116,52 @@ const treeNodes = computed(() => {
 // 排序树节点
 const sortedTreeNodes = computed(() => sortTreeNodes(treeNodes.value))
 
+// 跳转到文章详情
 const handleArticleClick = (articleId: string) => {
     router.push(`/article/${articleId}`)
     handleClose()
 }
 
+// 关闭弹窗
 const handleClose = () => {
     emit('close')
 }
 
+// 工具函数：阻止背景滚动
+const preventBodyScroll = () => {
+    document.body.style.overflow = 'hidden'
+}
+
+// 工具函数：恢复背景滚动
+const restoreBodyScroll = () => {
+    document.body.style.overflow = ''
+}
+
 // ESC 键关闭
 const handleEsc = (e: KeyboardEvent) => {
-    if (e.key === 'Escape' && props.visible) {
+    if (e.key === 'Escape') {
         handleClose()
     }
 }
 
-watch(() => props.visible, (isVisible) => {
-    if (isVisible) {
-        document.addEventListener('keydown', handleEsc)
-        // 禁止背景滚动
-        document.body.style.overflow = 'hidden'
-    } else {
-        document.removeEventListener('keydown', handleEsc)
-        // 恢复背景滚动
-        document.body.style.overflow = ''
+// 监听弹窗可见性
+watch(
+    () => props.visible,
+    (isVisible) => {
+        if (isVisible) {
+            document.addEventListener('keydown', handleEsc)
+            preventBodyScroll()
+        } else {
+            document.removeEventListener('keydown', handleEsc)
+            restoreBodyScroll()
+        }
     }
-})
+)
 
+// 组件卸载时清理
 onUnmounted(() => {
     document.removeEventListener('keydown', handleEsc)
-    // 确保恢复背景滚动
-    document.body.style.overflow = ''
+    restoreBodyScroll()
 })
 </script>
 
@@ -265,7 +283,6 @@ onUnmounted(() => {
     overflow-x: hidden;
 }
 
-/* 自定义滚动条 */
 .modal-content::-webkit-scrollbar {
     width: 6px;
 }
@@ -298,42 +315,27 @@ onUnmounted(() => {
     flex-direction: column;
 }
 
-/* 模态框动画 */
+.modal-enter-active,
+.modal-leave-active {
+    transition: opacity 0.2s ease;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+    opacity: 0;
+}
+
 .modal-enter-active .modal-wrapper,
 .modal-leave-active .modal-wrapper {
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
-.modal-enter-active .modal-container,
-.modal-leave-active .modal-container {
-    transition: opacity 0.3s ease;
-}
-
-.modal-enter-from .modal-wrapper {
-    transform: scale(0.9) translateY(-30px);
-}
-
-.modal-enter-from .modal-background-layer {
-    opacity: 1;
-}
-
-.modal-enter-from .modal-container {
-    opacity: 0;
-}
-
+.modal-enter-from .modal-wrapper,
 .modal-leave-to .modal-wrapper {
-    transform: scale(0.85) translateY(-30px);
-}
-
-.modal-leave-to .modal-background-layer {
+    transform: scale(0.95) translateY(10px);
     opacity: 0;
 }
 
-.modal-leave-to .modal-container {
-    opacity: 0;
-}
-
-/* 移动端响应式 */
 @media (max-width: 768px) {
     .document-tree-modal {
         padding: 1rem;

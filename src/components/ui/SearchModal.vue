@@ -11,7 +11,6 @@
                         </button>
                     </div>
 
-                    <!-- 搜索输入区域 -->
                     <div class="search-input-wrapper">
                         <svg
                             class="search-icon"
@@ -20,6 +19,7 @@
                             fill="none"
                             stroke="currentColor"
                             stroke-width="2"
+                            aria-hidden="true"
                         >
                             <circle cx="11" cy="11" r="8" />
                             <path d="M21 21l-4.35-4.35" />
@@ -30,6 +30,7 @@
                             type="text"
                             class="search-input"
                             placeholder="搜索文章标题、标签..."
+                            aria-label="搜索文章"
                             @input="handleSearch"
                         />
                         <button
@@ -44,6 +45,7 @@
                                 fill="none"
                                 stroke="currentColor"
                                 stroke-width="2"
+                                aria-hidden="true"
                             >
                                 <line x1="18" y1="6" x2="6" y2="18" />
                                 <line x1="6" y1="6" x2="18" y2="18" />
@@ -51,10 +53,9 @@
                         </button>
                     </div>
 
-                    <!-- 搜索结果 -->
                     <div class="modal-content">
                         <div v-if="loading" class="search-loading">
-                            <div class="loading-spinner"></div>
+                            <div class="loading-spinner" aria-hidden="true"></div>
                             <span>搜索中...</span>
                         </div>
 
@@ -72,13 +73,15 @@
                             >
                                 <div class="result-header">
                                     <h3 class="result-title">{{ article.title }}</h3>
-                                    <time class="result-date">{{ formatDate(article.date) }}</time>
+                                    <time class="result-date" :datetime="article.date">
+                                        {{ formatDate(article.date) }}
+                                    </time>
                                 </div>
                                 <p class="result-excerpt">{{ article.excerpt }}</p>
                                 <div v-if="article.tags.length" class="result-tags">
-                                    <span v-for="tag in article.tags" :key="tag" class="result-tag">{{
-                                        tag
-                                    }}</span>
+                                    <span v-for="tag in article.tags" :key="tag" class="result-tag">
+                                        {{ tag }}
+                                    </span>
                                 </div>
                             </RouterLink>
                         </div>
@@ -114,14 +117,34 @@ const emit = defineEmits<{
     (e: 'close'): void
 }>()
 
+// 常量配置
+const SEARCH_DEBOUNCE_MS = 300
+
+// 响应式状态
 const searchQuery = ref('')
 const results = ref<Article[]>([])
 const loading = ref(false)
 const searchInputRef = ref<HTMLInputElement | null>(null)
-
 let searchTimer: number | null = null
 
-// 搜索防抖
+// 工具函数：阻止背景滚动
+const preventBodyScroll = () => {
+    document.body.style.overflow = 'hidden'
+}
+
+// 工具函数：恢复背景滚动
+const restoreBodyScroll = () => {
+    document.body.style.overflow = ''
+}
+
+// 执行搜索
+const performSearch = () => {
+    const articles = getArticles()
+    results.value = searchArticles(searchQuery.value, articles)
+    loading.value = false
+}
+
+// 搜索输入处理（防抖）
 const handleSearch = () => {
     if (searchTimer) {
         clearTimeout(searchTimer)
@@ -131,15 +154,10 @@ const handleSearch = () => {
     searchTimer = window.setTimeout(() => {
         performSearch()
         searchTimer = null
-    }, 300)
+    }, SEARCH_DEBOUNCE_MS)
 }
 
-const performSearch = () => {
-    const articles = getArticles()
-    results.value = searchArticles(searchQuery.value, articles)
-    loading.value = false
-}
-
+// 清除搜索
 const clearSearch = () => {
     searchQuery.value = ''
     results.value = []
@@ -153,48 +171,47 @@ const clearSearch = () => {
     searchInputRef.value?.focus()
 }
 
+// 关闭弹窗
 const handleClose = () => {
     emit('close')
 }
 
-// ESC 键和 Q 键快捷键（仅在模态框打开时生效）
+// 键盘事件处理
 const handleKeydown = (e: KeyboardEvent) => {
-    // ESC 键关闭
-    if (e.key === 'Escape' && props.visible) {
+    // ESC: 关闭弹窗
+    if (e.key === 'Escape') {
         handleClose()
         return
     }
 
-    // Q 键关闭（当搜索框没有焦点时）
-    if ((e.key === 'q' || e.key === 'Q') && props.visible) {
-        // 检查搜索输入框是否有焦点
-        if (document.activeElement !== searchInputRef.value) {
-            handleClose()
-        }
+    // Q: 关闭弹窗（输入框无焦点时）
+    if ((e.key === 'q' || e.key === 'Q') && document.activeElement !== searchInputRef.value) {
+        handleClose()
     }
 }
 
-// 监听 visible 变化，自动聚焦输入框
-watch(() => props.visible, (isVisible) => {
-    if (isVisible) {
-        document.addEventListener('keydown', handleKeydown)
-        // 禁止背景滚动
-        document.body.style.overflow = 'hidden'
-        nextTick(() => {
-            searchInputRef.value?.focus()
-        })
-    } else {
-        document.removeEventListener('keydown', handleKeydown)
-        // 恢复背景滚动
-        document.body.style.overflow = ''
-        clearSearch()
+// 监听弹窗可见性
+watch(
+    () => props.visible,
+    (isVisible) => {
+        if (isVisible) {
+            document.addEventListener('keydown', handleKeydown)
+            preventBodyScroll()
+            nextTick(() => {
+                searchInputRef.value?.focus()
+            })
+        } else {
+            document.removeEventListener('keydown', handleKeydown)
+            restoreBodyScroll()
+            clearSearch()
+        }
     }
-})
+)
 
+// 组件卸载时清理
 onUnmounted(() => {
     document.removeEventListener('keydown', handleKeydown)
-    // 确保恢复背景滚动
-    document.body.style.overflow = ''
+    restoreBodyScroll()
     if (searchTimer) {
         clearTimeout(searchTimer)
     }
@@ -312,7 +329,6 @@ onUnmounted(() => {
     stroke-width: 2;
 }
 
-/* 搜索输入框 */
 .search-input-wrapper {
     position: relative;
     display: flex;
@@ -390,7 +406,6 @@ onUnmounted(() => {
     overflow-x: hidden;
 }
 
-/* 自定义滚动条 */
 .modal-content::-webkit-scrollbar {
     width: 6px;
 }
@@ -409,7 +424,6 @@ onUnmounted(() => {
     background: rgba(0, 0, 0, 0.15);
 }
 
-/* 加载状态 */
 .search-loading {
     display: flex;
     align-items: center;
@@ -435,7 +449,6 @@ onUnmounted(() => {
     }
 }
 
-/* 空状态 */
 .search-empty {
     display: flex;
     align-items: center;
@@ -445,7 +458,6 @@ onUnmounted(() => {
     font-size: var(--font-size-sm);
 }
 
-/* 搜索提示 */
 .search-hint {
     display: flex;
     flex-direction: column;
@@ -475,7 +487,6 @@ onUnmounted(() => {
     border-radius: 0.375rem;
 }
 
-/* 结果列表 */
 .results-list {
     display: flex;
     flex-direction: column;
@@ -509,8 +520,11 @@ onUnmounted(() => {
     font-weight: var(--font-weight-medium);
     margin: 0;
     color: var(--color-text);
-    flex: 1;
-    line-height: 1.4;
+}
+
+.result-date {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-lighter);
 }
 
 .result-excerpt {
@@ -518,17 +532,6 @@ onUnmounted(() => {
     color: var(--color-text-light);
     margin: 0 0 0.5rem 0;
     line-height: 1.6;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.result-date {
-    color: var(--color-text-lighter);
-    font-size: var(--font-size-xs);
-    flex-shrink: 0;
-    white-space: nowrap;
 }
 
 .result-tags {
@@ -540,187 +543,29 @@ onUnmounted(() => {
 .result-tag {
     font-size: var(--font-size-xs);
     color: var(--color-text-light);
-    padding: 0.125rem 0.5rem;
     background: rgba(0, 0, 0, 0.04);
+    padding: 0.125rem 0.375rem;
     border-radius: 0.25rem;
-    font-weight: var(--font-weight-medium);
 }
 
-/* 模态框动画 */
+.modal-enter-active,
+.modal-leave-active {
+    transition: opacity 0.2s ease;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+    opacity: 0;
+}
+
 .modal-enter-active .modal-wrapper,
 .modal-leave-active .modal-wrapper {
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
-.modal-enter-active .modal-container,
-.modal-leave-active .modal-container {
-    transition: opacity 0.3s ease;
-}
-
-.modal-enter-from .modal-wrapper {
-    transform: scale(0.9) translateY(-30px);
-}
-
-.modal-enter-from .modal-background-layer {
-    opacity: 1;
-}
-
-.modal-enter-from .modal-container {
-    opacity: 0;
-}
-
+.modal-enter-from .modal-wrapper,
 .modal-leave-to .modal-wrapper {
-    transform: scale(0.85) translateY(-30px);
-}
-
-.modal-leave-to .modal-background-layer {
+    transform: scale(0.95) translateY(10px);
     opacity: 0;
-}
-
-.modal-leave-to .modal-container {
-    opacity: 0;
-}
-
-/* 移动端响应式 */
-@media (max-width: 768px) {
-    .search-modal {
-        padding: 1rem;
-    }
-
-    .modal-wrapper {
-        max-width: calc(100% - 2rem);
-        height: 500px;
-    }
-
-    .modal-background-layer {
-        border-radius: 1.25rem;
-    }
-
-    .modal-background-layer::before {
-        border-radius: 1.25rem;
-    }
-
-    .modal-container {
-        border-radius: 1.25rem;
-    }
-
-    .modal-header {
-        padding: 0.875rem 0.875rem;
-    }
-
-    .modal-title {
-        font-size: var(--font-size-sm);
-    }
-
-    .modal-close {
-        width: 1.5rem;
-        height: 1.5rem;
-    }
-
-    .search-input-wrapper {
-        padding: 0.875rem 1.25rem;
-    }
-
-    .search-icon {
-        left: calc(1.25rem + 0.75rem);
-    }
-
-    .search-input {
-        padding: 0.625rem 0.625rem 0.625rem 2.5rem;
-    }
-
-    .clear-button {
-        right: calc(1.25rem + 0.75rem);
-    }
-
-    .modal-content {
-        padding: 0.75rem 1rem;
-    }
-
-    .result-item {
-        padding: 0.625rem;
-    }
-
-    .result-title {
-        font-size: var(--font-size-sm);
-    }
-
-    .result-excerpt {
-        font-size: var(--font-size-xs);
-    }
-}
-
-@media (max-width: 480px) {
-    .search-modal {
-        padding: 0.75rem;
-    }
-
-    .modal-wrapper {
-        max-width: calc(100% - 1.5rem);
-        height: 450px;
-    }
-
-    .modal-background-layer {
-        border-radius: 1rem;
-    }
-
-    .modal-background-layer::before {
-        border-radius: 1rem;
-    }
-
-    .modal-container {
-        border-radius: 1rem;
-    }
-
-    .modal-header {
-        padding: 0.75rem 0.75rem;
-    }
-
-    .modal-title {
-        font-size: var(--font-size-xs);
-    }
-
-    .modal-close {
-        width: 1.375rem;
-        height: 1.375rem;
-    }
-
-    .search-input-wrapper {
-        padding: 0.75rem 1rem;
-    }
-
-    .search-icon {
-        left: calc(1rem + 0.75rem);
-    }
-
-    .search-input {
-        padding: 0.625rem 0.625rem 0.625rem 2.25rem;
-    }
-
-    .clear-button {
-        right: calc(1rem + 0.75rem);
-    }
-
-    .modal-content {
-        padding: 0.625rem 0.875rem;
-    }
-
-    .search-icon {
-        width: 1.125rem;
-        height: 1.125rem;
-    }
-
-    .result-title {
-        font-size: var(--font-size-xs);
-    }
-
-    .result-excerpt {
-        font-size: 0.75rem;
-    }
-
-    .result-tag {
-        font-size: 0.7rem;
-        padding: 0.125rem 0.375rem;
-    }
 }
 </style>
