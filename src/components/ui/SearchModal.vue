@@ -1,15 +1,14 @@
 <template>
-    <transition name="modal">
-        <div v-if="visible" class="search-modal" @click.self="handleClose">
-            <div class="modal-wrapper">
-                <div class="modal-background-layer"></div>
-                <div class="modal-container">
-                    <div class="modal-header">
-                        <h2 class="modal-title">文章搜索</h2>
-                        <button aria-label="关闭" class="modal-close" @click="handleClose">
-                            <CloseIcon class="close-icon" />
-                        </button>
-                    </div>
+    <div v-show="visible" class="search-modal" @click.self="handleClose">
+        <div class="modal-wrapper">
+            <div class="modal-background-layer"></div>
+            <div class="modal-container">
+                <div class="modal-header">
+                    <h2 class="modal-title">文章搜索</h2>
+                    <button aria-label="关闭" class="modal-close" @click="handleClose">
+                        <CloseIcon class="close-icon" />
+                    </button>
+                </div>
 
                     <div class="search-input-wrapper">
                         <svg
@@ -96,7 +95,6 @@
                 </div>
             </div>
         </div>
-    </transition>
 </template>
 
 <script setup lang="ts">
@@ -535,26 +533,5 @@ onUnmounted(() => {
     background: rgba(0, 0, 0, 0.04);
     padding: 0.125rem 0.375rem;
     border-radius: 0.25rem;
-}
-
-.modal-enter-active,
-.modal-leave-active {
-    transition: opacity 0.2s ease;
-}
-
-.modal-enter-from,
-.modal-leave-to {
-    opacity: 0;
-}
-
-.modal-enter-active .modal-wrapper,
-.modal-leave-active .modal-wrapper {
-    transition: transform 0.2s ease, opacity 0.2s ease;
-}
-
-.modal-enter-from .modal-wrapper,
-.modal-leave-to .modal-wrapper {
-    transform: scale(0.95) translateY(10px);
-    opacity: 0;
 }
 </style>

@@ -1,35 +1,33 @@
 <template>
-    <transition name="modal">
-        <div v-if="visible" class="document-tree-modal" @click.self="handleClose">
-            <div class="modal-wrapper">
-                <div class="modal-background-layer"></div>
-                <div class="modal-container">
-                    <div class="modal-header">
-                        <h2 class="modal-title">文章目录</h2>
-                        <button aria-label="关闭" class="modal-close" @click="handleClose">
-                            <CloseIcon class="close-icon" />
-                        </button>
-                    </div>
+    <div v-show="visible" class="document-tree-modal" @click.self="handleClose">
+        <div class="modal-wrapper">
+            <div class="modal-background-layer"></div>
+            <div class="modal-container">
+                <div class="modal-header">
+                    <h2 class="modal-title">文章目录</h2>
+                    <button aria-label="关闭" class="modal-close" @click="handleClose">
+                        <CloseIcon class="close-icon" />
+                    </button>
+                </div>
 
-                    <div class="modal-content">
-                        <div v-if="treeNodes.length === 0" class="empty-state">
-                            <p>暂无文章</p>
-                        </div>
-                        <div v-else class="tree-container">
-                            <TreeNode
-                                v-for="node in sortedTreeNodes"
-                                :key="node.path"
-                                :node="node"
-                                :level="0"
-                                :articles="articles"
-                                @article-click="handleArticleClick"
-                            />
-                        </div>
+                <div class="modal-content">
+                    <div v-if="treeNodes.length === 0" class="empty-state">
+                        <p>暂无文章</p>
+                    </div>
+                    <div v-else class="tree-container">
+                        <TreeNode
+                            v-for="node in sortedTreeNodes"
+                            :key="node.path"
+                            :node="node"
+                            :level="0"
+                            :articles="articles"
+                            @article-click="handleArticleClick"
+                        />
                     </div>
                 </div>
             </div>
         </div>
-    </transition>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -300,27 +298,6 @@ onUnmounted(() => {
 .tree-container {
     display: flex;
     flex-direction: column;
-}
-
-.modal-enter-active,
-.modal-leave-active {
-    transition: opacity 0.2s ease;
-}
-
-.modal-enter-from,
-.modal-leave-to {
-    opacity: 0;
-}
-
-.modal-enter-active .modal-wrapper,
-.modal-leave-active .modal-wrapper {
-    transition: transform 0.2s ease, opacity 0.2s ease;
-}
-
-.modal-enter-from .modal-wrapper,
-.modal-leave-to .modal-wrapper {
-    transform: scale(0.95) translateY(10px);
-    opacity: 0;
 }
 
 @media (max-width: 768px) {
