@@ -197,4 +197,12 @@ onUnmounted(() => {
     width: 65%;
     opacity: 0.5;
 }
+
+@media (max-width: 768px) {
+    .dock {
+        right: 0.5rem;
+        padding: 0.5rem;
+        bottom: 0.5rem;
+    }
+}
 </style>
