@@ -1,5 +1,6 @@
 <template>
     <div class="articles-page">
+        <SearchButton @open="showSearch = true" />
         <header class="page-header">
             <h1 class="page-title">文章列表</h1>
         </header>
@@ -27,6 +28,7 @@ import { getArticles } from '@/utils/markdown'
 import ArticleCard from '@/components/article/ArticleCard.vue'
 import EmptyState from '@/components/ui/EmptyState.vue'
 import Dock from '@/components/ui/Dock.vue'
+import SearchButton from '@/components/ui/SearchButton.vue'
 import SearchModal from '@/components/ui/SearchModal.vue'
 import DocumentTreeModal from '@/components/ui/DocumentTreeModal.vue'
 import { createDockItems } from '@/constants/dock'
