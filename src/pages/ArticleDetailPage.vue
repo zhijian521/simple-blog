@@ -17,6 +17,12 @@
             <!-- eslint-disable-next-line vue/no-v-html -->
             <div class="article-body" v-html="sanitizedContent"></div>
         </article>
+
+        <!-- macOS 风格 Dock 菜单栏 -->
+        <Dock v-if="!loading && article" :items="dockItems" position="bottom" />
+
+        <!-- 搜索模态框 -->
+        <SearchModal v-if="!loading && article" :visible="showSearch" @close="showSearch = false" />
     </div>
 </template>
 
@@ -30,12 +36,21 @@ import ArticleMeta from '@/components/article/ArticleMeta.vue'
 import ArticleBreadcrumb from '@/components/article/ArticleBreadcrumb.vue'
 import LoadingState from '@/components/ui/LoadingState.vue'
 import NotFoundPage from '@/pages/NotFoundPage.vue'
+import Dock from '@/components/ui/Dock.vue'
+import SearchModal from '@/components/ui/SearchModal.vue'
+import { createDockItems } from '@/constants/dock'
 import type { Article } from '@/types/article'
 
 const route = useRoute()
 const article = ref<Article | null>(null)
 const loading = ref(true)
 const highlighting = ref(false)
+const showSearch = ref(false)
+
+// 创建 Dock 配置，传入搜索动作
+const dockItems = createDockItems(() => {
+    showSearch.value = true
+}).articleDetail
 
 // SEO 优化：动态生成页面元数据和结构化数据，提升搜索引擎收录效果
 useArticleSeo(article)
@@ -114,6 +129,7 @@ watch(
     max-width: var(--article-max-width);
     margin: 0 auto;
     padding: var(--spacing-xl) var(--spacing-lg);
+    padding-bottom: 5rem;
 }
 
 .article-header {
@@ -341,6 +357,7 @@ watch(
 @media (max-width: 768px) {
     .article-detail {
         padding: var(--spacing-xl) var(--spacing-mobile);
+        padding-bottom: 4rem;
     }
 
     .article-title {
@@ -372,6 +389,7 @@ watch(
 @media (max-width: 480px) {
     .article-detail {
         padding: var(--spacing-lg) var(--spacing-mobile);
+        padding-bottom: 4rem;
     }
 
     .article-title {

@@ -10,18 +10,31 @@
             <ArticleCard v-for="article in articles" :key="article.id" :article="article" />
         </div>
 
-        <FloatingActionButtons />
+        <!-- macOS 风格 Dock 菜单栏 -->
+        <Dock :items="dockItems" position="bottom" />
+
+        <!-- 搜索模态框 -->
+        <SearchModal :visible="showSearch" @close="showSearch = false" />
     </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import { getArticles } from '@/utils/markdown'
 import ArticleCard from '@/components/article/ArticleCard.vue'
 import EmptyState from '@/components/ui/EmptyState.vue'
-import FloatingActionButtons from '@/components/ui/FloatingActionButtons.vue'
+import Dock from '@/components/ui/Dock.vue'
+import SearchModal from '@/components/ui/SearchModal.vue'
+import { createDockItems } from '@/constants/dock'
 import type { Article } from '@/types/article'
 
 const articles = getArticles() as Article[]
+const showSearch = ref(false)
+
+// 创建 Dock 配置，传入搜索动作
+const dockItems = createDockItems(() => {
+    showSearch.value = true
+}).articleList
 </script>
 
 <style scoped>
@@ -29,6 +42,7 @@ const articles = getArticles() as Article[]
     max-width: var(--content-max-width);
     margin: 0 auto;
     padding: var(--spacing-xl) var(--spacing-lg);
+    padding-bottom: 5rem;
     min-height: 100vh;
     position: relative;
 }
@@ -68,6 +82,7 @@ const articles = getArticles() as Article[]
 @media (max-width: 768px) {
     .articles-page {
         padding: var(--spacing-2xl) var(--spacing-mobile);
+        padding-bottom: 4rem;
     }
 
     .articles-page::before {
@@ -91,6 +106,7 @@ const articles = getArticles() as Article[]
 @media (max-width: 480px) {
     .articles-page {
         padding: var(--spacing-xl) var(--spacing-mobile);
+        padding-bottom: 4rem;
     }
 
     .page-title {
