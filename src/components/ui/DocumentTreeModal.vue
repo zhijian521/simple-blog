@@ -39,6 +39,7 @@ import TreeNode from './TreeNode.vue'
 import CloseIcon from '@/components/icons/CloseIcon.vue'
 import { getArticles } from '@/utils/markdown'
 import { sortTreeNodes } from '@/utils/tree-sort'
+import { lockScroll, unlockScroll } from '@/utils/scroll-lock'
 import type { TreeNode as TreeNodeType } from '@/utils/build-article-tree'
 import type { Article } from '@/types/article'
 
@@ -127,16 +128,6 @@ const handleClose = () => {
     emit('close')
 }
 
-// 工具函数：阻止背景滚动
-const preventBodyScroll = () => {
-    document.body.style.overflow = 'hidden'
-}
-
-// 工具函数：恢复背景滚动
-const restoreBodyScroll = () => {
-    document.body.style.overflow = ''
-}
-
 // ESC 键关闭
 const handleEsc = (e: KeyboardEvent) => {
     if (e.key === 'Escape') {
@@ -150,10 +141,10 @@ watch(
     (isVisible) => {
         if (isVisible) {
             document.addEventListener('keydown', handleEsc)
-            preventBodyScroll()
+            lockScroll()
         } else {
             document.removeEventListener('keydown', handleEsc)
-            restoreBodyScroll()
+            unlockScroll()
         }
     }
 )
@@ -161,7 +152,7 @@ watch(
 // 组件卸载时清理
 onUnmounted(() => {
     document.removeEventListener('keydown', handleEsc)
-    restoreBodyScroll()
+    unlockScroll()
 })
 </script>
 
