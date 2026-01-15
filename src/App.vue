@@ -40,7 +40,6 @@ const showLoader = () => {
     document.documentElement.style.overflowY = 'scroll'
 }
 
-
 // 设置路由守卫
 router.beforeEach((to, from, next) => {
     // 如果是首次加载，不显示加载动画（onMounted 会处理）

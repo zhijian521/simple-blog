@@ -45,7 +45,7 @@ withDefaults(defineProps<Props>(), {
 }
 
 .dock--bottom {
-    bottom: 1rem;
+    bottom: 1.25rem;
 }
 
 .dock--top {
