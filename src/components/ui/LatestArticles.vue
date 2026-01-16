@@ -79,8 +79,13 @@ onMounted(() => {
     background: var(--color-bg-secondary);
 }
 
-.article-item:hover .article-title {
+.article-item:hover .article-title,
+.article-item:hover .article-date {
     color: var(--color-accent);
+}
+
+.article-item:hover .article-date {
+    opacity: 1;
 }
 
 .article-title {
@@ -106,11 +111,9 @@ onMounted(() => {
     letter-spacing: 0.02em;
     z-index: 1;
     opacity: 0.75;
-    transition: opacity var(--transition-base) ease;
-}
-
-.article-item:hover .article-date {
-    opacity: 1;
+    transition:
+        opacity var(--transition-base) ease,
+        color var(--transition-base) ease;
 }
 
 .article-underline {
@@ -122,7 +125,7 @@ onMounted(() => {
     background: var(--color-accent);
     transform: scaleX(0);
     transform-origin: left;
-    transition: transform var(--transition-base) ease;
+    transition: transform calc(var(--transition-base) * 2) ease;
 }
 
 .article-item:hover .article-underline {

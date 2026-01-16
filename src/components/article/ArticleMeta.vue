@@ -28,17 +28,15 @@ defineProps<Props>()
 <style scoped>
 .article-meta {
     font-size: var(--font-size-xs);
-    color: var(--color-text-lighter);
     font-weight: var(--font-weight-medium);
 }
 
 .author-prefix {
-    color: var(--color-text-lighter);
     margin-right: 0.25rem;
 }
 
 .author-name {
-    color: var(--color-text-light);
+    font-weight: var(--font-weight-medium);
 }
 
 @media (max-width: 480px) {

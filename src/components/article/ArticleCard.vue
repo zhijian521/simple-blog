@@ -69,54 +69,37 @@ function formatDate(date: string) {
 
 <style scoped>
 .article-card {
-    position: relative;
+    display: block;
 }
 
 .article-link {
     display: block;
     padding: var(--spacing-lg);
-    background: var(--color-bg);
-    backdrop-filter: blur(5px);
-    border-radius: var(--radius-xl);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    transition:
-        box-shadow var(--transition-base),
-        transform var(--transition-base);
+    background: var(--card-default-bg);
+    border: 1px solid var(--card-default-border);
+    border-radius: var(--radius-sm);
     text-decoration: none;
     color: inherit;
-    position: relative;
-    overflow: hidden;
-}
-
-/* 水墨风格背景 */
-.article-link::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 60%;
-    background: var(--gradient-ink);
-    opacity: 0;
-    transition: opacity var(--transition-base);
-    pointer-events: none;
-}
-
-.article-link:hover::before {
-    opacity: 1;
+    box-shadow: var(--card-default-shadow);
+    transition: all var(--transition-base) ease;
 }
 
 .article-link:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    transform: translateY(-1px);
+    background: var(--card-hover-bg);
+    border-color: var(--card-hover-border);
+    box-shadow: var(--card-hover-shadow);
 }
 
 .article-content {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-sm);
-    position: relative;
-    z-index: 1;
+    color: var(--color-text);
+    transition: color var(--transition-base) ease;
+}
+
+.article-link:hover .article-content {
+    color: var(--color-accent);
 }
 
 .article-header {
@@ -129,11 +112,9 @@ function formatDate(date: string) {
 .article-title {
     font-size: var(--font-size-lg);
     font-weight: var(--font-weight-medium);
-    color: var(--color-text);
     line-height: 1.4;
     flex: 1;
     letter-spacing: 0.02em;
-    transition: color var(--transition-fast);
     display: -webkit-box;
     -webkit-line-clamp: 2;
     line-clamp: 2;
@@ -141,13 +122,8 @@ function formatDate(date: string) {
     overflow: hidden;
 }
 
-.article-link:hover .article-title {
-    color: var(--color-link-hover);
-}
-
 .article-date {
     font-size: var(--font-size-xs);
-    color: var(--color-text-lighter);
     font-weight: var(--font-weight-normal);
     white-space: nowrap;
     font-variant-numeric: tabular-nums;
@@ -155,7 +131,6 @@ function formatDate(date: string) {
 }
 
 .article-excerpt {
-    color: var(--color-text-light);
     font-size: var(--font-size-sm);
     line-height: 1.8;
     letter-spacing: 0.02em;
@@ -181,37 +156,23 @@ function formatDate(date: string) {
 
 .article-tags .tag {
     font-size: var(--font-size-xs);
-    color: var(--color-text-light);
     padding: var(--spacing-tag);
-    background: var(--color-bg-secondary);
+    background: var(--color-bg-page);
     border-radius: var(--radius-sm);
-    transition:
-        color var(--transition-fast),
-        background-color var(--transition-fast);
     letter-spacing: 0.03em;
     font-weight: var(--font-weight-medium);
 }
 
 .read-more {
     font-size: var(--font-size-xs);
-    color: var(--color-text-lighter);
     font-weight: var(--font-weight-normal);
     letter-spacing: 0.05em;
-}
-
-.article-link:hover .read-more {
-    color: var(--color-link-hover);
 }
 
 /* 移动端响应式 */
 @media (max-width: 768px) {
     .article-link {
         padding: var(--spacing-md);
-        backdrop-filter: none;
-    }
-
-    .article-excerpt {
-        font-size: var(--font-size-sm);
     }
 
     .article-footer {
