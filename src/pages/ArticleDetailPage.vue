@@ -26,12 +26,8 @@
         <DocumentTreeModal v-if="!loading && article" :visible="showDocumentTree" @close="showDocumentTree = false" />
 
         <!-- 文章目录模态框 -->
-        <TableOfContentsModal
-            v-if="!loading && article"
-            :visible="showToc"
-            :content="article?.content"
-            @close="showToc = false"
-        />
+        <TableOfContentsModal v-if="!loading && article" :visible="showToc" :content="article?.content"
+            @close="showToc = false" />
     </div>
 </template>
 
@@ -149,7 +145,7 @@ watch(
     max-width: var(--article-max-width);
     margin: 0 auto;
     padding: var(--spacing-xl) var(--spacing-lg);
-    padding-bottom: 5rem;
+    padding-bottom: 1rem;
 }
 
 .article-header {
@@ -377,7 +373,7 @@ watch(
 @media (max-width: 768px) {
     .article-detail {
         padding: var(--spacing-xl) var(--spacing-mobile);
-        padding-bottom: 4rem;
+        padding-bottom: 1rem;
     }
 
     .article-title {
@@ -409,16 +405,16 @@ watch(
 @media (max-width: 480px) {
     .article-detail {
         padding: var(--spacing-lg) var(--spacing-mobile);
-        padding-bottom: 4rem;
+        padding-bottom: 1rem;
     }
 
     .article-title {
         font-size: var(--font-size-xl);
     }
 
-.article-body {
-    font-size: var(--font-size-sm);
-    line-height: 1.7;
-}
+    .article-body {
+        font-size: var(--font-size-sm);
+        line-height: 1.7;
+    }
 }
 </style>

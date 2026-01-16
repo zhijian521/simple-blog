@@ -52,7 +52,7 @@ const dockItems = createDockItems(
     max-width: var(--content-max-width);
     margin: 0 auto;
     padding: var(--spacing-xl) var(--spacing-lg);
-    padding-bottom: 5rem;
+    padding-bottom: 1em;
     min-height: 100vh;
     position: relative;
 }
@@ -92,7 +92,7 @@ const dockItems = createDockItems(
 @media (max-width: 768px) {
     .articles-page {
         padding: var(--spacing-2xl) var(--spacing-mobile);
-        padding-bottom: 4rem;
+        padding-bottom: 1rem;
     }
 
     .articles-page::before {
@@ -116,7 +116,7 @@ const dockItems = createDockItems(
 @media (max-width: 480px) {
     .articles-page {
         padding: var(--spacing-xl) var(--spacing-mobile);
-        padding-bottom: 4rem;
+        padding-bottom: 1rem;
     }
 
     .page-title {
