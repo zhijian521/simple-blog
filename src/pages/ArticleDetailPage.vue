@@ -1,8 +1,6 @@
 <template>
     <div class="article-detail">
-        <LoadingState v-if="loading" />
-
-        <NotFoundPage v-else-if="!article" />
+        <NotFoundPage v-if="!article" />
 
         <article v-else class="article-content">
             <div class="article-header">
@@ -37,7 +35,6 @@ import { useArticleSeo } from '@/utils/seo'
 import { sanitizeHtmlWithSsr } from '@/utils/dompurify'
 import ArticleMeta from '@/components/article/ArticleMeta.vue'
 import ArticleBreadcrumb from '@/components/article/ArticleBreadcrumb.vue'
-import LoadingState from '@/components/ui/LoadingState.vue'
 import NotFoundPage from '@/pages/NotFoundPage.vue'
 import Dock from '@/components/ui/Dock.vue'
 import SearchModal from '@/components/ui/SearchModal.vue'

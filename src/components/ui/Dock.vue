@@ -104,7 +104,7 @@ onUnmounted(() => {
     border-radius: 1rem;
     pointer-events: auto;
     position: relative;
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     border: 1px solid rgba(255, 255, 255, 0.2);

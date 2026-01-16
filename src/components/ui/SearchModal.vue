@@ -77,7 +77,7 @@
                                     </time>
                                 </div>
                                 <p class="result-excerpt">{{ article.excerpt }}</p>
-                                <div v-if="article.tags.length" class="result-tags">
+                                <div v-if="article.tags && article.tags.length" class="result-tags">
                                     <span v-for="tag in article.tags" :key="tag" class="result-tag">
                                         {{ tag }}
                                     </span>
@@ -124,8 +124,6 @@ const results = ref<Article[]>([])
 const loading = ref(false)
 const searchInputRef = ref<HTMLInputElement | null>(null)
 let searchTimer: number | null = null
-
-
 
 // 执行搜索
 const performSearch = () => {
@@ -232,7 +230,7 @@ onUnmounted(() => {
     position: absolute;
     inset: 0;
     border-radius: 1.5rem;
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -533,5 +531,214 @@ onUnmounted(() => {
     background: rgba(0, 0, 0, 0.04);
     padding: 0.125rem 0.375rem;
     border-radius: 0.25rem;
+}
+
+@media (max-width: 768px) {
+    .search-modal {
+        padding: 1rem;
+    }
+
+    .modal-wrapper {
+        max-width: calc(100% - 2rem);
+        height: 500px;
+    }
+
+    .modal-background-layer {
+        border-radius: 1.25rem;
+    }
+
+    .modal-background-layer::before {
+        border-radius: 1.25rem;
+    }
+
+    .modal-container {
+        border-radius: 1.25rem;
+    }
+
+    .modal-header {
+        padding: 0.875rem 0.875rem;
+    }
+
+    .modal-title {
+        font-size: var(--font-size-sm);
+    }
+
+    .modal-close {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+
+    .search-input-wrapper {
+        padding: 0.875rem 1.25rem;
+    }
+
+    .search-icon {
+        left: calc(1.25rem + 0.75rem);
+    }
+
+    .search-input {
+        font-size: var(--font-size-sm);
+        padding: 0.625rem 0.625rem 0.625rem 2.5rem;
+    }
+
+    .clear-button {
+        right: calc(1.25rem + 0.75rem);
+    }
+
+    .modal-content {
+        padding: 0.75rem 1rem;
+    }
+
+    .result-item {
+        padding: 0.625rem;
+    }
+
+    .result-title {
+        font-size: var(--font-size-sm);
+    }
+
+    .result-date {
+        font-size: 0.75rem;
+    }
+
+    .result-excerpt {
+        font-size: var(--font-size-xs);
+    }
+
+    .result-tag {
+        font-size: 0.7rem;
+        padding: 0.125rem 0.25rem;
+    }
+
+    .search-loading,
+    .search-empty,
+    .search-hint {
+        padding: 2rem 0;
+    }
+
+    .search-hint p,
+    .search-loading span,
+    .search-empty p {
+        font-size: var(--font-size-xs);
+    }
+
+    .tip {
+        font-size: 0.7rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .search-modal {
+        padding: 0.75rem;
+    }
+
+    .modal-wrapper {
+        max-width: calc(100% - 1.5rem);
+        height: 450px;
+    }
+
+    .modal-background-layer {
+        border-radius: 1rem;
+    }
+
+    .modal-background-layer::before {
+        border-radius: 1rem;
+    }
+
+    .modal-container {
+        border-radius: 1rem;
+    }
+
+    .modal-header {
+        padding: 0.75rem 0.75rem;
+    }
+
+    .modal-title {
+        font-size: var(--font-size-xs);
+    }
+
+    .modal-close {
+        width: 1.375rem;
+        height: 1.375rem;
+    }
+
+    .close-icon {
+        width: 0.75rem;
+        height: 0.75rem;
+    }
+
+    .search-input-wrapper {
+        padding: 0.75rem 1rem;
+    }
+
+    .search-icon {
+        left: calc(1rem + 0.625rem);
+        width: 1rem;
+        height: 1rem;
+    }
+
+    .search-input {
+        font-size: var(--font-size-xs);
+        padding: 0.5rem 0.5rem 0.5rem 2.25rem;
+    }
+
+    .clear-button {
+        right: calc(1rem + 0.625rem);
+        width: 1.25rem;
+        height: 1.25rem;
+    }
+
+    .clear-button svg {
+        width: 0.75rem;
+        height: 0.75rem;
+    }
+
+    .modal-content {
+        padding: 0.625rem 0.875rem;
+    }
+
+    .result-item {
+        padding: 0.5rem;
+    }
+
+    .result-header {
+        gap: 0.5rem;
+        margin-bottom: 0.375rem;
+    }
+
+    .result-title {
+        font-size: var(--font-size-xs);
+    }
+
+    .result-date {
+        font-size: 0.7rem;
+    }
+
+    .result-excerpt {
+        font-size: var(--font-size-xs);
+        margin-bottom: 0.375rem;
+    }
+
+    .result-tag {
+        font-size: 0.65rem;
+        padding: 0.0625rem 0.25rem;
+    }
+
+    .search-loading,
+    .search-empty,
+    .search-hint {
+        padding: 1.5rem 0;
+    }
+
+    .search-loading span,
+    .search-empty p,
+    .search-hint p {
+        font-size: 0.75rem;
+    }
+
+    .tip {
+        font-size: 0.65rem;
+        padding: 0.1875rem 0.375rem;
+    }
 }
 </style>
