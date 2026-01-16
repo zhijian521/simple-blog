@@ -1,7 +1,3 @@
-/**
- * 文章 ID 生成和验证工具
- */
-
 const CHARACTERS = 'abcdefghijklmnopqrstuvwxyz0123456789'
 const ID_LENGTH = 8
 

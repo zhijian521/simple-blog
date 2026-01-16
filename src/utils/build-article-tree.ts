@@ -1,8 +1,3 @@
-/**
- * 构建文章树结构
- * 递归扫描 blogs 目录并构建分层结构
- */
-
 import { readFileSync, readdirSync } from 'fs'
 import { resolve } from 'path'
 
@@ -14,11 +9,6 @@ export interface TreeNode {
     id?: string
 }
 
-/**
- * 构建文章树结构
- * @param dir - blogs 目录路径
- * @returns 树形结构数组
- */
 export function buildArticleTree(dir: string): TreeNode[] {
     const buildTree = (currentPath: string, relativePath: string): TreeNode[] => {
         const nodes: TreeNode[] = []

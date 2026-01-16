@@ -16,11 +16,6 @@ import { useHead } from '@vueuse/head'
 import Footer from '@/components/ui/Footer.vue'
 import { SITE_CONFIG } from '@/constants'
 
-/**
- * 根组件
- * 负责页面布局和 Footer 显示控制
- * 首页固定高度且禁用滚动（解决移动端 100vh 问题）
- */
 const route = useRoute()
 const isHomePage = computed(() => route.path === '/')
 

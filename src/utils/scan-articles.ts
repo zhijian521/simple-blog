@@ -1,8 +1,3 @@
-/**
- * 文章扫描工具
- * 提供递归扫描 blogs 目录并提取文章信息的通用函数
- */
-
 import { readFileSync, readdirSync, statSync } from 'fs'
 import { resolve } from 'path'
 
@@ -18,11 +13,6 @@ export interface ArticleInfoWithFileStats extends ArticleInfo {
     }
 }
 
-/**
- * 扫描指定目录下的所有 Markdown 文件并提取文章信息
- * @param dir - 要扫描的目录路径
- * @returns 文章信息数组
- */
 export function scanArticles(dir: string): ArticleInfo[] {
     const articles: ArticleInfo[] = []
 
@@ -52,11 +42,6 @@ export function scanArticles(dir: string): ArticleInfo[] {
     return articles
 }
 
-/**
- * 扫描指定目录下的所有 Markdown 文件并提取文章信息（包含文件统计信息）
- * @param dir - 要扫描的目录路径
- * @returns 文章信息数组（包含文件统计信息）
- */
 export function scanArticlesWithStats(dir: string): ArticleInfoWithFileStats[] {
     const articles: ArticleInfoWithFileStats[] = []
 
@@ -90,19 +75,12 @@ export function scanArticlesWithStats(dir: string): ArticleInfoWithFileStats[] {
     return articles
 }
 
-/**
- * 扫描 blogs 目录并提取文章 ID 列表
- * @returns 文章 ID 数组
- */
 export function scanArticleIds(): string[] {
     const blogsDir = resolve(process.cwd(), 'blogs')
     const articles = scanArticles(blogsDir)
     return articles.map(article => article.id)
 }
 
-/**
- * 格式化日期为 YYYY-MM-DD
- */
 function formatDate(date: Date): string {
     const year = date.getFullYear()
     const month = String(date.getMonth() + 1).padStart(2, '0')
@@ -110,10 +88,6 @@ function formatDate(date: Date): string {
     return `${year}-${month}-${day}`
 }
 
-/**
- * 扫描 blogs 目录并提取文章信息（用于 sitemap 生成）
- * @returns 文章信息数组
- */
 export function scanArticlesForSitemap(): Array<{ id: string; date: string }> {
     const blogsDir = resolve(process.cwd(), 'blogs')
     const articles = scanArticlesWithStats(blogsDir)

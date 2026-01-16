@@ -3,9 +3,6 @@ import { useHead } from '@vueuse/head'
 import { SITE_CONFIG } from '@/constants'
 import type { Article } from '@/types/article'
 
-/**
- * 为文章详情页生成 SEO 元数据和结构化数据
- */
 export function useArticleSeo(article: Ref<Article | null>): void {
     const pageTitle = computed(() => {
         return article.value ? `${article.value.title} - ${SITE_CONFIG.title}` : SITE_CONFIG.title

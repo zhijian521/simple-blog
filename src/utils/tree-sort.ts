@@ -1,8 +1,5 @@
 import type { TreeNode } from './build-article-tree'
 
-/**
- * 排序树节点：目录优先，然后按名称排序
- */
 export function sortTreeNodes(nodes: TreeNode[]): TreeNode[] {
     return [...nodes].sort((a, b) => {
         if (a.type === 'directory' && b.type === 'file') return -1
