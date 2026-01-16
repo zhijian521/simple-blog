@@ -12,11 +12,15 @@ pre.shiki {
   overflow-x: auto;
   line-height: 1.6;
   font-size: var(--font-size-base);
+  background: var(--color-bg-secondary);
+  color: var(--color-code-text);
 }
 
 /* ========== 代码块内部样式 ========== */
 pre.shiki code {
   font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  background: transparent;
+  color: inherit;
 }
 
 /* ========== 滚动条样式 ========== */

@@ -216,6 +216,13 @@ async function highlightCodeElement(
         const highlightedPre = temp.firstChild as HTMLElement
 
         if (highlightedPre) {
+            // 移除 Shiki 添加的内联样式
+            highlightedPre.removeAttribute('style')
+            const codeInside = highlightedPre.querySelector('code')
+            if (codeInside) {
+                codeInside.removeAttribute('style')
+            }
+
             const originalLangClass = Array.from(preElement.classList).find(cls =>
                 cls.startsWith('language-')
             )

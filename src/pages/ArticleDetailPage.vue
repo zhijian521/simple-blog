@@ -179,6 +179,25 @@ watch(
     word-wrap: break-word;
 }
 
+/* 未高亮的代码块初始样式（防止闪烁） */
+.article-body :deep(pre:not(.shiki)) {
+    position: relative;
+    margin: var(--spacing-md) 0;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    overflow-x: auto;
+    line-height: 1.6;
+    font-size: var(--font-size-base);
+    background: var(--color-bg-secondary);
+    color: var(--color-code-text);
+}
+
+.article-body :deep(pre:not(.shiki) code) {
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    background: transparent;
+    color: inherit;
+}
+
 /* 标题样式 */
 .article-body :deep(h2),
 .article-body :deep(h3),
