@@ -4,11 +4,16 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/logo.png" />
     <link rel="canonical" href="https://blog.yuwb.cn" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="耶温博客 - 记录思考，分享知识" />
     <meta name="keywords" content="耶温博客, 技术博客, 编程, 开发, 前端, 后端, 全栈" />
     <meta name="author" content="耶温" />
-    <meta name="theme-color" content="#fafafa" />
+
+    <!-- Mobile Viewport with Safe Area Support for iPhone X+ -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+    <!-- Mobile Browser Theme Color -->
+    <!-- Controls the top status bar color on Android Chrome and iOS -->
+    <meta name="theme-color" content="#ebe6da" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
@@ -31,9 +36,19 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="耶温博客" />
 
+    <!-- Android Chrome -->
+    <meta name="mobile-web-app-capable" content="yes" />
+
+    <!-- Mobile UI Color Meta Tags -->
+    <!-- Controls the top status bar color on mobile browsers -->
+    <meta name="msapplication-TileColor" content="#ebe6da" />
+    <meta name="msapplication-navbutton-color" content="#ebe6da" />
+    <meta name="browser-nav-button-color" content="#ebe6da" />
+    <meta name="nav-button-color" content="#ebe6da" />
+
     <title>耶温博客 - 记录思考，分享知识</title>
   </head>
-  <body>
+  <body style="background-color: #ebe6da;">
     <div id="app"></div>
     <script type="module" src="/src/main.ts"></script>
   </body>

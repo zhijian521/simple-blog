@@ -18,8 +18,8 @@ const pwaConfig = {
         short_name: '耶温博客',
         description: '记录思考，分享知识',
         // 使用项目主题色（与 variables.css 保持一致）
-        theme_color: '#fafafa', // 对应 --color-bg-page，状态栏背景色
-        background_color: '#fafafa', // 应用启动时的背景色
+        theme_color: '#ebe6da', // 对应 --color-bg-page，状态栏背景色
+        background_color: '#ebe6da', // 应用启动时的背景色
         display: 'standalone',
         orientation: 'portrait-primary',
         scope: '/',
