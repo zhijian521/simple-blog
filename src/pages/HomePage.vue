@@ -1,7 +1,8 @@
 <template>
     <div class="home-page">
         <InkBackground v-if="animationsReady" />
-        <SnowfallEffect v-if="animationsReady" />
+        <!-- 雪花飘落特效 -->
+        <!-- <SnowfallEffect v-if="animationsReady" /> -->
         <SearchButton @open="showSearch = true" />
         <div class="home-content">
             <section class="hero">
@@ -26,7 +27,7 @@ import GitActivityChart from '@/components/ui/GitActivityChart.vue'
 import SearchButton from '@/components/ui/SearchButton.vue'
 import SearchModal from '@/components/ui/SearchModal.vue'
 import InkBackground from '@/components/effects/InkBackground.vue'
-import SnowfallEffect from '@/components/effects/SnowfallEffect.vue'
+// import SnowfallEffect from '@/components/effects/SnowfallEffect.vue'
 import { SITE_CONFIG } from '@/constants'
 
 const showSearch = ref(false)
@@ -36,7 +37,7 @@ const animationsReady = ref(false)
 onMounted(async () => {
     // 等待页面内容渲染完成
     await nextTick()
-    
+
     // 使用 setTimeout 在下一个事件循环中加载动画
     setTimeout(() => {
         animationsReady.value = true

@@ -16,6 +16,7 @@
             >
                 <span class="article-title">{{ article.title }}</span>
                 <time class="article-date">{{ formattedDate(article.date) }}</time>
+                <span class="article-underline"></span>
             </RouterLink>
         </div>
     </div>
@@ -67,60 +68,19 @@ onMounted(() => {
     align-items: center;
     justify-content: space-between;
     padding: 11px var(--spacing-md);
-    background: linear-gradient(
-        135deg,
-        rgba(255, 255, 255, 0.85) 0%,
-        rgba(255, 255, 255, 0.75) 100%
-    );
-    backdrop-filter: blur(12px) saturate(180%);
-    -webkit-backdrop-filter: blur(12px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    border-radius: 11px;
+    background: transparent;
+    border-radius: var(--radius-sm);
     text-decoration: none;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow:
-        0 1px 6px rgba(0, 0, 0, 0.02),
-        0 2px 12px rgba(0, 0, 0, 0.015);
+    transition: all var(--transition-base) ease;
     overflow: hidden;
-    transform: translateZ(0);
-}
-
-.article-item::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-        135deg,
-        rgba(255, 255, 255, 0.12) 0%,
-        rgba(255, 255, 255, 0.04) 100%
-    );
-    opacity: 0;
-    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    pointer-events: none;
 }
 
 .article-item:hover {
-    background: linear-gradient(
-        135deg,
-        rgba(255, 255, 255, 0.92) 0%,
-        rgba(255, 255, 255, 0.82) 100%
-    );
-    border-color: rgba(255, 255, 255, 0.65);
-    backdrop-filter: blur(14px) saturate(185%);
-    -webkit-backdrop-filter: blur(14px) saturate(185%);
-    box-shadow:
-        0 3px 12px rgba(0, 0, 0, 0.035),
-        0 6px 24px rgba(0, 0, 0, 0.02);
+    background: var(--color-bg-secondary);
 }
 
-.article-item:hover::before {
-    opacity: 1;
-}
-
-.article-item:active {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(8px) saturate(170%);
-    -webkit-backdrop-filter: blur(8px) saturate(170%);
+.article-item:hover .article-title {
+    color: var(--color-accent);
 }
 
 .article-title {
@@ -134,7 +94,7 @@ onMounted(() => {
     white-space: nowrap;
     margin-right: var(--spacing-md);
     z-index: 1;
-    text-shadow: 0 1px 3px rgba(255, 255, 255, 0.8);
+    transition: color var(--transition-base) ease;
 }
 
 .article-date {
@@ -145,13 +105,28 @@ onMounted(() => {
     white-space: nowrap;
     letter-spacing: 0.02em;
     z-index: 1;
-    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.6);
     opacity: 0.75;
-    transition: opacity 0.3s ease;
+    transition: opacity var(--transition-base) ease;
 }
 
 .article-item:hover .article-date {
     opacity: 1;
+}
+
+.article-underline {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--color-accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--transition-base) ease;
+}
+
+.article-item:hover .article-underline {
+    transform: scaleX(1);
 }
 
 /* 骨架屏样式 */
@@ -200,9 +175,7 @@ onMounted(() => {
 
     .article-item {
         padding: 12px var(--spacing-md);
-        backdrop-filter: blur(10px) saturate(170%);
-        -webkit-backdrop-filter: blur(10px) saturate(170%);
-        border-radius: 10px;
+        border-radius: var(--radius-sm);
     }
 
     .article-title {
