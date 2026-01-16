@@ -1,7 +1,7 @@
 <template>
     <div class="home-page">
-        <InkBackground />
-        <SnowfallEffect />
+        <InkBackground v-if="animationsReady" />
+        <SnowfallEffect v-if="animationsReady" />
         <SearchButton @open="showSearch = true" />
         <div class="home-content">
             <section class="hero">
@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 import ViewArticleButton from '@/components/ui/ViewArticleButton.vue'
 import LatestArticles from '@/components/ui/LatestArticles.vue'
 import GitActivityChart from '@/components/ui/GitActivityChart.vue'
@@ -30,6 +30,18 @@ import SnowfallEffect from '@/components/effects/SnowfallEffect.vue'
 import { SITE_CONFIG } from '@/constants'
 
 const showSearch = ref(false)
+const animationsReady = ref(false)
+
+// 延迟加载动画，优化首屏加载时间
+onMounted(async () => {
+    // 等待页面内容渲染完成
+    await nextTick()
+    
+    // 使用 setTimeout 在下一个事件循环中加载动画
+    setTimeout(() => {
+        animationsReady.value = true
+    }, 100)
+})
 </script>
 
 <style scoped>
