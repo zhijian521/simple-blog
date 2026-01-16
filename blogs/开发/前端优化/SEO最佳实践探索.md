@@ -1,6 +1,7 @@
 ---
 title: SEO最佳实践探索
-date: 2026-01-16
+date: 2024-05-09
+update: 2026-01-16
 category: 开发/前端优化
 description: 2026年现代化SEO优化指南
 tags:
