@@ -24,6 +24,14 @@
 
         <!-- 文档树模态框 -->
         <DocumentTreeModal v-if="!loading && article" :visible="showDocumentTree" @close="showDocumentTree = false" />
+
+        <!-- 文章目录模态框 -->
+        <TableOfContentsModal
+            v-if="!loading && article"
+            :visible="showToc"
+            :content="article?.content"
+            @close="showToc = false"
+        />
     </div>
 </template>
 
@@ -39,6 +47,7 @@ import NotFoundPage from '@/pages/NotFoundPage.vue'
 import Dock from '@/components/ui/Dock.vue'
 import SearchModal from '@/components/ui/SearchModal.vue'
 import DocumentTreeModal from '@/components/ui/DocumentTreeModal.vue'
+import TableOfContentsModal from '@/components/ui/TableOfContentsModal.vue'
 import { createDockItems } from '@/constants/dock'
 import type { Article } from '@/types/article'
 
@@ -48,14 +57,18 @@ const loading = ref(true)
 const highlighting = ref(false)
 const showSearch = ref(false)
 const showDocumentTree = ref(false)
+const showToc = ref(false)
 
-// 创建 Dock 配置，传入搜索和列表动作
+// 创建 Dock 配置，传入搜索、列表和目录动作
 const dockItems = createDockItems(
     () => {
         showSearch.value = true
     },
     () => {
         showDocumentTree.value = true
+    },
+    () => {
+        showToc.value = true
     }
 ).articleDetail
 
@@ -403,9 +416,9 @@ watch(
         font-size: var(--font-size-xl);
     }
 
-    .article-body {
-        font-size: var(--font-size-sm);
-        line-height: 1.7;
-    }
+.article-body {
+    font-size: var(--font-size-sm);
+    line-height: 1.7;
+}
 }
 </style>

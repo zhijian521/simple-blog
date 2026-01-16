@@ -62,35 +62,40 @@ const emit = defineEmits<{
 const isExpanded = ref(props.level === 0)
 
 // 平滑展开/折叠动画
-const beforeEnter = (el: HTMLElement) => {
-    el.style.height = '0'
-    el.style.opacity = '0'
+const beforeEnter = (el: Element) => {
+    const element = el as HTMLElement
+    element.style.height = '0'
+    element.style.opacity = '0'
 }
 
-const enter = (el: HTMLElement, done: () => void) => {
-    const height = el.scrollHeight
+const enter = (el: Element, done: () => void) => {
+    const element = el as HTMLElement
+    const height = element.scrollHeight
     requestAnimationFrame(() => {
-        el.style.height = height + 'px'
-        el.style.opacity = '1'
+        element.style.height = height + 'px'
+        element.style.opacity = '1'
         setTimeout(() => {
-            el.style.height = 'auto'
+            element.style.height = 'auto'
             done()
         }, 300)
     })
 }
 
-const afterEnter = (el: HTMLElement) => {
-    el.style.height = 'auto'
+const afterEnter = (el: Element) => {
+    const element = el as HTMLElement
+    element.style.height = 'auto'
 }
 
-const beforeLeave = (el: HTMLElement) => {
-    el.style.height = el.scrollHeight + 'px'
+const beforeLeave = (el: Element) => {
+    const element = el as HTMLElement
+    element.style.height = element.scrollHeight + 'px'
 }
 
-const leave = (el: HTMLElement, done: () => void) => {
+const leave = (el: Element, done: () => void) => {
+    const element = el as HTMLElement
     requestAnimationFrame(() => {
-        el.style.height = '0'
-        el.style.opacity = '0'
+        element.style.height = '0'
+        element.style.opacity = '0'
         setTimeout(done, 300)
     })
 }
@@ -196,7 +201,7 @@ const handleClick = () => {
     }
 
     .tree-node-label {
-        font-size: var(--font-size-xs);
+        font-size: 0.85rem;
     }
 
     .tree-node-date {
@@ -215,7 +220,7 @@ const handleClick = () => {
     }
 
     .tree-node-label {
-        font-size: 0.75rem;
+        font-size: 0.8rem;
     }
 
     .tree-node-date {

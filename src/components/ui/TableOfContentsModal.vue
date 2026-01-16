@@ -1,5 +1,5 @@
 <template>
-    <div v-show="visible" class="document-tree-modal" @click.self="handleClose">
+    <div v-show="visible" class="toc-modal" @click.self="handleClose">
         <div class="modal-wrapper">
             <div class="modal-background-layer"></div>
             <div class="modal-container">
@@ -11,18 +11,18 @@
                 </div>
 
                 <div class="modal-content">
-                    <div v-if="treeNodes.length === 0" class="empty-state">
-                        <p>暂无文章</p>
+                    <div v-if="headings.length === 0" class="empty-state">
+                        <p>暂未找到标题</p>
                     </div>
-                    <div v-else class="tree-container">
-                        <TreeNode
-                            v-for="node in sortedTreeNodes"
-                            :key="node.path"
-                            :node="node"
-                            :level="0"
-                            :articles="articles"
-                            @article-click="handleArticleClick"
-                        />
+                    <div v-else class="toc-list">
+                        <div
+                            v-for="heading in headings"
+                            :key="heading.id"
+                            :class="['toc-item', `toc-level-${heading.level}`]"
+                            @click="scrollToHeading(heading.id)"
+                        >
+                            {{ heading.text }}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -31,17 +31,18 @@
 </template>
 
 <script setup lang="ts">
-import { computed, watch, onUnmounted } from 'vue'
-import { useRouter } from 'vue-router'
-import TreeNode from './TreeNode.vue'
+import { ref, watch, nextTick, onUnmounted } from 'vue'
 import CloseIcon from '@/components/icons/CloseIcon.vue'
-import { getArticles } from '@/utils/markdown'
-import { sortTreeNodes } from '@/utils/tree-sort'
-import type { TreeNode as TreeNodeType } from '@/utils/build-article-tree'
-import type { Article } from '@/types/article'
 
 interface Props {
     visible: boolean
+    content?: string
+}
+
+interface Heading {
+    id: string
+    text: string
+    level: number
 }
 
 const props = defineProps<Props>()
@@ -50,74 +51,60 @@ const emit = defineEmits<{
     (e: 'close'): void
 }>()
 
-const router = useRouter()
-const articles = getArticles() as Article[]
+const headings = ref<Heading[]>([])
 
-// 常量配置
-const BLOG_PATH_PREFIX = '/blogs/'
-const BLOG_FILE_SUFFIX = '.md'
-
-// 构建树形结构
-const treeNodes = computed(() => {
-    // SSR 环境下返回空数组
-    if (typeof window === 'undefined') return []
-
-    const blogModules = import.meta.glob('/blogs/**/*.md', { query: '?raw' })
-    const treeData: TreeNodeType[] = []
-
-    for (const path in blogModules) {
-        const relativePath = path
-            .replace(new RegExp(`^${BLOG_PATH_PREFIX}`), '')
-            .replace(BLOG_FILE_SUFFIX, '')
-        const parts = relativePath.split('/')
-
-        let currentLevel = treeData
-        let currentPath = ''
-
-        for (let i = 0; i < parts.length; i++) {
-            const part = parts[i]
-            currentPath = currentPath ? `${currentPath}/${part}` : part
-            const isFile = i === parts.length - 1
-
-            if (isFile) {
-                const article = articles.find(a => a.slug === relativePath)
-                currentLevel.push({
-                    name: part,
-                    path: relativePath,
-                    type: 'file',
-                    id: article?.id,
-                })
-            } else {
-                let existingNode = currentLevel.find(
-                    n => n.name === part && n.type === 'directory'
-                )
-
-                if (!existingNode) {
-                    const newNode: TreeNodeType = {
-                        name: part,
-                        path: currentPath,
-                        type: 'directory',
-                        children: [],
-                    }
-                    currentLevel.push(newNode)
-                    existingNode = newNode
-                }
-
-                currentLevel = existingNode.children!
-            }
-        }
+// 从 HTML 内容中提取标题
+const extractHeadings = () => {
+    if (!props.content) {
+        headings.value = []
+        return
     }
 
-    return treeData
-})
+    // 创建临时 DOM 解析 HTML
+    const tempDiv = document.createElement('div')
+    tempDiv.innerHTML = props.content
 
-// 排序树节点
-const sortedTreeNodes = computed(() => sortTreeNodes(treeNodes.value))
+    const foundHeadings: Heading[] = []
+    const headingElements = tempDiv.querySelectorAll('h2, h3, h4')
 
-// 跳转到文章详情
-const handleArticleClick = (articleId: string) => {
-    router.push(`/article/${articleId}`)
-    handleClose()
+    headingElements.forEach((el, index) => {
+        const level = parseInt(el.tagName.charAt(1))
+        const text = el.textContent?.trim() || ''
+        
+        // 生成唯一 ID
+        const id = `heading-${index}`
+        el.id = id
+
+        foundHeadings.push({
+            id,
+            text,
+            level,
+        })
+    })
+
+    headings.value = foundHeadings
+
+    // 更新实际的 DOM 中的标题 ID
+    nextTick(() => {
+        const articleBody = document.querySelector('.article-body')
+        if (articleBody) {
+            const actualHeadings = articleBody.querySelectorAll('h2, h3, h4')
+            actualHeadings.forEach((el, idx) => {
+                if (foundHeadings[idx]) {
+                    el.id = foundHeadings[idx].id
+                }
+            })
+        }
+    })
+}
+
+// 滚动到指定标题
+const scrollToHeading = (id: string) => {
+    const element = document.getElementById(id)
+    if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        handleClose()
+    }
 }
 
 // 关闭弹窗
@@ -132,16 +119,18 @@ const handleEsc = (e: KeyboardEvent) => {
     }
 }
 
-// 监听弹窗可见性
+// 监听弹窗可见性和内容变化
 watch(
-    () => props.visible,
-    (isVisible) => {
-        if (isVisible) {
+    () => [props.visible, props.content],
+    ([visible]) => {
+        if (visible) {
             document.addEventListener('keydown', handleEsc)
+            extractHeadings()
         } else {
             document.removeEventListener('keydown', handleEsc)
         }
-    }
+    },
+    { immediate: true }
 )
 
 // 组件卸载时清理
@@ -151,7 +140,7 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-.document-tree-modal {
+.toc-modal {
     position: fixed;
     top: 0;
     left: 0;
@@ -295,13 +284,42 @@ onUnmounted(() => {
     font-size: var(--font-size-sm);
 }
 
-.tree-container {
+.toc-list {
     display: flex;
     flex-direction: column;
 }
 
+.toc-item {
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: var(--color-text);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+}
+
+.toc-item:hover {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.toc-level-2 {
+    padding-left: 0.75rem;
+}
+
+.toc-level-3 {
+    padding-left: 2rem;
+    font-size: var(--font-size-sm);
+}
+
+.toc-level-4 {
+    padding-left: 3rem;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-light);
+}
+
 @media (max-width: 768px) {
-    .document-tree-modal {
+    .toc-modal {
         padding: 1rem;
     }
 
@@ -339,10 +357,30 @@ onUnmounted(() => {
     .modal-content {
         padding: 0.75rem 1rem;
     }
+
+    .toc-item {
+        padding: 0.625rem;
+        font-size: 0.9rem;
+    }
+
+    .toc-level-2 {
+        padding-left: 0.625rem;
+    }
+
+    .toc-level-3 {
+        padding-left: 1.75rem;
+        font-size: 0.8rem;
+    }
+
+    .toc-level-4 {
+        padding-left: 2.75rem;
+        font-size: 0.75rem;
+        color: var(--color-text-light);
+    }
 }
 
 @media (max-width: 480px) {
-    .document-tree-modal {
+    .toc-modal {
         padding: 0.75rem;
     }
 
@@ -377,8 +415,33 @@ onUnmounted(() => {
         height: 1.375rem;
     }
 
+    .close-icon {
+        width: 0.75rem;
+        height: 0.75rem;
+    }
+
     .modal-content {
         padding: 0.625rem 0.875rem;
+    }
+
+    .toc-item {
+        padding: 0.5rem;
+        font-size: 0.85rem;
+    }
+
+    .toc-level-2 {
+        padding-left: 0.5rem;
+    }
+
+    .toc-level-3 {
+        padding-left: 1.5rem;
+        font-size: 0.75rem;
+    }
+
+    .toc-level-4 {
+        padding-left: 2.5rem;
+        font-size: 0.7rem;
+        color: var(--color-text-light);
     }
 }
 </style>

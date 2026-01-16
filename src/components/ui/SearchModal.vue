@@ -539,7 +539,8 @@ onUnmounted(() => {
     }
 
     .modal-wrapper {
-        max-width: calc(100% - 2rem);
+        max-width: 500px;
+        width: calc(100% - 2rem);
         height: 500px;
     }
 
@@ -560,7 +561,7 @@ onUnmounted(() => {
     }
 
     .modal-title {
-        font-size: var(--font-size-sm);
+        font-size: 0.95rem;
     }
 
     .modal-close {
@@ -577,7 +578,7 @@ onUnmounted(() => {
     }
 
     .search-input {
-        font-size: var(--font-size-sm);
+        font-size: 0.9rem;
         padding: 0.625rem 0.625rem 0.625rem 2.5rem;
     }
 
@@ -594,7 +595,7 @@ onUnmounted(() => {
     }
 
     .result-title {
-        font-size: var(--font-size-sm);
+        font-size: 0.9rem;
     }
 
     .result-date {
@@ -602,7 +603,7 @@ onUnmounted(() => {
     }
 
     .result-excerpt {
-        font-size: var(--font-size-xs);
+        font-size: 0.8rem;
     }
 
     .result-tag {
@@ -619,7 +620,7 @@ onUnmounted(() => {
     .search-hint p,
     .search-loading span,
     .search-empty p {
-        font-size: var(--font-size-xs);
+        font-size: 0.85rem;
     }
 
     .tip {
@@ -633,7 +634,8 @@ onUnmounted(() => {
     }
 
     .modal-wrapper {
-        max-width: calc(100% - 1.5rem);
+        max-width: 400px;
+        width: calc(100% - 1.5rem);
         height: 450px;
     }
 
@@ -654,7 +656,7 @@ onUnmounted(() => {
     }
 
     .modal-title {
-        font-size: var(--font-size-xs);
+        font-size: 0.85rem;
     }
 
     .modal-close {
@@ -678,7 +680,7 @@ onUnmounted(() => {
     }
 
     .search-input {
-        font-size: var(--font-size-xs);
+        font-size: 0.85rem;
         padding: 0.5rem 0.5rem 0.5rem 2.25rem;
     }
 
@@ -707,7 +709,7 @@ onUnmounted(() => {
     }
 
     .result-title {
-        font-size: var(--font-size-xs);
+        font-size: 0.85rem;
     }
 
     .result-date {
@@ -715,7 +717,7 @@ onUnmounted(() => {
     }
 
     .result-excerpt {
-        font-size: var(--font-size-xs);
+        font-size: 0.75rem;
         margin-bottom: 0.375rem;
     }
 
