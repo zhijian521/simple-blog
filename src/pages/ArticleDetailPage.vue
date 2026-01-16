@@ -177,6 +177,10 @@ watch(
     font-size: var(--font-size-base);
     font-weight: 390;
     word-wrap: break-word;
+    /* 允许选择和复制文本 */
+    -webkit-user-select: text;
+    user-select: text;
+    -webkit-touch-callout: default;
 }
 
 /* 未高亮的代码块初始样式（防止闪烁） */
@@ -283,14 +287,22 @@ watch(
     margin-bottom: var(--spacing-xs);
 }
 
-/* 引用块样式 */
+/* 引用块样式 - 水墨风格优化（更浅） */
 .article-body :deep(blockquote) {
-    border-left: var(--border-width-md) solid var(--color-border);
-    padding: var(--spacing-sm) var(--spacing-md);
-    margin: var(--spacing-md) 0;
+    position: relative;
+    margin: var(--spacing-lg) 0;
+    padding: var(--spacing-md) var(--spacing-lg);
+    padding-left: var(--spacing-xl);
     color: var(--color-text-light);
-    background: var(--color-bg-page);
-    border-radius: 0 var(--spacing-sm) var(--spacing-sm) 0;
+    background: var(--color-bg-secondary);
+    border-radius: var(--radius-md);
+    /* 更浅的阴影 */
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03), 0 2px 8px rgba(0, 0, 0, 0.02);
+    font-weight: 300;
+    line-height: 1.8;
+    overflow: hidden;
+    /* 左侧浅色边框 */
+    border-left: 3px solid rgba(26, 26, 26, 0.15);
 }
 
 .article-body :deep(blockquote p) {
@@ -419,6 +431,11 @@ watch(
     .article-body :deep(td) {
         padding: var(--spacing-xs) var(--spacing-sm);
     }
+
+    .article-body :deep(blockquote) {
+        padding: var(--spacing-sm) var(--spacing-md);
+        padding-left: var(--spacing-lg);
+    }
 }
 
 @media (max-width: 480px) {
@@ -434,6 +451,12 @@ watch(
     .article-body {
         font-size: var(--font-size-sm);
         line-height: 1.7;
+    }
+
+    .article-body :deep(blockquote) {
+        padding: var(--spacing-sm);
+        padding-left: var(--spacing-md);
+        margin: var(--spacing-md) 0;
     }
 }
 </style>
