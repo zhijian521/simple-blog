@@ -36,11 +36,17 @@ const routes: RouteRecordRaw[] = [
 const router = createRouter({
     history: import.meta.env.SSR ? createMemoryHistory() : createWebHistory(),
     routes,
-    scrollBehavior(_to, _from, savedPosition) {
+    scrollBehavior(to, from, savedPosition) {
+        // 如果有保存的位置（如浏览器后退），则恢复到该位置
         if (savedPosition) {
             return savedPosition
         }
-        return { top: 0, behavior: 'smooth' }
+        // 跳转到文章详情页时，滚动到顶部
+        if (to.name === 'ArticleDetail') {
+            return { top: 0, behavior: 'auto' }
+        }
+        // 其他情况也滚动到顶部
+        return { top: 0, behavior: 'auto' }
     },
 })
 

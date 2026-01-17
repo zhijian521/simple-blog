@@ -116,6 +116,8 @@ loadArticle(validatedId)
 onMounted(() => {
     // 客户端导航时重新加载数据
     loadArticle(validatedId)
+    // 滚动到顶部
+    window.scrollTo({ top: 0, behavior: 'auto' })
     // 高亮代码块
     highlightCode()
 })
@@ -132,10 +134,13 @@ watch(
             const validatedId =
                 typeof newId === 'string' ? newId : Array.isArray(newId) ? newId[0] : ''
             loadArticle(validatedId)
-            // 只在客户端环境执行代码高亮
+            // 只在客户端环境执行
             if (!import.meta.env.SSR) {
-                // 等待 DOM 更新后高亮代码
+                // 等待 DOM 更新
                 await nextTick()
+                // 滚动到顶部
+                window.scrollTo({ top: 0, behavior: 'auto' })
+                // 高亮代码
                 highlightCode()
             }
         }
