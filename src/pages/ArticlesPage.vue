@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { getArticles } from '@/utils/markdown'
 import ArticleCard from '@/components/article/ArticleCard.vue'
 import EmptyState from '@/components/ui/EmptyState.vue'
@@ -35,6 +35,11 @@ import type { Article } from '@/types/article'
 const articles = getArticles() as Article[]
 const showSearch = ref(false)
 const showDocumentTree = ref(false)
+
+// 页面挂载时滚动到顶部
+onMounted(() => {
+    window.scrollTo({ top: 0, behavior: 'auto' })
+})
 
 // 创建 Dock 配置，传入搜索和列表动作
 const dockItems = createDockItems(
