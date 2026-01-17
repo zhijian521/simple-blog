@@ -175,7 +175,7 @@ watch(
     color: var(--color-text);
     line-height: 1.8;
     font-size: var(--font-size-base);
-    font-weight: 390;
+    font-weight: 400;
     word-wrap: break-word;
     /* 允许选择和复制文本 */
     -webkit-user-select: text;
@@ -298,7 +298,7 @@ watch(
     border-radius: var(--radius-md);
     /* 更浅的阴影 */
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03), 0 2px 8px rgba(0, 0, 0, 0.02);
-    font-weight: 300;
+    font-weight: 400;
     line-height: 1.8;
     overflow: hidden;
     /* 左侧浅色边框 */

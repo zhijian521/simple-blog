@@ -60,10 +60,10 @@
   --font-size-xxs: 0.65rem;
 
   /* 字重 */
-  --font-weight-normal: 300;
+  --font-weight-normal: 400;
   --font-weight-medium: 400;
   --font-weight-semibold: 500;
-  --font-weight-bold: 600;
+  --font-weight-bold: 500;
 
   /* === 圆角系统 === */
   --radius-sm: 4px;

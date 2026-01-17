@@ -61,7 +61,7 @@ const currentYear = new Date().getFullYear()
     font-size: var(--font-size-xs);
     color: var(--color-text-light);
     margin: 0;
-    font-weight: 390;
+    font-weight: 400;
 }
 
 .site-footer-link {
