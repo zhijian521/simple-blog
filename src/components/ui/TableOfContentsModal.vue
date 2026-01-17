@@ -123,6 +123,9 @@ const handleEsc = (e: KeyboardEvent) => {
 watch(
     () => [props.visible, props.content],
     ([visible]) => {
+        // 只在客户端环境执行
+        if (import.meta.env.SSR) return
+
         if (visible) {
             document.addEventListener('keydown', handleEsc)
             extractHeadings()

@@ -132,9 +132,12 @@ watch(
             const validatedId =
                 typeof newId === 'string' ? newId : Array.isArray(newId) ? newId[0] : ''
             loadArticle(validatedId)
-            // 等待 DOM 更新后高亮代码
-            await nextTick()
-            highlightCode()
+            // 只在客户端环境执行代码高亮
+            if (!import.meta.env.SSR) {
+                // 等待 DOM 更新后高亮代码
+                await nextTick()
+                highlightCode()
+            }
         }
     }
 )
