@@ -351,12 +351,12 @@ watch(
     border-collapse: collapse;
     margin: var(--spacing-md) 0;
     font-size: 0.9375em;
-    overflow-x: auto;
-    display: block;
+    overflow: hidden;
+    border-radius: var(--radius-md);
 }
 
 .article-body :deep(thead) {
-    border-bottom: 2px solid var(--color-border);
+    border-bottom: 1px solid var(--color-bg-secondary);
 }
 
 .article-body :deep(th),
@@ -373,7 +373,7 @@ watch(
 }
 
 .article-body :deep(tbody tr) {
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-bg-secondary);
 }
 
 .article-body :deep(tbody tr:last-child) {
@@ -433,11 +433,6 @@ watch(
 
     .article-body :deep(table) {
         font-size: 0.875em;
-    }
-
-    .article-body :deep(th),
-    .article-body :deep(td) {
-        padding: var(--spacing-xs) var(--spacing-sm);
     }
 
     .article-body :deep(blockquote) {

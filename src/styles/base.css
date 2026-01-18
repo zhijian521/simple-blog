@@ -109,6 +109,26 @@ blockquote {
   color: var(--color-text-light);
 }
 
+/* Table */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: var(--spacing-md) 0;
+  font-size: 0.9375em;
+  background: var(--color-bg-secondary);
+  border: 1px solid #d1d1d1;
+  box-shadow: var(--shadow-ink);
+}
+
+tbody tr:nth-child(even) {
+  background: var(--color-bg-tertiary);
+}
+
+tbody tr:hover {
+  background: var(--color-bg-page);
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
