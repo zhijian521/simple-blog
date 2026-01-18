@@ -65,6 +65,10 @@ function ensureFileId(filePath: string): boolean {
                 if (Array.isArray(value)) {
                     return `${key}:\n${value.map(v => `  - ${v}`).join('\n')}`
                 }
+                // 字符串直接输出，其他类型用 JSON.stringify
+                if (typeof value === 'string') {
+                    return `${key}: ${value}`
+                }
                 return `${key}: ${JSON.stringify(value)}`
             })
             .join('\n')
