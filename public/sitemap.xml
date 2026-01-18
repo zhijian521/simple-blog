@@ -1,73 +1,85 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-        <loc>https://blog.yuwb.cn/</loc>
-        <lastmod>2026-01-16</lastmod>
+        <loc>https://www.yuwb.dev/</loc>
+        <lastmod>2026-01-18</lastmod>
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
     </url>
     <url>
-        <loc>https://blog.yuwb.cn/articles</loc>
-        <lastmod>2026-01-16</lastmod>
+        <loc>https://www.yuwb.dev/articles</loc>
+        <lastmod>2026-01-18</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://blog.yuwb.cn/article/s8u9yp4g</loc>
+        <loc>https://www.yuwb.dev/article/s8u9yp4g</loc>
         <lastmod>2026-01-03</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
     </url>
     <url>
-        <loc>https://blog.yuwb.cn/article/nwd0bpy4</loc>
+        <loc>https://www.yuwb.dev/article/nwd0bpy4</loc>
         <lastmod>2024-05-11</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
     </url>
     <url>
-        <loc>https://blog.yuwb.cn/article/hleayr4y</loc>
+        <loc>https://www.yuwb.dev/article/hleayr4y</loc>
         <lastmod>2024-05-16</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
     </url>
     <url>
-        <loc>https://blog.yuwb.cn/article/zjfqwa97</loc>
-        <lastmod>2024-06-01</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.6</priority>
-    </url>
-    <url>
-        <loc>https://blog.yuwb.cn/article/ngbqsy5p</loc>
+        <loc>https://www.yuwb.dev/article/ngbqsy5p</loc>
         <lastmod>2024-08-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
     </url>
     <url>
-        <loc>https://blog.yuwb.cn/article/kwthekfy</loc>
+        <loc>https://www.yuwb.dev/article/kwthekfy</loc>
         <lastmod>2024-08-19</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
     </url>
     <url>
-        <loc>https://blog.yuwb.cn/article/d7t2tpc7</loc>
+        <loc>https://www.yuwb.dev/article/zjfqwa97</loc>
+        <lastmod>2024-06-01</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    <url>
+        <loc>https://www.yuwb.dev/article/nc06s8ot</loc>
+        <lastmod>2024-05-09</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    <url>
+        <loc>https://www.yuwb.dev/article/lcf84kaw</loc>
+        <lastmod>2024-05-09</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    <url>
+        <loc>https://www.yuwb.dev/article/d7t2tpc7</loc>
         <lastmod>2026-01-03</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
     </url>
     <url>
-        <loc>https://blog.yuwb.cn/article/9byt3r60</loc>
+        <loc>https://www.yuwb.dev/article/9byt3r60</loc>
         <lastmod>2025-12-29</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
     </url>
     <url>
-        <loc>https://blog.yuwb.cn/article/4ppzzg4p</loc>
-        <lastmod>2025-12-28</lastmod>
+        <loc>https://www.yuwb.dev/article/4ppzzg4p</loc>
+        <lastmod>2026-01-16</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
     </url>
     <url>
-        <loc>https://blog.yuwb.cn/article/47u5com6</loc>
+        <loc>https://www.yuwb.dev/article/47u5com6</loc>
         <lastmod>2025-01-02</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
