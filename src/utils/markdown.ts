@@ -18,7 +18,7 @@ const DEFAULT_EXCERPT_LENGTH = 200
 const SHIKI_THEME = 'github-light'
 
 // 常用语言列表（初始化时加载）
-const CORE_LANGUAGES = ['javascript', 'typescript', 'bash', 'json', 'html', 'css'] as const
+const CORE_LANGUAGES = ['javascript', 'typescript', 'vue', 'bash', 'json', 'html', 'css'] as const
 
 // 支持的所有语言（按需加载）
 const SUPPORTED_LANGUAGES = [
@@ -28,6 +28,7 @@ const SUPPORTED_LANGUAGES = [
     'typescript',
     'js',
     'ts',
+    'vue',
     'json',
     'html',
     'css',
