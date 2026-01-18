@@ -36,7 +36,7 @@ const routes: RouteRecordRaw[] = [
 const router = createRouter({
     history: import.meta.env.SSR ? createMemoryHistory() : createWebHistory(),
     routes,
-    scrollBehavior(to, from, savedPosition) {
+    scrollBehavior(to, _from, savedPosition) {
         // 如果有保存的位置（如浏览器后退），则恢复到该位置
         if (savedPosition) {
             return savedPosition
