@@ -13,6 +13,8 @@ export default defineConfig({
     ssgOptions: {
         // 从配置文件获取需要预渲染的路由列表
         includedRoutes: getIncludedRoutes,
+        // 使用目录结构格式，每个页面生成独立目录和 index.html
+        format: 'directory',
     },
     resolve: {
         alias: {
