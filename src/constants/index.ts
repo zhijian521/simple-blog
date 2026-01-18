@@ -7,7 +7,7 @@ export const SITE_CONFIG = {
     description: '记录思考，分享知识',
     keywords: '耶温博客, 技术博客, 编程, 开发, 前端, 后端, 全栈',
     author: '耶温',
-    url: 'https://blog.yuwb.cn',
+    url: 'https://www.yuwb.dev',
     icp: {
         number: '陕ICP备2024040821号-1',
         url: 'https://beian.miit.gov.cn/',

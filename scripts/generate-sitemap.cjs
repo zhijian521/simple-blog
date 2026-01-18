@@ -8,7 +8,7 @@
 const fs = require('fs')
 const path = require('path')
 
-const SITE_URL = 'https://blog.yuwb.cn'
+const SITE_URL = 'https://www.yuwb.dev'
 
 function formatDate(date) {
   const year = date.getFullYear()
