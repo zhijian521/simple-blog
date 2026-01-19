@@ -8,6 +8,7 @@
         </main>
         <Footer v-if="!isHomePage && !isLoading" />
         <SpeedInsights />
+        <Analytics />
     </div>
 </template>
 
@@ -19,6 +20,7 @@ import Footer from '@/components/ui/Footer.vue'
 import PageLoader from '@/components/ui/PageLoader.vue'
 import { SITE_CONFIG } from '@/constants'
 import { SpeedInsights } from '@vercel/speed-insights/vue'
+import { Analytics } from '@vercel/analytics/vue'
 
 const route = useRoute()
 const router = useRouter()
