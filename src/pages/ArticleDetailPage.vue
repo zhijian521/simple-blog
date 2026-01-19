@@ -17,17 +17,30 @@
         </article>
 
         <!-- macOS 风格 Dock 菜单栏 -->
-        <Dock v-if="!loading && article" :items="dockItems" position="bottom" :search-visible="showSearch" />
+        <Dock
+            v-if="!loading && article"
+            :items="dockItems"
+            position="bottom"
+            :search-visible="showSearch"
+        />
 
         <!-- 搜索模态框 -->
         <SearchModal v-if="!loading && article" :visible="showSearch" @close="showSearch = false" />
 
         <!-- 文档树模态框 -->
-        <DocumentTreeModal v-if="!loading && article" :visible="showDocumentTree" @close="showDocumentTree = false" />
+        <DocumentTreeModal
+            v-if="!loading && article"
+            :visible="showDocumentTree"
+            @close="showDocumentTree = false"
+        />
 
         <!-- 文章目录模态框 -->
-        <TableOfContentsModal v-if="!loading && article" :visible="showToc" :content="article?.content"
-            @close="showToc = false" />
+        <TableOfContentsModal
+            v-if="!loading && article"
+            :visible="showToc"
+            :content="article?.content"
+            @close="showToc = false"
+        />
     </div>
 </template>
 
@@ -305,7 +318,9 @@ watch(
     background: var(--color-bg-secondary);
     border-radius: var(--radius-md);
     /* 更浅的阴影 */
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03), 0 2px 8px rgba(0, 0, 0, 0.02);
+    box-shadow:
+        0 1px 4px rgba(0, 0, 0, 0.03),
+        0 2px 8px rgba(0, 0, 0, 0.02);
     font-weight: 400;
     line-height: 1.8;
     overflow: hidden;

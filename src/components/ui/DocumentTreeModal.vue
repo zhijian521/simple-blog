@@ -88,9 +88,7 @@ const treeNodes = computed(() => {
                     id: article?.id,
                 })
             } else {
-                let existingNode = currentLevel.find(
-                    n => n.name === part && n.type === 'directory'
-                )
+                let existingNode = currentLevel.find(n => n.name === part && n.type === 'directory')
 
                 if (!existingNode) {
                     const newNode: TreeNodeType = {
@@ -135,7 +133,7 @@ const handleEsc = (e: KeyboardEvent) => {
 // 监听弹窗可见性
 watch(
     () => props.visible,
-    (isVisible) => {
+    isVisible => {
         if (isVisible) {
             document.addEventListener('keydown', handleEsc)
         } else {

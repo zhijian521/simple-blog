@@ -83,6 +83,7 @@ Google Search Console 是 Google 提供的免费服务，可以帮助你：
 如果使用了 GTM，也可以用它验证。
 
 **验证成功后：**
+
 - 网站状态变为"所有权已验证"
 - 开始收集数据（通常需要 24-48 小时）
 
@@ -123,6 +124,7 @@ Sitemap 是一个 XML 文件，列出网站的所有重要页面。
 路径：Search Console → 站点地图 → 添加新的站点地图
 
 输入 sitemap 文件路径：
+
 - 通常为：`sitemap.xml`
 - 或：`sitemap/sitemap.xml`
 
@@ -164,6 +166,7 @@ Sitemap 是一个 XML 文件，列出网站的所有重要页面。
 3. 点击"请求编入索引"
 
 **注意：**
+
 - 每天限额有限（通常几十次）
 - 不是保证立即索引
 - 质量高的页面索引更快
@@ -227,6 +230,7 @@ Sitemap 是一个 XML 文件，列出网站的所有重要页面。
 路径：Search Console → 移动设备可用性
 
 **检查项：**
+
 - 文字太小难以阅读
 - 触摸元素太靠近
 - 内容宽度大于屏幕宽度
@@ -294,17 +298,17 @@ Sitemap 是一个 XML 文件，列出网站的所有重要页面。
 
 ```html
 <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Article",
-  "headline": "文章标题",
-  "author": {
-    "@type": "Person",
-    "name": "作者名"
-  },
-  "datePublished": "2025-01-18",
-  "description": "文章描述"
-}
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "文章标题",
+    "author": {
+      "@type": "Person",
+      "name": "作者名"
+    },
+    "datePublished": "2025-01-18",
+    "description": "文章描述"
+  }
 </script>
 ```
 
@@ -333,6 +337,7 @@ Sitemap 是一个 XML 文件，列出网站的所有重要页面。
 ### Q: 为什么网站没有被索引？
 
 **可能原因：**
+
 - 网站是新的（需要时间）
 - robots.txt 阻止索引
 - noindex 标签
@@ -340,6 +345,7 @@ Sitemap 是一个 XML 文件，列出网站的所有重要页面。
 - 内容质量低
 
 **解决方法：**
+
 - 检查"覆盖范围"报告
 - 使用"网址检查"工具诊断
 - 确保没有 noindex 标签
@@ -366,6 +372,7 @@ Sitemap 是一个 XML 文件，列出网站的所有重要页面。
 https://pagespeed.web.dev/
 
 根据建议优化：
+
 - 响应式设计
 - 视口配置
 - 字体大小
@@ -408,6 +415,7 @@ Google Search Console 是个人网站 SEO 不可或缺的工具。通过它你�
 ✅ 提升网站流量和可见性
 
 **关键要点：**
+
 1. 定期检查 Search Console
 2. 及时修复错误和警告
 3. 持续优化内容和技术

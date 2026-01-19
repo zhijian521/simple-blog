@@ -2,7 +2,6 @@
 
 简约优雅的静态博客系统，记录思考，分享知识
 
-
 ---
 
 耶温博客是一个轻量级、高性能的静态博客系统，采用 Vue 3 和 Vite 构建。支持 Markdown 撰写、全文搜索、响应式设计，开箱即用。
@@ -115,13 +114,13 @@ export const SITE_CONFIG = {
 
 ## 脚本命令
 
-| 命令 | 说明 |
-|------|------|
-| `npm run dev` | 启动开发服务器 |
-| `npm run build` | 生产构建 |
-| `npm run ensure-ids` | 生成文章 ID |
-| `npm run fetch-git` | 获取 Git 活动数据 |
-| `npm run generate-sitemap` | 生成 sitemap |
+| 命令                       | 说明              |
+| -------------------------- | ----------------- |
+| `npm run dev`              | 启动开发服务器    |
+| `npm run build`            | 生产构建          |
+| `npm run ensure-ids`       | 生成文章 ID       |
+| `npm run fetch-git`        | 获取 Git 活动数据 |
+| `npm run generate-sitemap` | 生成 sitemap      |
 
 ---
 

@@ -7,11 +7,19 @@
             @click="handleClick"
         >
             <component
-                :is="node.type === 'directory' ? (isExpanded ? FolderOpenIcon : FolderClosedIcon) : DocumentIcon"
+                :is="
+                    node.type === 'directory'
+                        ? isExpanded
+                            ? FolderOpenIcon
+                            : FolderClosedIcon
+                        : DocumentIcon
+                "
                 class="tree-node-icon"
             />
             <span class="tree-node-label">{{ node.name }}</span>
-            <span v-if="node.type === 'file' && articleDate" class="tree-node-date">{{ articleDate }}</span>
+            <span v-if="node.type === 'file' && articleDate" class="tree-node-date">{{
+                articleDate
+            }}</span>
         </div>
 
         <transition
@@ -186,8 +194,9 @@ const handleClick = () => {
 
 .tree-node-children {
     overflow: hidden;
-    transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition:
+        height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .tree-node-children-inner {

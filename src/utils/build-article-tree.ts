@@ -23,7 +23,9 @@ export function buildArticleTree(dir: string): TreeNode[] {
             // 添加目录节点
             for (const dirEnt of directories) {
                 const fullPath = resolve(currentPath, dirEnt.name)
-                const newRelativePath = relativePath ? `${relativePath}/${dirEnt.name}` : dirEnt.name
+                const newRelativePath = relativePath
+                    ? `${relativePath}/${dirEnt.name}`
+                    : dirEnt.name
 
                 nodes.push({
                     name: dirEnt.name,
@@ -40,7 +42,9 @@ export function buildArticleTree(dir: string): TreeNode[] {
                 const idMatch = content.match(/^id:\s*(.+)$/m)
                 const id = idMatch ? idMatch[1].trim() : undefined
 
-                const newRelativePath = relativePath ? `${relativePath}/${fileEnt.name}` : fileEnt.name
+                const newRelativePath = relativePath
+                    ? `${relativePath}/${fileEnt.name}`
+                    : fileEnt.name
 
                 nodes.push({
                     name: fileEnt.name.replace('.md', ''),

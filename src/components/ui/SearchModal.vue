@@ -10,9 +10,35 @@
                     </button>
                 </div>
 
-                    <div class="search-input-wrapper">
+                <div class="search-input-wrapper">
+                    <svg
+                        class="search-icon"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        aria-hidden="true"
+                    >
+                        <circle cx="11" cy="11" r="8" />
+                        <path d="M21 21l-4.35-4.35" />
+                    </svg>
+                    <input
+                        ref="searchInputRef"
+                        v-model="searchQuery"
+                        type="text"
+                        class="search-input"
+                        placeholder="搜索文章标题、标签..."
+                        aria-label="搜索文章"
+                        @input="handleSearch"
+                    />
+                    <button
+                        v-if="searchQuery"
+                        class="clear-button"
+                        aria-label="清除搜索"
+                        @click="clearSearch"
+                    >
                         <svg
-                            class="search-icon"
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 24 24"
                             fill="none"
@@ -20,81 +46,55 @@
                             stroke-width="2"
                             aria-hidden="true"
                         >
-                            <circle cx="11" cy="11" r="8" />
-                            <path d="M21 21l-4.35-4.35" />
+                            <line x1="18" y1="6" x2="6" y2="18" />
+                            <line x1="6" y1="6" x2="18" y2="18" />
                         </svg>
-                        <input
-                            ref="searchInputRef"
-                            v-model="searchQuery"
-                            type="text"
-                            class="search-input"
-                            placeholder="搜索文章标题、标签..."
-                            aria-label="搜索文章"
-                            @input="handleSearch"
-                        />
-                        <button
-                            v-if="searchQuery"
-                            class="clear-button"
-                            aria-label="清除搜索"
-                            @click="clearSearch"
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="2"
-                                aria-hidden="true"
-                            >
-                                <line x1="18" y1="6" x2="6" y2="18" />
-                                <line x1="6" y1="6" x2="18" y2="18" />
-                            </svg>
-                        </button>
+                    </button>
+                </div>
+
+                <div class="modal-content">
+                    <div v-if="loading" class="search-loading">
+                        <div class="loading-spinner" aria-hidden="true"></div>
+                        <span>搜索中...</span>
                     </div>
 
-                    <div class="modal-content">
-                        <div v-if="loading" class="search-loading">
-                            <div class="loading-spinner" aria-hidden="true"></div>
-                            <span>搜索中...</span>
-                        </div>
+                    <div v-else-if="searchQuery && results.length === 0" class="search-empty">
+                        <p>未找到相关文章</p>
+                    </div>
 
-                        <div v-else-if="searchQuery && results.length === 0" class="search-empty">
-                            <p>未找到相关文章</p>
-                        </div>
-
-                        <div v-else-if="results.length > 0" class="results-list">
-                            <RouterLink
-                                v-for="article in results"
-                                :key="article.id"
-                                :to="`/article/${article.id}`"
-                                class="result-item"
-                                @click="handleClose"
-                            >
-                                <div class="result-header">
-                                    <h3 class="result-title">{{ article.title }}</h3>
-                                    <time class="result-date" :datetime="article.date">
-                                        {{ formatDate(article.date) }}
-                                    </time>
-                                </div>
-                                <p class="result-excerpt">{{ article.excerpt }}</p>
-                                <div v-if="article.tags && article.tags.length" class="result-tags">
-                                    <span v-for="tag in article.tags" :key="tag" class="result-tag">
-                                        {{ tag }}
-                                    </span>
-                                </div>
-                            </RouterLink>
-                        </div>
-
-                        <div v-else class="search-hint">
-                            <p>输入关键词搜索文章</p>
-                            <div class="search-tips">
-                                <span class="tip">支持搜索标题、标签和简介</span>
+                    <div v-else-if="results.length > 0" class="results-list">
+                        <RouterLink
+                            v-for="article in results"
+                            :key="article.id"
+                            :to="`/article/${article.id}`"
+                            class="result-item"
+                            @click="handleClose"
+                        >
+                            <div class="result-header">
+                                <h3 class="result-title">{{ article.title }}</h3>
+                                <time class="result-date" :datetime="article.date">
+                                    {{ formatDate(article.date) }}
+                                </time>
                             </div>
+                            <p class="result-excerpt">{{ article.excerpt }}</p>
+                            <div v-if="article.tags && article.tags.length" class="result-tags">
+                                <span v-for="tag in article.tags" :key="tag" class="result-tag">
+                                    {{ tag }}
+                                </span>
+                            </div>
+                        </RouterLink>
+                    </div>
+
+                    <div v-else class="search-hint">
+                        <p>输入关键词搜索文章</p>
+                        <div class="search-tips">
+                            <span class="tip">支持搜索标题、标签和简介</span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -181,7 +181,7 @@ const handleKeydown = (e: KeyboardEvent) => {
 // 监听弹窗可见性
 watch(
     () => props.visible,
-    (isVisible) => {
+    isVisible => {
         if (isVisible) {
             document.addEventListener('keydown', handleKeydown)
             nextTick(() => {
@@ -234,7 +234,7 @@ onUnmounted(() => {
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     border: 2px solid rgba(255, 255, 255, 1);
-   box-shadow:
+    box-shadow:
         0 8px 32px rgba(0, 0, 0, 0.08),
         inset 0 1px 0 rgba(255, 255, 255, 0.3),
         inset 0 -1px 0 rgba(0, 0, 0, 0.02);

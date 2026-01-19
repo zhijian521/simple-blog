@@ -39,11 +39,7 @@ const searchItem = computed(() => props.items.find(item => item.id === 'search')
 
 // 检查当前焦点是否在可编辑元素中
 const isInputFocused = (target: HTMLElement): boolean => {
-    return (
-        target.tagName === 'INPUT' ||
-        target.tagName === 'TEXTAREA' ||
-        target.isContentEditable
-    )
+    return target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable
 }
 
 // 全局快捷键处理

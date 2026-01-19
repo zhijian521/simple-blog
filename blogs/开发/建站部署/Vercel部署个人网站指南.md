@@ -23,6 +23,7 @@ id: ko1f4cao
 ## 准备工作
 
 需要准备以下账号：
+
 - **GitHub 账号**：代码托管
 - **Vercel 账号**：网站部署
 - **Name.com 账号**：域名购买
@@ -78,12 +79,12 @@ Output Directory: dist
 
 ### 选择域名后缀
 
-| 后缀 | 价格 | 特点 |
-|------|------|------|
-| `.com` | $10-15/年 | 最常用 |
+| 后缀   | 价格      | 特点       |
+| ------ | --------- | ---------- |
+| `.com` | $10-15/年 | 最常用     |
 | `.dev` | $12-20/年 | 开发者推荐 |
-| `.io` | $35-50/年 | 科技圈流行 |
-| `.xyz` | $1-2/年 | 预算有限 |
+| `.io`  | $35-50/年 | 科技圈流行 |
+| `.xyz` | $1-2/年   | 预算有限   |
 
 ### 购买
 
@@ -98,6 +99,7 @@ Output Directory: dist
 Vercel 会根据域名类型显示需要配置的 DNS 记录，**请按照 Vercel 页面显示的具体值进行配置**：
 
 **根域名（如 yourdomain.com）：**
+
 ```
 Type: A
 Name: @
@@ -105,6 +107,7 @@ Value: (从 Vercel 复制，例如 76.76.21.21)
 ```
 
 **子域名（如 www.yourdomain.com）：**
+
 ```
 Type: CNAME
 Name: www
@@ -112,6 +115,7 @@ Value: (从 Vercel 复制，例如 cname.vercel-dns.com)
 ```
 
 **其他子域名（如 blog.yourdomain.com）：**
+
 ```
 Type: CNAME
 Name: blog
@@ -127,6 +131,7 @@ Value: (从 Vercel 复制，例如 cname.vercel-dns.com)
 3. 在 Name.com 添加对应的 DNS 记录
 
 **如果使用根域名（如 yourdomain.com）：**
+
 ```
 Type: A
 Host: @
@@ -135,6 +140,7 @@ TTL: 300 或默认
 ```
 
 **如果使用 www 子域名（如 www.yourdomain.com）：**
+
 ```
 Type: CNAME
 Host: www
@@ -144,10 +150,10 @@ TTL: 300 或默认
 
 **推荐配置（同时支持根域名和 www）：**
 
-| Type | Host | Answer | TTL |
-|------|------|--------|-----|
-| A | @ | (从 Vercel 复制) | 300 |
-| CNAME | www | (从 Vercel 复制) | 300 |
+| Type  | Host | Answer           | TTL |
+| ----- | ---- | ---------------- | --- |
+| A     | @    | (从 Vercel 复制) | 300 |
+| CNAME | www  | (从 Vercel 复制) | 300 |
 
 ### WWW 重定向（可选）
 
@@ -174,6 +180,7 @@ nslookup yourdomain.com
 ### 访问测试
 
 在浏览器访问你的域名：
+
 - `https://yourdomain.com`（根域名）
 - `https://www.yourdomain.com`（www 子域名）
 
@@ -222,14 +229,14 @@ Vercel 会自动为域名提供 SSL 证书，通常 1-24 小时内生效。
 ```html
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="UTF-8">
-  <title>页面未找到</title>
-</head>
-<body>
-  <h1>404 - 页面未找到</h1>
-  <a href="/">返回首页</a>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>页面未找到</title>
+  </head>
+  <body>
+    <h1>404 - 页面未找到</h1>
+    <a href="/">返回首页</a>
+  </body>
 </html>
 ```
 
@@ -280,10 +287,12 @@ Vercel 会自动为域名提供 SSL 证书，通常 1-24 小时内生效。
 ### 总成本
 
 **最低：**
+
 - Vercel：免费
 - 域名（.xyz）：$1-2/年
 
 **推荐：**
+
 - Vercel：免费
 - 域名（.dev 或 .com）：$10-15/年
 

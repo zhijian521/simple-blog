@@ -70,7 +70,7 @@ const extractHeadings = () => {
     headingElements.forEach((el, index) => {
         const level = parseInt(el.tagName.charAt(1))
         const text = el.textContent?.trim() || ''
-        
+
         // 生成唯一 ID
         const id = `heading-${index}`
         el.id = id
