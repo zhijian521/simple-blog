@@ -10,6 +10,14 @@
             <ArticleCard v-for="article in articles" :key="article.id" :article="article" />
         </div>
 
+        <!-- 分页组件 -->
+        <Pagination
+            v-if="allArticles.length > 0"
+            :current-page="currentPage"
+            :total-pages="totalPages"
+            @page-change="handlePageChange"
+        />
+
         <!-- macOS 风格 Dock 菜单栏 -->
         <Dock :items="dockItems" position="bottom" :search-visible="showSearch" />
 
@@ -22,24 +30,39 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import { getArticles } from '@/utils/markdown'
 import ArticleCard from '@/components/article/ArticleCard.vue'
 import EmptyState from '@/components/ui/EmptyState.vue'
 import Dock from '@/components/ui/Dock.vue'
 import SearchModal from '@/components/ui/SearchModal.vue'
 import DocumentTreeModal from '@/components/ui/DocumentTreeModal.vue'
+import Pagination from '@/components/ui/Pagination.vue'
 import { createDockItems } from '@/constants/dock'
+import { PAGINATION } from '@/constants'
 import type { Article } from '@/types/article'
 
-const articles = getArticles() as Article[]
+const allArticles = getArticles() as Article[]
 const showSearch = ref(false)
 const showDocumentTree = ref(false)
+const currentPage = ref(1)
+const pageSize = PAGINATION.DEFAULT_PAGE_SIZE
 
-// 页面挂载时滚动到顶部
-onMounted(() => {
-    window.scrollTo({ top: 0, behavior: 'auto' })
+// 计算总页数
+const totalPages = computed(() => Math.ceil(allArticles.length / pageSize))
+
+// 当前页的文章列表
+const articles = computed(() => {
+    const start = (currentPage.value - 1) * pageSize
+    const end = start + pageSize
+    return allArticles.slice(start, end)
 })
+
+// 切换页面
+const handlePageChange = (page: number) => {
+    currentPage.value = page
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+}
 
 // 创建 Dock 配置，传入搜索和列表动作
 const dockItems = createDockItems(
@@ -57,7 +80,7 @@ const dockItems = createDockItems(
     max-width: var(--content-max-width);
     margin: 0 auto;
     padding: var(--spacing-xl) var(--spacing-lg);
-    padding-bottom: 1em;
+    padding-bottom: 2rem;
     min-height: 100vh;
     position: relative;
 }
@@ -97,7 +120,7 @@ const dockItems = createDockItems(
 @media (max-width: 768px) {
     .articles-page {
         padding: var(--spacing-2xl) var(--spacing-mobile);
-        padding-bottom: 1rem;
+        padding-bottom: 2rem;
     }
 
     .articles-page::before {
@@ -121,7 +144,7 @@ const dockItems = createDockItems(
 @media (max-width: 480px) {
     .articles-page {
         padding: var(--spacing-xl) var(--spacing-mobile);
-        padding-bottom: 1rem;
+        padding-bottom: 2rem;
     }
 
     .page-title {
