@@ -1,6 +1,6 @@
 ---
 title: JS 模块系统：CJS 与 ESM 详解
-date: "2025-01-19T00:00:00.000Z"
+date: 2025-01-19
 category: 开发/NodeJS
 description: 一文看懂 CommonJS 和 ES Modules 的区别与使用
 tags:
@@ -268,7 +268,6 @@ src/
 | 兼容老版本 Node.js | CJS |
 - 维护老项目 | 保持 CJS |
 
-**一句话建议**：2024 年及以后的新项目，无脑选 ESM。
 
 ## 参考资源
 
