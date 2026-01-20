@@ -1,6 +1,7 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
+  "buildCommand": "git fetch --unshallow || true && npm run build",
   "headers": [
     {
       "source": "/(.*)",
