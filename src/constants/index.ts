@@ -8,10 +8,6 @@ export const SITE_CONFIG = {
     keywords: '耶温博客, 技术博客, 编程, 开发, 前端, 后端, 全栈',
     author: '耶温',
     url: 'https://www.yuwb.dev',
-    icp: {
-        number: '陕ICP备2024040821号-1',
-        url: 'https://beian.miit.gov.cn/',
-    },
     copyright: {
         startYear: 2024,
         owner: '耶温博客',
