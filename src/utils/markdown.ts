@@ -143,6 +143,7 @@ function parseArticle(markdownContent: string, slug: string): Article {
         author: attributes.author,
         category: attributes.category,
         tags: attributes.tags || [],
+        sticky: attributes.sticky || 0,
     }
 }
 
@@ -171,7 +172,17 @@ function loadArticles(): void {
             }
         })
 
-        articlesCache.list.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+        // 先按置顶优先级降序，再按日期降序
+        articlesCache.list.sort((a, b) => {
+            // 先比较 sticky 值（降序）
+            const stickyA = a.sticky || 0
+            const stickyB = b.sticky || 0
+            if (stickyA !== stickyB) {
+                return stickyB - stickyA
+            }
+            // sticky 相同时，按日期降序
+            return new Date(b.date).getTime() - new Date(a.date).getTime()
+        })
 
         if (articlesCache.list.length === 0) {
             console.warn('没有成功加载任何文章')

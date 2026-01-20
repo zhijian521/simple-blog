@@ -16,7 +16,7 @@
    - showTags?: boolean - 是否显示标签（默认：true）
 -->
 <template>
-    <article class="article-card">
+    <article class="article-card" :class="{ 'is-sticky': isSticky }">
         <router-link
             :to="ROUTES.ARTICLE(article.id)"
             class="article-link"
@@ -46,6 +46,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import ArticleMeta from './ArticleMeta.vue'
 import type { Article } from '@/types/article'
 import { ROUTES } from '@/constants'
@@ -57,9 +58,14 @@ interface Props {
     showTags?: boolean
 }
 
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
     showExcerpt: true,
     showTags: true,
+})
+
+// 判断是否为置顶文章（sticky > 0）
+const isSticky = computed(() => {
+    return (props.article.sticky || 0) > 0
 })
 
 function formatDate(date: string) {
@@ -88,6 +94,33 @@ function formatDate(date: string) {
     background: var(--card-hover-bg);
     border-color: var(--card-hover-border);
     box-shadow: var(--card-hover-shadow);
+}
+
+/* 置顶文章样式 */
+.article-card.is-sticky .article-link {
+    background: linear-gradient(
+        90deg,
+        rgba(26, 26, 26, 0.05) 0%,
+        rgba(26, 26, 26, 0.02) 50%,
+        transparent 100%
+    );
+    border-left: 2px solid var(--color-accent);
+    padding-left: calc(var(--spacing-lg) - 2px);
+    box-shadow:
+        0 1px 4px rgba(0, 0, 0, 0.04),
+        0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+.article-card.is-sticky .article-link:hover {
+    background: linear-gradient(
+        90deg,
+        rgba(26, 26, 26, 0.08) 0%,
+        rgba(26, 26, 26, 0.04) 50%,
+        transparent 100%
+    );
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.06),
+        0 4px 12px rgba(0, 0, 0, 0.04);
 }
 
 .article-content {
@@ -120,6 +153,12 @@ function formatDate(date: string) {
     line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+}
+
+/* 置顶文章标题样式 */
+.article-card.is-sticky .article-title {
+    color: var(--color-text);
+    font-weight: 500;
 }
 
 .article-date {
@@ -226,6 +265,11 @@ function formatDate(date: string) {
 
     .read-more {
         font-size: var(--font-size-xxs);
+    }
+
+    /* 移动端置顶文章样式优化 */
+    .article-card.is-sticky .article-link {
+        padding-left: calc(var(--spacing-md) - 1px);
     }
 }
 </style>

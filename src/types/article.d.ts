@@ -15,6 +15,7 @@ export interface Article {
     author?: string
     category?: string
     tags?: string[]
+    sticky?: number // 置顶优先级（数值越大越靠前）
 }
 
 /**
@@ -30,5 +31,6 @@ export interface ArticleFrontMatter {
     tags?: string[]
     category?: string
     id?: string
+    sticky?: number // 置顶优先级（可选，默认为 0）
     [key: string]: unknown // 允许额外的自定义字段
 }

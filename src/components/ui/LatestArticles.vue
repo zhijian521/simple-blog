@@ -36,7 +36,16 @@ const formattedDate = (date: string): string => {
 }
 
 onMounted(() => {
-    latestArticles.value = getArticles().slice(0, 3)
+    // 获取所有文章
+    const allArticles = getArticles()
+
+    // 按日期降序排序（只按日期，忽略 sticky）
+    const sortedByDate = [...allArticles].sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    )
+
+    // 取最新的 3 篇文章
+    latestArticles.value = sortedByDate.slice(0, 3)
     loading.value = false
 })
 </script>
