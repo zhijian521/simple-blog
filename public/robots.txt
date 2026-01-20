@@ -9,4 +9,4 @@ Disallow: /worker-*.js
 Disallow: /assets/
 
 # 站点地图
-Sitemap: https://blog.yuwb.cn/sitemap.xml
+Sitemap: https://www.yuwb.dev/sitemap.xml
