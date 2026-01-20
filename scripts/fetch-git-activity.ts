@@ -67,6 +67,19 @@ function saveJson(data: GitActivityData): string {
 function main() {
     console.log('📊 获取 Git 提交活动...')
 
+    // 在 CI 环境中（如 Vercel），先拉取完整的 Git 历史
+    // 因为 CI 通常使用浅克隆（shallow clone），导致 git log 只能看到最近的提交
+    if (process.env.CI || process.env.VERCEL) {
+        console.log('📥 检测到 CI 环境，拉取完整 Git 历史...')
+        try {
+            exec('git fetch --unshallow')
+            console.log('✓ Git 历史拉取完成')
+        } catch (error) {
+            // 如果已经是完整克隆，会报错，可以忽略
+            console.log('ℹ 已经是完整克隆，跳过')
+        }
+    }
+
     const commitDates = fetchCommitDates()
     console.log(`✓ ${commitDates.length} 次提交`)
 
