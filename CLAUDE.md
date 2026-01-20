@@ -133,12 +133,25 @@ simple-blog/
 - 核心语言在初始化时加载，其他语言按需加载
 - 主题：`github-light`
 
-### 文章 ID 管理
+### 文章 front-matter 管理
 
 **双重保障机制：**
 
-1. **构建时脚本**：`scripts/ensure-article-ids.ts` - 扫描所有文章，为缺失 ID 的文章生成 8 位 ID
-2. **开发时插件**：`src/plugins/blog-watcher.ts` - 自定义 Vite 插件，监听 `blogs/` 目录变化，自动为新文件添加 ID
+1. **构建时脚本**：`scripts/ensure-article-ids.ts` - 扫描所有文章，为缺失字段的文章生成 8 位 ID
+2. **开发时插件**：`src/plugins/blog-watcher.ts` - 自定义 Vite 插件，监听 `blogs/` 目录变化，自动补全 front-matter
+
+**自动补全的字段：**
+
+- `title` - 从文件名推断
+- `date` - 当前日期（YYYY-MM-DD）
+- `category` - 从目录路径推断
+- `id` - 8 位随机 ID（小写字母和数字）
+
+**注意：**
+
+- `description` 不自动添加，需要人工编写以确保质量
+- 已存在的字段不会被覆盖
+- 构建时脚本只处理 ID，开发时插件处理所有字段
 
 **共享工具模块：**
 
@@ -397,14 +410,63 @@ ssgOptions: {
 
 **关键文件：** `src/plugins/blog-watcher.ts`
 
-开发时使用的自定义插件，实现博客文章的实时监听和热更新：
+开发时使用的自定义插件，实现博客文章的实时监听和自动补全 front-matter：
+
+**监听功能：**
 
 - 使用 `chokidar` 监听 `blogs/` 目录下的所有 `.md` 文件
 - 检测新文件、修改、删除事件
-- 自动为缺少 ID 的文章添加 8 位随机 ID
 - 触发客户端全页面热更新（`full-reload`）
 - 仅在开发模式（`NODE_ENV=development`）下启用调试日志
 - 在 `buildEnd` 钩子中正确关闭监听器，避免内存泄漏
+
+**自动补全 front-matter 字段：**
+
+当检测到新文件或文件修改时，自动检查并添加缺失的字段：
+
+1. **title** - 从文件名推断
+   - 例如：`Vue实践.md` → `title: Vue实践`
+
+2. **date** - 使用当前日期
+   - 格式：`YYYY-MM-DD`
+   - 例如：`2025-01-20`
+
+3. **category** - 从完整目录路径推断
+   - 例如：`blogs/开发/建站部署/建站说明.md` → `category: 开发/建站部署`
+   - 根目录文件不添加 category
+
+4. **id** - 生成 8 位随机 ID（小写字母和数字）
+   - 例如：`a3b5c7d9`
+
+5. **description** - 不自动添加
+   - 需要人工编写，确保质量
+
+**示例：**
+
+创建新文件 `blogs/开发/Vue3入门.md`，插件自动补全为：
+
+```yaml
+---
+title: Vue3入门
+date: 2025-01-20
+category: 开发
+id: a3b5c7d9
+---
+# Vue3 入门教程
+
+这里是文章内容...
+```
+
+**控制台输出示例：**
+
+```
+[BlogWatcher] 📝 检测到新文件: E:\YevinWork\simple-blog\blogs\开发\Vue3入门.md
+[BlogWatcher] ✓ 为 Vue3入门.md 添加字段:
+  - title: "Vue3入门"
+  - date: 2025-01-20
+  - category: 开发
+  - id: a3b5c7d9
+```
 
 ## 类型系统
 
@@ -479,10 +541,45 @@ ssgOptions: {
 
 ### 添加新文章
 
+**开发模式（推荐）：**
+
 1. 在 `blogs/` 目录下创建 `.md` 文件（支持嵌套文件夹）
-2. 添加 YAML front-matter 元数据（必须包含 `id` 字段）
-3. 如果缺少 ID，运行 `npm run ensure-ids` 自动生成
-4. 文章路径会自动转换为 slug（例如 `blogs/category/article.md` → `category/article`）
+2. 添加文章内容（front-matter 可选，插件会自动补全）
+3. 保存文件后，`blog-watcher` 插件自动检测并补全以下字段：
+   - `title` - 从文件名推断
+   - `date` - 当前日期
+   - `category` - 从目录路径推断
+   - `id` - 随机生成
+4. 可选：手动添加或编辑 `description`、`tags` 等字段
+
+**生产构建：**
+
+1. 如果开发时缺少 ID，运行 `npm run ensure-ids` 批量生成
+2. 文章路径会自动转换为 slug（例如 `blogs/category/article.md` → `category/article`）
+
+**示例：**
+
+创建文件 `blogs/开发/Vue3实战.md`：
+
+```markdown
+# Vue3 实战指南
+
+这里是文章内容...
+```
+
+保存后自动补全为：
+
+```yaml
+---
+title: Vue3实战
+date: 2025-01-20
+category: 开发
+id: a3b5c7d9
+---
+# Vue3 实战指南
+
+这里是文章内容...
+```
 
 ### 修改文章数据结构
 
