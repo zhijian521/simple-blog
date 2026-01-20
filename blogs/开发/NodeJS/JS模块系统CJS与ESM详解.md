@@ -27,7 +27,7 @@ JavaScript 有两种主流的模块系统：**CommonJS (CJS)** 和 **ES Modules 
 // 导出
 module.exports = {
   name: 'foo',
-  sayHello: () => 'Hello'
+  sayHello: () => 'Hello',
 }
 
 // 或者
@@ -63,7 +63,7 @@ export const bar = 'bar'
 
 // 默认导出
 export default {
-  name: 'foo'
+  name: 'foo',
 }
 
 // 导入
@@ -88,13 +88,13 @@ button.addEventListener('click', async () => {
 
 ## 核心区别
 
-| 特性 | CommonJS | ES Modules |
-|------|----------|------------|
-| **语法** | `require` / `module.exports` | `import` / `export` |
-| **加载时机** | 运行时 | 编译时 |
-| **导出方式** | 值拷贝 | 实时绑定 |
-| **文件扩展名** | `.cjs` 或 `.js` | `.mjs` 或 `.js` + `type: "module"` |
-| **顶级 await** | ❌ 不支持 | ✅ 支持 |
+| 特性           | CommonJS                     | ES Modules                         |
+| -------------- | ---------------------------- | ---------------------------------- |
+| **语法**       | `require` / `module.exports` | `import` / `export`                |
+| **加载时机**   | 运行时                       | 编译时                             |
+| **导出方式**   | 值拷贝                       | 实时绑定                           |
+| **文件扩展名** | `.cjs` 或 `.js`              | `.mjs` 或 `.js` + `type: "module"` |
+| **顶级 await** | ❌ 不支持                    | ✅ 支持                            |
 
 ### 例子：值拷贝 vs 实时绑定
 
@@ -108,15 +108,15 @@ export { count }
 
 // main.js (ESM)
 import { count, increment } from './counter.js'
-console.log(count)  // 0
+console.log(count) // 0
 increment()
-console.log(count)  // 1（实时更新）
+console.log(count) // 1（实时更新）
 
 // main.js (CJS)
 const { count, increment } = require('./counter.js')
-console.log(count)  // 0
+console.log(count) // 0
 increment()
-console.log(count)  // 仍然是 0（值拷贝）
+console.log(count) // 仍然是 0（值拷贝）
 ```
 
 ## 如何选择模块系统
@@ -170,7 +170,7 @@ import fs from 'fs'
 export const foo = 'foo'
 ```
 
-### __dirname 和 __filename
+### **dirname 和 **filename
 
 ESM 中没有 `__dirname` 和 `__filename`，需要自己实现：
 
@@ -255,19 +255,19 @@ src/
 ### Q: Node.js 版本要求？
 
 **A**:
+
 - Node.js 13.2+：实验性支持
 - Node.js 16+：稳定支持
 - Node.js 20+：完整支持
 
 ## 总结
 
-| 场景 | 选择 |
-|------|------|
-| 新项目 | ✅ ESM |
-| 使用 Vite / Rollup | ✅ ESM |
-| 兼容老版本 Node.js | CJS |
-- 维护老项目 | 保持 CJS |
-
+| 场景               | 选择     |
+| ------------------ | -------- |
+| 新项目             | ✅ ESM   |
+| 使用 Vite / Rollup | ✅ ESM   |
+| 兼容老版本 Node.js | CJS      |
+| - 维护老项目       | 保持 CJS |
 
 ## 参考资源
 

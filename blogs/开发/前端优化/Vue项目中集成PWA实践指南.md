@@ -16,11 +16,11 @@ Progressive Web App (PWA) 是使用现代 Web API 和渐进增强策略构建的
 
 ### 核心特性
 
--  **离线可用**：通过 Service Worker 缓存资源
--  **可安装**：添加到主屏幕，独立窗口运行
--  **自动更新**：后台检测并更新应用
--  **推送通知**：接收和显示推送消息
--  **性能优化**：资源缓存，减少加载时间
+- **离线可用**：通过 Service Worker 缓存资源
+- **可安装**：添加到主屏幕，独立窗口运行
+- **自动更新**：后台检测并更新应用
+- **推送通知**：接收和显示推送消息
+- **性能优化**：资源缓存，减少加载时间
 
 ## 快速开始
 
@@ -54,17 +54,17 @@ export default defineConfig({
           {
             src: 'pwa-192x192.png',
             sizes: '192x192',
-            type: 'image/png'
+            type: 'image/png',
           },
           {
             src: 'pwa-512x512.png',
             sizes: '512x512',
-            type: 'image/png'
-          }
-        ]
-      }
-    })
-  ]
+            type: 'image/png',
+          },
+        ],
+      },
+    }),
+  ],
 })
 ```
 
@@ -85,7 +85,7 @@ const updateSW = registerSW({
   },
   onOfflineReady() {
     console.log('应用已准备好离线使用')
-  }
+  },
 })
 
 createApp(App).mount('#app')
@@ -108,10 +108,10 @@ public/
 
 ### registerType
 
-| 选项 | 说明 | 适用场景 |
-|------|------|----------|
+| 选项         | 说明               | 适用场景   |
+| ------------ | ------------------ | ---------- |
 | `autoUpdate` | 自动检测并后台更新 | 工具类应用 |
-| `prompt` | 提示用户确认更新 | 内容类应用 |
+| `prompt`     | 提示用户确认更新   | 内容类应用 |
 
 ### 缓存策略
 
@@ -129,9 +129,9 @@ VitePWA({
           cacheName: 'api-cache',
           expiration: {
             maxEntries: 50,
-            maxAgeSeconds: 60 * 60 * 24 // 24 小时
-          }
-        }
+            maxAgeSeconds: 60 * 60 * 24, // 24 小时
+          },
+        },
       },
       {
         // 图片
@@ -141,31 +141,31 @@ VitePWA({
           cacheName: 'image-cache',
           expiration: {
             maxEntries: 60,
-            maxAgeSeconds: 60 * 60 * 24 * 30 // 30 天
-          }
-        }
+            maxAgeSeconds: 60 * 60 * 24 * 30, // 30 天
+          },
+        },
       },
       {
         // 静态资源
         urlPattern: /\.(?:js|css)$/,
         handler: 'StaleWhileRevalidate',
         options: {
-          cacheName: 'static-cache'
-        }
-      }
-    ]
-  }
+          cacheName: 'static-cache',
+        },
+      },
+    ],
+  },
 })
 ```
 
 ### 策略对比
 
-| 策略 | 说明 | 使用场景 |
-|------|------|----------|
-| `CacheFirst` | 优先使用缓存 | 图片、字体 |
-| `NetworkFirst` | 优先网络请求 | API 请求 |
-| `StaleWhileRevalidate` | 先返回缓存，后台更新 | JS、CSS |
-| `NetworkOnly` | 仅使用网络 | 实时数据 |
+| 策略                   | 说明                 | 使用场景   |
+| ---------------------- | -------------------- | ---------- |
+| `CacheFirst`           | 优先使用缓存         | 图片、字体 |
+| `NetworkFirst`         | 优先网络请求         | API 请求   |
+| `StaleWhileRevalidate` | 先返回缓存，后台更新 | JS、CSS    |
+| `NetworkOnly`          | 仅使用网络           | 实时数据   |
 
 ## 开发调试
 
@@ -183,11 +183,12 @@ lighthouse https://your-app.com --view
 ```
 
 **检测项**：
--  可安装性
--  Service Worker
--  离线可用
--  HTTPS 部署
--  Manifest 配置
+
+- 可安装性
+- Service Worker
+- 离线可用
+- HTTPS 部署
+- Manifest 配置
 
 ### 离线测试
 
@@ -204,8 +205,8 @@ lighthouse https://your-app.com --view
 ```typescript
 VitePWA({
   devOptions: {
-    enabled: true
-  }
+    enabled: true,
+  },
 })
 ```
 
@@ -217,8 +218,8 @@ VitePWA({
 VitePWA({
   workbox: {
     clientsClaim: true,
-    skipWaiting: true
-  }
+    skipWaiting: true,
+  },
 })
 ```
 
@@ -278,8 +279,8 @@ server {
 ```typescript
 VitePWA({
   workbox: {
-    globPatterns: ['**/*.{js,css,html,ico,png,svg}']
-  }
+    globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+  },
 })
 ```
 
@@ -298,9 +299,7 @@ expiration: {
 
 ```vue
 <template>
-  <div v-if="!isOnline" class="offline-banner">
-    网络不可用，显示缓存内容
-  </div>
+  <div v-if="!isOnline" class="offline-banner">网络不可用，显示缓存内容</div>
 </template>
 
 <script setup lang="ts">
@@ -356,10 +355,10 @@ onUnmounted(() => {
 
 PWA 通过 Service Worker 和 Manifest 提升用户体验：
 
--  离线可用：资源缓存，无网络也能访问
--  可安装：添加到主屏幕，独立运行
--  自动更新：后台检测更新，无缝升级
--  性能优化：缓存策略，减少加载时间
+- 离线可用：资源缓存，无网络也能访问
+- 可安装：添加到主屏幕，独立运行
+- 自动更新：后台检测更新，无缝升级
+- 性能优化：缓存策略，减少加载时间
 
 **推荐配置**：
 
@@ -370,8 +369,8 @@ VitePWA({
     globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
     runtimeCaching: [
       { urlPattern: /^https:\/\/api\./, handler: 'NetworkFirst' },
-      { urlPattern: /\.(png|jpg|svg)$/, handler: 'CacheFirst' }
-    ]
-  }
+      { urlPattern: /\.(png|jpg|svg)$/, handler: 'CacheFirst' },
+    ],
+  },
 })
 ```
