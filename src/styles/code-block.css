@@ -14,6 +14,13 @@ pre.shiki {
   font-size: var(--font-size-base);
   background: var(--color-bg-secondary);
   color: var(--color-code-text);
+  /* 平滑滚动 */
+  scroll-behavior: smooth;
+  /* 优化滚动性能 */
+  -webkit-overflow-scrolling: touch;
+  /* 防止内容溢出 */
+  word-wrap: normal;
+  white-space: pre;
 }
 
 /* ========== 代码块内部样式 ========== */
@@ -23,20 +30,78 @@ pre.shiki code {
   color: inherit;
 }
 
-/* ========== 滚动条样式 ========== */
+/* ========== 滚动条样式 - Webkit 浏览器 ========== */
 pre.shiki::-webkit-scrollbar {
-  height: 6px;
+  height: 8px;
+  width: 8px;
 }
 
 pre.shiki::-webkit-scrollbar-track {
   background: transparent;
+  border-radius: 4px;
 }
 
 pre.shiki::-webkit-scrollbar-thumb {
-  background: var(--color-border);
-  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  transition: background var(--transition-fast) ease;
 }
 
 pre.shiki::-webkit-scrollbar-thumb:hover {
-  background: var(--color-text-lighter);
+  background: rgba(0, 0, 0, 0.25);
+}
+
+pre.shiki::-webkit-scrollbar-thumb:active {
+  background: rgba(0, 0, 0, 0.35);
+}
+
+/* ========== 滚动条样式 - Firefox ========== */
+pre.shiki {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.15) transparent;
+}
+
+/* ========== 滚动条悬停效果 ========== */
+pre.shiki:hover {
+  scrollbar-color: rgba(0, 0, 0, 0.25) transparent;
+}
+
+/* ========== 移动端优化 ========== */
+@media (max-width: 768px) {
+  pre.shiki {
+    /* 移动端滚动条更细 */
+    -webkit-overflow-scrolling: touch;
+  }
+
+  pre.shiki::-webkit-scrollbar {
+    height: 4px;
+    width: 4px;
+  }
+
+  pre.shiki::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* ========== 深色模式适配（如果需要） ========== */
+@media (prefers-color-scheme: dark) {
+  pre.shiki::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  pre.shiki::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  pre.shiki::-webkit-scrollbar-thumb:active {
+    background: rgba(255, 255, 255, 0.4);
+  }
+
+  pre.shiki {
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+  }
+
+  pre.shiki:hover {
+    scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+  }
 }
