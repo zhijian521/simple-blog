@@ -45,16 +45,17 @@ Giscus 是基于 GitHub Discussions 的轻量级评论系统，具有以下优�
 配置完成后，将生成的代码嵌入到需要的地方，例如文章页面底部：
 
 ```html
-<script src="https://giscus.app/client.js"
-        data-repo="username/repo"
-        data-repo-id="R_kgDO..."
-        data-category-id="DIC_kgDO..."
-        data-mapping="pathname"
-        data-theme="light"
-        data-lang="zh-CN"
-        crossorigin="anonymous"
-        async>
-</script>
+<script
+  src="https://giscus.app/client.js"
+  data-repo="username/repo"
+  data-repo-id="R_kgDO..."
+  data-category-id="DIC_kgDO..."
+  data-mapping="pathname"
+  data-theme="light"
+  data-lang="zh-CN"
+  crossorigin="anonymous"
+  async
+></script>
 ```
 
 ## 配置说明
@@ -72,12 +73,12 @@ Giscus 是基于 GitHub Discussions 的轻量级评论系统，具有以下优�
 
 ### 映射方式
 
-| 映射方式   | 说明         | 适用场景       |
-| ---------- | ------------ | -------------- |
+| 映射方式   | 说明         | 适用场景         |
+| ---------- | ------------ | ---------------- |
 | `pathname` | URL 路径     | 博客文章（推荐） |
-| `url`      | 完整 URL     | 单页面应用     |
-| `title`    | 页面标题     | 文档站点       |
-| `specific` | 自定义字符串 | 精确控制       |
+| `url`      | 完整 URL     | 单页面应用       |
+| `title`    | 页面标题     | 文档站点         |
+| `specific` | 自定义字符串 | 精确控制         |
 
 **推荐使用 `pathname`**：开发/生产环境自动适配，不依赖完整域名。
 
@@ -86,13 +87,12 @@ Giscus 是基于 GitHub Discussions 的轻量级评论系统，具有以下优�
 ### 评论不显示
 
 检查清单：
+
 1. 仓库是否为公开仓库
 2. Discussions 功能是否已启用
 3. Giscus App 是否已安装
 4. `repoId` 和 `categoryId` 是否正确
 5. 是否需要发表第一条评论来创建 Discussion
-
-
 
 ## 参考资源
 

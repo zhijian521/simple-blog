@@ -19,6 +19,7 @@ import { useHead } from '@vueuse/head'
 import Footer from '@/components/ui/Footer.vue'
 import PageLoader from '@/components/ui/PageLoader.vue'
 import { SITE_CONFIG } from '@/constants'
+import { PAGE_LOADER_DELAY_MS } from '@/constants/animation'
 import { SpeedInsights } from '@vercel/speed-insights/vue'
 import { Analytics } from '@vercel/analytics/vue'
 
@@ -55,7 +56,7 @@ router.afterEach(() => {
             isLoading.value = false
             pageLoader.value?.hide()
             document.documentElement.style.overflowY = ''
-        }, 200)
+        }, PAGE_LOADER_DELAY_MS)
     })
 })
 
@@ -68,7 +69,7 @@ onMounted(() => {
             isLoading.value = false
             pageLoader.value?.hide()
             document.documentElement.style.overflowY = ''
-        }, 200)
+        }, PAGE_LOADER_DELAY_MS)
     })
 })
 

@@ -62,6 +62,7 @@ import { useRoute } from 'vue-router'
 import { getArticleById, highlightCodeBlocks, disposeHighlighter } from '@/utils/markdown'
 import { useArticleSeo } from '@/utils/seo'
 import { sanitizeHtmlWithSsr } from '@/utils/dompurify'
+import { extractRouteId, isValidRouteId } from '@/utils/router'
 import ArticleMeta from '@/components/article/ArticleMeta.vue'
 import ArticleBreadcrumb from '@/components/article/ArticleBreadcrumb.vue'
 import GiscusComments from '@/components/comments/GiscusComments.vue'
@@ -123,26 +124,36 @@ const highlightCode = async () => {
 }
 
 const loadArticle = (id: string) => {
-    if (!id || typeof id !== 'string' || id.length === 0) {
+    // 验证 ID
+    if (!isValidRouteId(id)) {
         console.error('Invalid article ID:', id)
         article.value = null
         loading.value = false
         return
     }
-    // getArticleById 是同步操作，直接获取数据并结束加载状态
-    article.value = getArticleById(id)
+
+    // 获取文章数据
+    const foundArticle = getArticleById(id)
+
+    if (!foundArticle) {
+        console.warn(`Article not found: ${id}`)
+        article.value = null
+        loading.value = false
+        return
+    }
+
+    article.value = foundArticle
     loading.value = false
 }
 
 // 立即加载文章数据（支持 SSR）
 // 在服务端渲染时同步执行，确保生成的 HTML 包含完整内容
-const id = route.params.id
-const validatedId = typeof id === 'string' ? id : Array.isArray(id) ? id[0] : ''
-loadArticle(validatedId)
+const id = extractRouteId(route.params.id)
+loadArticle(id)
 
 onMounted(() => {
     // 客户端导航时重新加载数据
-    loadArticle(validatedId)
+    loadArticle(id)
     // 滚动到顶部
     window.scrollTo({ top: 0, behavior: 'auto' })
     // 高亮代码块
@@ -157,9 +168,8 @@ onUnmounted(() => {
 watch(
     () => route.params.id,
     async newId => {
-        if (newId) {
-            const validatedId =
-                typeof newId === 'string' ? newId : Array.isArray(newId) ? newId[0] : ''
+        const validatedId = extractRouteId(newId)
+        if (validatedId) {
             loadArticle(validatedId)
             // 只在客户端环境执行
             if (!import.meta.env.SSR) {

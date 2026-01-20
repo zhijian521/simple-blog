@@ -323,24 +323,24 @@ simple-blog/
 
 **映射方式选择：**
 
-| 映射方式   | 说明               | 推荐度 | 使用场景          |
-| ---------- | ------------------ | ------ | ----------------- |
-| `pathname` | URL 路径           | ⭐⭐⭐  | 博客文章（默认）  |
-| `url`      | 完整 URL           | ⭐⭐    | 包含域名的场景    |
-| `title`    | 页面标题           | ⭐     | 简单页面          |
-| `specific` | 自定义字符串       | ⭐     | 需手动指定 term   |
+| 映射方式   | 说明         | 推荐度 | 使用场景         |
+| ---------- | ------------ | ------ | ---------------- |
+| `pathname` | URL 路径     | ⭐⭐⭐ | 博客文章（默认） |
+| `url`      | 完整 URL     | ⭐⭐   | 包含域名的场景   |
+| `title`    | 页面标题     | ⭐     | 简单页面         |
+| `specific` | 自定义字符串 | ⭐     | 需手动指定 term  |
 
 **主题选项：**
 
 ```typescript
 // 浅色主题
-'light' | 'light_high_contrast' | 'light_tritonopia' | 'noborder_light'
+;'light' | 'light_high_contrast' | 'light_tritonopia' | 'noborder_light'
 
 // 深色主题
-'dark' | 'dark_high_contrast' | 'dark_dimmed' | 'dark_tritonopia' | 'noborder_dark'
+;'dark' | 'dark_high_contrast' | 'dark_dimmed' | 'dark_tritonopia' | 'noborder_dark'
 
 // 特殊主题
-'transparent_high_contrast' | 'preferred_color_scheme' | 'cobalt' | 'fro'
+;'transparent_high_contrast' | 'preferred_color_scheme' | 'cobalt' | 'fro'
 ```
 
 完整主题列表：https://github.com/giscus/giscus/blob/main/ADVANCED-USAGE.md#theme
@@ -719,10 +719,10 @@ id: a3b5c7d9
 ```typescript
 export const GISCUS_CONFIG = {
   repo: 'your-username/your-repo',
-  repoId: 'R_kgDO...',       // 从 giscus.app 复制
-  categoryId: 'DIC_kgDO...',  // 从 giscus.app 复制
-  theme: 'fro',              // 选择合适的主题
-  mapping: 'pathname',       // 推荐使用 pathname
+  repoId: 'R_kgDO...', // 从 giscus.app 复制
+  categoryId: 'DIC_kgDO...', // 从 giscus.app 复制
+  theme: 'fro', // 选择合适的主题
+  mapping: 'pathname', // 推荐使用 pathname
   inputPosition: 'bottom',
   lazyLoad: false,
 } as const
@@ -737,13 +737,13 @@ export const GISCUS_CONFIG = {
 
 **主题推荐：**
 
-| 项目风格       | 推荐主题                      |
-| -------------- | ----------------------------- |
-| 水墨风格       | `fro`、`noborder_light`       |
-| 简约风格       | `light`                       |
-| 暗色系         | `dark`、`dark_dimmed`         |
-| 高对比度       | `light_high_contrast`         |
-| 自适应         | `preferred_color_scheme`      |
+| 项目风格 | 推荐主题                 |
+| -------- | ------------------------ |
+| 水墨风格 | `fro`、`noborder_light`  |
+| 简约风格 | `light`                  |
+| 暗色系   | `dark`、`dark_dimmed`    |
+| 高对比度 | `light_high_contrast`    |
+| 自适应   | `preferred_color_scheme` |
 
 **注意事项：**
 

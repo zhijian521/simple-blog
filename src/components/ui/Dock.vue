@@ -19,8 +19,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted } from 'vue'
+import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
+import { useKeyboardShortcut } from '@/composables/useKeyboardShortcut'
 import type { DockItem } from '@/constants/dock'
 
 interface Props {
@@ -37,39 +38,31 @@ const props = withDefaults(defineProps<Props>(), {
 // 查找搜索项（使用 computed 响应式）
 const searchItem = computed(() => props.items.find(item => item.id === 'search'))
 
-// 检查当前焦点是否在可编辑元素中
-const isInputFocused = (target: HTMLElement): boolean => {
-    return target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable
-}
-
-// 全局快捷键处理
-const handleKeydown = (e: KeyboardEvent) => {
-    // 搜索弹窗已打开，不处理快捷键
-    if (props.searchVisible) return
-
-    // Cmd/Ctrl + K: 打开搜索
-    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault()
+// Cmd/Ctrl + K: 打开搜索（只在搜索弹窗关闭时生效）
+useKeyboardShortcut(
+    'k',
+    () => {
         searchItem.value?.action?.()
-        return
+    },
+    {
+        ctrlKey: true,
+        preventDefault: true,
+        condition: () => !props.searchVisible,
     }
+)
 
-    // Q: 打开搜索（焦点不在输入框中）
-    if (e.key === 'q' || e.key === 'Q') {
-        if (!isInputFocused(e.target as HTMLElement)) {
-            e.preventDefault()
-            searchItem.value?.action?.()
-        }
+// Q: 打开搜索（焦点不在输入框中，且搜索弹窗关闭时生效）
+useKeyboardShortcut(
+    'q',
+    () => {
+        searchItem.value?.action?.()
+    },
+    {
+        preventDefault: true,
+        ignoreInputs: true,
+        condition: () => !props.searchVisible,
     }
-}
-
-onMounted(() => {
-    document.addEventListener('keydown', handleKeydown)
-})
-
-onUnmounted(() => {
-    document.removeEventListener('keydown', handleKeydown)
-})
+)
 </script>
 
 <style scoped>

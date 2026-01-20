@@ -29,6 +29,7 @@ import SearchModal from '@/components/ui/SearchModal.vue'
 import InkBackground from '@/components/effects/InkBackground.vue'
 // import SnowfallEffect from '@/components/effects/SnowfallEffect.vue'
 import { SITE_CONFIG } from '@/constants'
+import { HOME_ANIMATION_DELAY_MS } from '@/constants/animation'
 
 const showSearch = ref(false)
 const animationsReady = ref(false)
@@ -41,7 +42,7 @@ onMounted(async () => {
     // 使用 setTimeout 在下一个事件循环中加载动画
     setTimeout(() => {
         animationsReady.value = true
-    }, 100)
+    }, HOME_ANIMATION_DELAY_MS)
 })
 </script>
 

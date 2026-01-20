@@ -11,6 +11,9 @@
  * @param onResize - 可选的尺寸变化回调函数
  * @returns 清理函数，调用后移除所有监听器
  */
+import { useDebounceFn } from '@vueuse/core'
+import { CANVAS_RESIZE_DEBOUNCE_MS, ORIENTATION_CHANGE_DELAY_MS } from '@/constants/animation'
+
 export function setupCanvasResize(canvas: HTMLCanvasElement, onResize?: () => void): () => void {
     const resize = () => {
         // 直接使用窗口尺寸（适用于 position: fixed 的 Canvas）
@@ -24,30 +27,17 @@ export function setupCanvasResize(canvas: HTMLCanvasElement, onResize?: () => vo
     // 初始设置
     resize()
 
-    // 监听窗口大小变化（添加 100ms 防抖）
-    let resizeTimer: number | null = null
-    const handleResize = () => {
-        if (resizeTimer !== null) {
-            clearTimeout(resizeTimer)
-        }
-        resizeTimer = window.setTimeout(() => {
-            resize()
-            resizeTimer = null
-        }, 100)
-    }
-
-    window.addEventListener('resize', handleResize)
+    // 监听窗口大小变化（使用 VueUse 防抖）
+    const debouncedResize = useDebounceFn(resize, CANVAS_RESIZE_DEBOUNCE_MS)
+    window.addEventListener('resize', debouncedResize)
 
     // 移动端优化：监听方向变化
     window.addEventListener('orientationchange', () => {
-        setTimeout(resize, 100)
+        setTimeout(resize, ORIENTATION_CHANGE_DELAY_MS)
     })
 
     // 返回清理函数
     return () => {
-        window.removeEventListener('resize', handleResize)
-        if (resizeTimer !== null) {
-            clearTimeout(resizeTimer)
-        }
+        window.removeEventListener('resize', debouncedResize)
     }
 }

@@ -98,9 +98,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, nextTick, onUnmounted } from 'vue'
+import { ref, watch, nextTick } from 'vue'
+import { useDebounceFn } from '@vueuse/core'
+import { useKeyboardShortcut } from '@/composables/useKeyboardShortcut'
 import { getArticles } from '@/utils/markdown'
 import { searchArticles } from '@/utils/search'
+import { SEARCH_DEBOUNCE_MS } from '@/constants/animation'
 import type { Article } from '@/types/article'
 import { formatDate } from '@/utils/date'
 import CloseIcon from '@/components/icons/CloseIcon.vue'
@@ -115,47 +118,28 @@ const emit = defineEmits<{
     (e: 'close'): void
 }>()
 
-// 常量配置
-const SEARCH_DEBOUNCE_MS = 300
-
 // 响应式状态
 const searchQuery = ref('')
 const results = ref<Article[]>([])
 const loading = ref(false)
 const searchInputRef = ref<HTMLInputElement | null>(null)
-let searchTimer: number | null = null
 
-// 执行搜索
+// 搜索输入处理（使用 VueUse 防抖）
 const performSearch = () => {
     const articles = getArticles()
     results.value = searchArticles(searchQuery.value, articles)
     loading.value = false
 }
 
-// 搜索输入处理（防抖）
-const handleSearch = () => {
-    if (searchTimer) {
-        clearTimeout(searchTimer)
-    }
-
-    loading.value = true
-    searchTimer = window.setTimeout(() => {
-        performSearch()
-        searchTimer = null
-    }, SEARCH_DEBOUNCE_MS)
-}
+const handleSearch = useDebounceFn(() => {
+    performSearch()
+}, SEARCH_DEBOUNCE_MS)
 
 // 清除搜索
 const clearSearch = () => {
     searchQuery.value = ''
     results.value = []
     loading.value = false
-
-    if (searchTimer) {
-        clearTimeout(searchTimer)
-        searchTimer = null
-    }
-
     searchInputRef.value?.focus()
 }
 
@@ -164,43 +148,30 @@ const handleClose = () => {
     emit('close')
 }
 
-// 键盘事件处理
-const handleKeydown = (e: KeyboardEvent) => {
-    // ESC: 关闭弹窗
-    if (e.key === 'Escape') {
-        handleClose()
-        return
-    }
+// ESC: 关闭弹窗（只在弹窗可见时生效）
+useKeyboardShortcut('Escape', handleClose, {
+    condition: () => props.visible,
+})
 
-    // Q: 关闭弹窗（输入框无焦点时）
-    if ((e.key === 'q' || e.key === 'Q') && document.activeElement !== searchInputRef.value) {
-        handleClose()
-    }
-}
+// Q: 关闭弹窗（输入框无焦点时，且弹窗可见时生效）
+useKeyboardShortcut('q', handleClose, {
+    ignoreInputs: true,
+    condition: () => props.visible && document.activeElement !== searchInputRef.value,
+})
 
 // 监听弹窗可见性
 watch(
     () => props.visible,
     isVisible => {
         if (isVisible) {
-            document.addEventListener('keydown', handleKeydown)
             nextTick(() => {
                 searchInputRef.value?.focus()
             })
         } else {
-            document.removeEventListener('keydown', handleKeydown)
             clearSearch()
         }
     }
 )
-
-// 组件卸载时清理
-onUnmounted(() => {
-    document.removeEventListener('keydown', handleKeydown)
-    if (searchTimer) {
-        clearTimeout(searchTimer)
-    }
-})
 </script>
 
 <style scoped>
