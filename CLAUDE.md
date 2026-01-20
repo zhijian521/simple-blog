@@ -86,6 +86,7 @@ simple-blog/
 │   ├── assets/              # 静态资源
 │   ├── components/          # 组件目录
 │   │   ├── article/         # 文章相关组件
+│   │   ├── comments/        # 评论系统组件
 │   │   ├── effects/         # Canvas 动画特效
 │   │   ├── icons/           # SVG 图标组件
 │   │   └── ui/              # 通用 UI 组件
@@ -275,6 +276,108 @@ simple-blog/
 
 - 构建时自动缓存：`**/*.{js,css,html,ico,png,svg,xml,txt,woff2}`
 - 确保应用核心资源立即可用
+
+### 评论系统
+
+**关键文件：**
+
+- `src/components/comments/GiscusComments.vue` - Giscus 评论组件
+- `src/constants/giscus.ts` - Giscus 配置文件
+
+**功能特性：**
+
+- 基于 GitHub Discussions 的轻量级评论系统
+- 完全免费，无需数据库和维护
+- 支持 Markdown、代码高亮、数学公式
+- 支持回复、反应和通知
+- 多主题支持，适配不同设计风格
+
+**快速配置：**
+
+1. **启用 GitHub Discussions**
+   - 仓库设置 → Features → 启用 Discussions
+   - 创建分类（如：Q&A、General）
+
+2. **安装 Giscus App**
+   - 访问 https://github.com/apps/giscus
+   - 安装到你的仓库
+
+3. **获取配置参数**
+   - 访问 https://giscus.app
+   - 填写仓库信息和选择配置
+   - 复制生成的参数
+
+4. **更新配置文件**
+   ```typescript
+   // src/constants/giscus.ts
+   export const GISCUS_CONFIG = {
+     repo: 'zhijian521/blog-comments',
+     repoId: 'R_kgDOMNskgg',
+     categoryId: 'DIC_kwDOMNskgs4CgWpW',
+     theme: 'fro',
+     mapping: 'pathname',
+     inputPosition: 'bottom',
+     lazyLoad: false,
+   } as const
+   ```
+
+**映射方式选择：**
+
+| 映射方式   | 说明               | 推荐度 | 使用场景          |
+| ---------- | ------------------ | ------ | ----------------- |
+| `pathname` | URL 路径           | ⭐⭐⭐  | 博客文章（默认）  |
+| `url`      | 完整 URL           | ⭐⭐    | 包含域名的场景    |
+| `title`    | 页面标题           | ⭐     | 简单页面          |
+| `specific` | 自定义字符串       | ⭐     | 需手动指定 term   |
+
+**主题选项：**
+
+```typescript
+// 浅色主题
+'light' | 'light_high_contrast' | 'light_tritonopia' | 'noborder_light'
+
+// 深色主题
+'dark' | 'dark_high_contrast' | 'dark_dimmed' | 'dark_tritonopia' | 'noborder_dark'
+
+// 特殊主题
+'transparent_high_contrast' | 'preferred_color_scheme' | 'cobalt' | 'fro'
+```
+
+完整主题列表：https://github.com/giscus/giscus/blob/main/ADVANCED-USAGE.md#theme
+
+**使用示例：**
+
+```vue
+<template>
+  <GiscusComments
+    v-if="isGiscusConfigured && article"
+    :repo="GISCUS_CONFIG.repo"
+    :repo-id="GISCUS_CONFIG.repoId"
+    :category-id="GISCUS_CONFIG.categoryId"
+    :mapping="GISCUS_CONFIG.mapping"
+    :theme="GISCUS_CONFIG.theme"
+    :input-position="GISCUS_CONFIG.inputPosition"
+    :lazy-load="GISCUS_CONFIG.lazyLoad"
+  />
+</template>
+
+<script setup lang="ts">
+import { GISCUS_CONFIG, isGiscusConfigured } from '@/constants/giscus'
+import GiscusComments from '@/components/comments/GiscusComments.vue'
+</script>
+```
+
+**工作原理：**
+
+- 组件挂载时动态加载 Giscus 脚本
+- 根据 `mapping` 方式自动匹配或创建 Discussion
+- 首次访问自动创建 Discussion（需发表第一条评论）
+- 后续访问加载已有评论
+
+**位置：**
+
+- 文章详情页底部（`src/pages/ArticleDetailPage.vue:18-28`）
+- 自动添加分隔线区分评论区域
 
 ### 文章搜索功能
 
@@ -586,6 +689,68 @@ id: a3b5c7d9
 1. 更新 `src/types/article.d.ts` 中的类型定义
 2. 在 `src/utils/markdown.ts` 的 `parseArticle()` 函数中添加字段解析逻辑
 3. 更新 `ArticleFrontMatter` 接口以支持 front-matter 中的新字段
+
+### 配置评论系统
+
+**步骤 1：准备 GitHub 仓库**
+
+1. 确保仓库是公开的
+2. 仓库设置 → Features → 启用 Discussions
+3. 创建至少一个分类（如：Q&A、Announcements）
+
+**步骤 2：安装 Giscus**
+
+1. 访问 https://github.com/apps/giscus
+2. 点击 "Install"，选择你的仓库
+3. 授予必要权限
+
+**步骤 3：获取配置参数**
+
+1. 访问 https://giscus.app
+2. 填写仓库信息（`username/repository-name`）
+3. 选择页面 ↔️ discussions 映射关系（推荐选择 `pathname`）
+4. 选择 Discussion 分类
+5. 复制生成的配置参数
+
+**步骤 4：更新项目配置**
+
+编辑 `src/constants/giscus.ts`：
+
+```typescript
+export const GISCUS_CONFIG = {
+  repo: 'your-username/your-repo',
+  repoId: 'R_kgDO...',       // 从 giscus.app 复制
+  categoryId: 'DIC_kgDO...',  // 从 giscus.app 复制
+  theme: 'fro',              // 选择合适的主题
+  mapping: 'pathname',       // 推荐使用 pathname
+  inputPosition: 'bottom',
+  lazyLoad: false,
+} as const
+```
+
+**步骤 5：验证配置**
+
+1. 运行 `npm run dev`
+2. 访问任意文章详情页
+3. 滚动到底部，确认评论区域显示
+4. 登录 GitHub 并发表测试评论
+
+**主题推荐：**
+
+| 项目风格       | 推荐主题                      |
+| -------------- | ----------------------------- |
+| 水墨风格       | `fro`、`noborder_light`       |
+| 简约风格       | `light`                       |
+| 暗色系         | `dark`、`dark_dimmed`         |
+| 高对比度       | `light_high_contrast`         |
+| 自适应         | `preferred_color_scheme`      |
+
+**注意事项：**
+
+- 仓库必须是公开的，否则访客无法查看评论
+- 每个页面根据 `mapping` 自动创建对应的 Discussion
+- 首次访问时需要发表第一条评论来创建 Discussion
+- 评论数据存储在 GitHub Discussions 中，可随时管理
 
 ### 安全机制
 
@@ -1240,6 +1405,7 @@ git diff HEAD~5 CLAUDE.md
 src/components/
 ├── effects/      # Canvas 动画特效组件
 ├── article/      # 文章相关组件（卡片、元数据等）
+├── comments/     # 评论系统组件
 └── ui/          # 通用 UI 组件（按钮、加载状态、搜索等）
 ```
 
@@ -1251,6 +1417,13 @@ src/components/
 - `LatestArticles.vue` - 最新文章列表（固定在页面底部）
 - `PageLoader.vue` - 页面加载动画组件
 - `Footer.vue` - 页脚组件
+
+**Comments 组件说明：**
+
+- `GiscusComments.vue` - Giscus 评论系统
+  - 位置：`src/components/comments/GiscusComments.vue`
+  - 用途：为文章提供基于 GitHub Discussions 的评论功能
+  - 配置：`src/constants/giscus.ts`
 
 ### 代码质量
 

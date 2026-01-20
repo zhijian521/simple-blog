@@ -14,6 +14,18 @@
 
             <!-- eslint-disable-next-line vue/no-v-html -->
             <div class="article-body" v-html="sanitizedContent"></div>
+
+            <!-- Giscus 评论系统 -->
+            <GiscusComments
+                v-if="isGiscusConfigured && article"
+                :repo="GISCUS_CONFIG.repo"
+                :repo-id="GISCUS_CONFIG.repoId"
+                :category-id="GISCUS_CONFIG.categoryId"
+                :mapping="GISCUS_CONFIG.mapping"
+                :theme="GISCUS_CONFIG.theme"
+                :input-position="GISCUS_CONFIG.inputPosition"
+                :lazy-load="GISCUS_CONFIG.lazyLoad"
+            />
         </article>
 
         <!-- macOS 风格 Dock 菜单栏 -->
@@ -52,12 +64,14 @@ import { useArticleSeo } from '@/utils/seo'
 import { sanitizeHtmlWithSsr } from '@/utils/dompurify'
 import ArticleMeta from '@/components/article/ArticleMeta.vue'
 import ArticleBreadcrumb from '@/components/article/ArticleBreadcrumb.vue'
+import GiscusComments from '@/components/comments/GiscusComments.vue'
 import NotFoundPage from '@/pages/NotFoundPage.vue'
 import Dock from '@/components/ui/Dock.vue'
 import SearchModal from '@/components/ui/SearchModal.vue'
 import DocumentTreeModal from '@/components/ui/DocumentTreeModal.vue'
 import TableOfContentsModal from '@/components/ui/TableOfContentsModal.vue'
 import { createDockItems } from '@/constants/dock'
+import { GISCUS_CONFIG, isGiscusConfigured } from '@/constants/giscus'
 import type { Article } from '@/types/article'
 
 const route = useRoute()
