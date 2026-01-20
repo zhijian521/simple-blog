@@ -40,8 +40,5 @@ build
 coverage
 .nyc_output
 
-# Generated files
-public/git-activity.json
-
 # ai coding
 .claude
