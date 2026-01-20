@@ -43,26 +43,103 @@ const pwaConfig = {
     // Workbox 缓存配置
     workbox: {
         // 预缓存文件模式：构建时将这些文件加入缓存清单
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,xml,txt}'],
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,xml,txt,woff2}'],
 
-        // 运行时缓存策略：处理动态请求
+        // 运行时缓存策略：根据资源类型使用不同的策略
         runtimeCaching: [
+            // 1. HTML 文档 - 网络优先（确保获取最新内容）
             {
-                // 匹配所有本地路径
-                urlPattern: /^\/.*$/,
-
-                // NetworkFirst: 优先尝试网络，失败时使用缓存
-                // 适合需要获取最新内容但又要离线可用的场景
+                urlPattern: /^https?:\/\/.*\/$|^https?:\/\/.*\/.*\.html$/,
                 handler: 'NetworkFirst',
-
                 options: {
-                    cacheName: 'runtime-cache',
+                    cacheName: 'html-cache',
                     expiration: {
-                        maxEntries: 100, // 最多缓存 100 个请求
-                        maxAgeSeconds: 3600 * 24 * 7, // 7 天后过期
+                        maxEntries: 10,
+                        maxAgeSeconds: 3600 * 24, // 1 天
                     },
                     cacheableResponse: {
-                        statuses: [0, 200], // 只缓存成功的响应
+                        statuses: [0, 200],
+                    },
+                },
+            },
+
+            // 2. JavaScript 和 CSS - 网络优先（开发时确保获取最新代码）
+            {
+                urlPattern: /^https?:\/\/.*\.(?:js|css)$/,
+                handler: 'NetworkFirst',
+                options: {
+                    cacheName: 'static-resources-cache',
+                    expiration: {
+                        maxEntries: 50,
+                        maxAgeSeconds: 3600 * 24 * 7, // 7 天
+                    },
+                    cacheableResponse: {
+                        statuses: [0, 200],
+                    },
+                },
+            },
+
+            // 3. 图片资源 - 缓存优先（减少带宽消耗）
+            {
+                urlPattern: /^https?:\/\/.*\.(?:png|jpg|jpeg|svg|gif|webp|ico)$/,
+                handler: 'CacheFirst',
+                options: {
+                    cacheName: 'images-cache',
+                    expiration: {
+                        maxEntries: 60,
+                        maxAgeSeconds: 3600 * 24 * 30, // 30 天
+                    },
+                    cacheableResponse: {
+                        statuses: [0, 200],
+                    },
+                },
+            },
+
+            // 4. 字体文件 - 缓存优先（几乎不变）
+            {
+                urlPattern: /^https?:\/\/.*\.(?:woff|woff2|ttf|otf|eot)$/,
+                handler: 'CacheFirst',
+                options: {
+                    cacheName: 'fonts-cache',
+                    expiration: {
+                        maxEntries: 10,
+                        maxAgeSeconds: 3600 * 24 * 365, // 1 年
+                    },
+                    cacheableResponse: {
+                        statuses: [0, 200],
+                    },
+                },
+            },
+
+            // 5. API 数据 - 网络优先（确保数据最新）
+            {
+                urlPattern: /^https?:\/\/.*\/api\/.*/,
+                handler: 'NetworkFirst',
+                options: {
+                    cacheName: 'api-cache',
+                    expiration: {
+                        maxEntries: 20,
+                        maxAgeSeconds: 3600, // 1 小时
+                    },
+                    cacheableResponse: {
+                        statuses: [0, 200],
+                    },
+                    networkTimeoutSeconds: 10, // 10 秒超时后回退到缓存
+                },
+            },
+
+            // 6. 外部 CDN 资源 - 网络优先（StaleWhileRevalidate 平衡性能和新鲜度）
+            {
+                urlPattern: /^https:\/\/cdn\.|https:\/\/unpkg\.com/,
+                handler: 'StaleWhileRevalidate',
+                options: {
+                    cacheName: 'cdn-cache',
+                    expiration: {
+                        maxEntries: 30,
+                        maxAgeSeconds: 3600 * 24 * 7, // 7 天
+                    },
+                    cacheableResponse: {
+                        statuses: [0, 200],
                     },
                 },
             },

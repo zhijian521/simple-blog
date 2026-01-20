@@ -43,6 +43,7 @@ npm run format:check
 ## 技术栈
 
 ### 核心框架
+
 - **Vue 3** - 使用 Composition API 和 `<script setup>` 语法
 - **Vite 5** - 构建工具和开发服务器
 - **TypeScript 5** - 严格模式类型检查
@@ -50,17 +51,20 @@ npm run format:check
 - **vite-ssg** - 静态站点生成
 
 ### 内容处理
+
 - **markdown-it** - Markdown 解析和渲染
 - **Shiki** - 代码语法高亮（支持 47+ 编程语言）
 - **front-matter** - YAML 元数据解析
 - **DOMPurify** - HTML 净化（XSS 防护）
 
 ### 开发工具
+
 - **ESLint** - 代码检查（使用 Flat Config）
 - **Prettier** - 代码格式化
 - **tsx** - TypeScript 脚本执行
 
 ### PWA 和分析
+
 - **vite-plugin-pwa** - PWA 功能支持
 - **Vercel Analytics** - 网站分析
 - **Vercel Speed Insights** - 性能洞察
@@ -223,8 +227,41 @@ simple-blog/
 
 - 使用 `vite-plugin-pwa` 实现 PWA 功能
 - 支持离线访问、安装到桌面等 PWA 特性
-- Service Worker 自动更新策略
+- Service Worker 自动更新策略（`registerType: 'autoUpdate'`）
 - 在 `vite.config.ts` 中注册插件
+
+**缓存策略（网络资源优先）：**
+
+1. **HTML 文档** - NetworkFirst
+   - 优先从网络获取，确保内容最新
+   - 网络失败时使用缓存
+   - 缓存时间：1 天，最多 10 个条目
+
+2. **JavaScript 和 CSS** - NetworkFirst
+   - 开发时确保获取最新代码
+   - 缓存时间：7 天，最多 50 个条目
+
+3. **图片资源** - CacheFirst
+   - 优先使用缓存，减少带宽消耗
+   - 缓存时间：30 天，最多 60 个条目
+
+4. **字体文件** - CacheFirst
+   - 字体文件几乎不变，长期缓存
+   - 缓存时间：1 年，最多 10 个条目
+
+5. **API 数据** - NetworkFirst
+   - 确保数据最新，10 秒超时后回退到缓存
+   - 缓存时间：1 小时，最多 20 个条目
+
+6. **外部 CDN 资源** - StaleWhileRevalidate
+   - 平衡性能和新鲜度
+   - 立即返回缓存，后台更新
+   - 缓存时间：7 天，最多 30 个条目
+
+**预缓存清单：**
+
+- 构建时自动缓存：`**/*.{js,css,html,ico,png,svg,xml,txt,woff2}`
+- 确保应用核心资源立即可用
 
 ### 文章搜索功能
 
@@ -624,12 +661,7 @@ const user = data as User
 
 // ✅ 推荐：使用类型守卫
 function isUser(value: unknown): value is User {
-  return (
-    typeof value === 'object' &&
-    value !== null &&
-    'id' in value &&
-    'name' in value
-  )
+  return typeof value === 'object' && value !== null && 'id' in value && 'name' in value
 }
 
 // ✅ 推荐：使用类型缩小
@@ -769,9 +801,7 @@ const routes = [
 ]
 
 // ✅ 推荐：组件级别的懒加载
-const HeavyComponent = defineAsyncComponent(
-  () => import('@/components/HeavyComponent.vue')
-)
+const HeavyComponent = defineAsyncComponent(() => import('@/components/HeavyComponent.vue'))
 ```
 
 **列表渲染优化：**
@@ -779,11 +809,7 @@ const HeavyComponent = defineAsyncComponent(
 ```vue
 <template>
   <!-- ✅ 推荐：为列表项添加唯一的 key -->
-  <article
-    v-for="article in articles"
-    :key="article.id"
-    class="article-card"
-  >
+  <article v-for="article in articles" :key="article.id" class="article-card">
     {{ article.title }}
   </article>
 </template>
@@ -883,7 +909,7 @@ export function useCounter(initialValue = 0) {
 
   const increment = () => count.value++
   const decrement = () => count.value--
-  const reset = () => count.value = initialValue
+  const reset = () => (count.value = initialValue)
 
   return {
     count: readonly(count),
@@ -920,7 +946,7 @@ export function useCounter(initialValue = 0) {
 const searchTerm = ref('')
 const results = ref([])
 
-watch(searchTerm, async (newTerm) => {
+watch(searchTerm, async newTerm => {
   results.value = await search(newTerm)
 })
 
@@ -939,9 +965,7 @@ watchEffect(async () => {
 
 // ✅ 正确：提取到计算属性
 const publishedArticles = computed(() =>
-  articles.value
-    .filter(a => a.published)
-    .sort((a, b) => b.date - a.date)
+  articles.value.filter(a => a.published).sort((a, b) => b.date - a.date)
 )
 
 // ❌ 反模式 3：过早优化和抽象
@@ -1065,14 +1089,14 @@ git commit -m "docs: 更新 XXX 功能文档"
 
 **示例：添加新组件后的文档更新**
 
-```markdown
+````markdown
 ### 组件组织
 
 **UI 组件说明：**
 
 - `Dock.vue` - macOS 风格 Dock 菜单
 - `SearchModal.vue` - 搜索模态框
-- `NewFeature.vue` - 新功能组件（新增）  ← 添加说明
+- `NewFeature.vue` - 新功能组件（新增） ← 添加说明
   - 位置：`src/components/ui/NewFeature.vue`
   - 用途：实现XXX功能
   - 使用方法：见下方示例
@@ -1088,7 +1112,9 @@ import NewFeature from '@/components/ui/NewFeature.vue'
   <NewFeature :data="items" @update="handleUpdate" />
 </template>
 ```
-```
+````
+
+````
 
 **违反文档同步要求的后果：**
 
@@ -1107,7 +1133,7 @@ git diff --name-only HEAD~5
 
 # 检查是否修改了关键文件
 git diff HEAD~5 CLAUDE.md
-```
+````
 
 ## 项目开发规范
 
