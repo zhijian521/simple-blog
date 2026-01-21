@@ -17,7 +17,7 @@
 
             <!-- Giscus 评论系统 -->
             <GiscusComments
-                v-if="isGiscusConfigured && article"
+                v-if="giscusEnabled && article"
                 :repo="GISCUS_CONFIG.repo"
                 :repo-id="GISCUS_CONFIG.repoId"
                 :category-id="GISCUS_CONFIG.categoryId"
@@ -98,6 +98,9 @@ const dockItems = createDockItems(
 
 // SEO 优化：动态生成页面元数据和结构化数据，提升搜索引擎收录效果
 useArticleSeo(article)
+
+// 检查 Giscus 是否已配置
+const giscusEnabled = computed(() => isGiscusConfigured())
 
 // 净化 HTML 内容，防止 XSS 攻击
 const sanitizedContent = computed(() => {

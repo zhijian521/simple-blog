@@ -74,19 +74,12 @@
 
 <script setup lang="ts">
 import { onMounted, computed } from 'vue'
-import { useRouter } from 'vue-router'
 import { getArticles } from '@/utils/markdown'
-import type { Article } from '@/utils/markdown'
+import type { Article } from '@/types/article'
 
 // 常量定义
 const EXCERPT_MAX_LENGTH = 80
 const MS_PER_WEEK = 1000 * 60 * 60 * 24 * 7
-
-// 颜色常量
-const COLOR_DARK = '#1a1a1a'
-const COLOR_ACCENT = '#8b7355'
-const COLOR_BORDER_DARK = '#2c2c2c'
-const COLOR_SEPARATOR = '#bbb'
 
 // 文章卡片样式类型
 type CardStyle = 'featured' | 'highlight' | 'standard'
@@ -98,8 +91,6 @@ interface DisplayArticle extends Article {
     excerpt: string
     formattedDate: string
 }
-
-const router = useRouter()
 
 // 获取所有文章（已按 sticky 和日期排序）
 const rawArticles = getArticles()
@@ -163,7 +154,7 @@ function handleCategoryClick(category: string): void {
  * @returns 截断后的摘要文本
  */
 function getExcerpt(article: Article): string {
-    const excerpt = article.excerpt || article.description || ''
+    const excerpt = article.excerpt || ''
     return excerpt.length > EXCERPT_MAX_LENGTH
         ? excerpt.substring(0, EXCERPT_MAX_LENGTH) + '...'
         : excerpt
@@ -515,6 +506,7 @@ onMounted(() => {
     margin: 0 0 0.875rem;
     display: -webkit-box;
     -webkit-line-clamp: 3;
+    line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -736,6 +728,7 @@ onMounted(() => {
 
     .article-excerpt {
         -webkit-line-clamp: 2;
+        line-clamp: 2;
     }
 
     .article-card.featured .article-title,

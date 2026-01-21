@@ -8,14 +8,8 @@ import { getIncludedRoutes } from './src/config/ssg'
 
 const plugins = [vue(), VitePWA(pwaOptions), blogWatcher()]
 
-export default defineConfig({
+const config = defineConfig({
     plugins,
-    ssgOptions: {
-        // 从配置文件获取需要预渲染的路由列表
-        includedRoutes: getIncludedRoutes,
-        // 使用目录结构格式，每个页面生成独立目录和 index.html
-        format: 'directory',
-    },
     resolve: {
         alias: {
             '@': resolve(__dirname, 'src'),
@@ -34,3 +28,14 @@ export default defineConfig({
         open: true,
     },
 })
+
+// 添加 vite-ssg 配置（使用类型断言）
+export default {
+    ...config,
+    ssgOptions: {
+        // 从配置文件获取需要预渲染的路由列表
+        includedRoutes: getIncludedRoutes,
+        // 使用目录结构格式，每个页面生成独立目录和 index.html
+        format: 'directory' as const,
+    },
+}
