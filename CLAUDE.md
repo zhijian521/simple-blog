@@ -255,14 +255,14 @@ simple-blog/
 const rawArticles = getArticles() // 已按 sticky 和 date 排序
 
 const articles = computed<DisplayArticle[]>(() => {
-    return rawArticles.map((article, index) => ({
-        ...article,
-        index,
-        cardStyle: getCardStyle(index),
-        excerpt: getExcerpt(article),
-        formattedDate: formatShortDate(article.date),
-    }))
-    // 无需再次排序，getArticles() 已处理
+  return rawArticles.map((article, index) => ({
+    ...article,
+    index,
+    cardStyle: getCardStyle(index),
+    excerpt: getExcerpt(article),
+    formattedDate: formatShortDate(article.date),
+  }))
+  // 无需再次排序，getArticles() 已处理
 })
 ```
 
@@ -271,28 +271,28 @@ const articles = computed<DisplayArticle[]>(() => {
 ```css
 /* 置顶文章样式 - 与 ArticleCard.vue 完全一致 */
 .article-card.pinned {
-    border-left: 2px solid #1a1a1a;
-    background: linear-gradient(
-        90deg,
-        rgba(26, 26, 26, 0.05) 0%,
-        rgba(26, 26, 26, 0.02) 50%,
-        transparent 100%
-    );
-    box-shadow:
-        0 1px 4px rgba(0, 0, 0, 0.04),
-        0 2px 8px rgba(0, 0, 0, 0.02);
+  border-left: 2px solid #1a1a1a;
+  background: linear-gradient(
+    90deg,
+    rgba(26, 26, 26, 0.05) 0%,
+    rgba(26, 26, 26, 0.02) 50%,
+    transparent 100%
+  );
+  box-shadow:
+    0 1px 4px rgba(0, 0, 0, 0.04),
+    0 2px 8px rgba(0, 0, 0, 0.02);
 }
 
 .article-card.pinned:hover {
-    background: linear-gradient(
-        90deg,
-        rgba(26, 26, 26, 0.08) 0%,
-        rgba(26, 26, 26, 0.04) 50%,
-        transparent 100%
-    );
-    box-shadow:
-        0 2px 8px rgba(0, 0, 0, 0.06),
-        0 4px 12px rgba(0, 0, 0, 0.04);
+  background: linear-gradient(
+    90deg,
+    rgba(26, 26, 26, 0.08) 0%,
+    rgba(26, 26, 26, 0.04) 50%,
+    transparent 100%
+  );
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.06),
+    0 4px 12px rgba(0, 0, 0, 0.04);
 }
 ```
 
