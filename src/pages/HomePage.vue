@@ -3,8 +3,6 @@
         <InkBackground v-if="animationsReady" />
         <!-- 雪花飘落特效 -->
         <!-- <SnowfallEffect v-if="animationsReady" /> -->
-        <NewspaperButton />
-        <SearchButton @open="showSearch = true" />
         <div class="home-content">
             <section class="hero">
                 <h1 class="hero-title">{{ SITE_CONFIG.title }}</h1>
@@ -12,11 +10,18 @@
                 <div class="hero-actions">
                     <ViewArticleButton to="/articles" text="查看文章" />
                 </div>
+                <div class="hero-shortcuts">
+                    <SearchButton @open="showSearch = true" />
+                    <DocumentTreeButton @open="showDocumentTree = true" />
+                    <NewspaperButton />
+                    <GitHubButton />
+                </div>
             </section>
         </div>
         <LatestArticles />
         <GitActivityChart />
         <SearchModal :visible="showSearch" @close="showSearch = false" />
+        <DocumentTreeModal :visible="showDocumentTree" @close="showDocumentTree = false" />
     </div>
 </template>
 
@@ -28,20 +33,21 @@ import GitActivityChart from '@/components/ui/GitActivityChart.vue'
 import SearchButton from '@/components/ui/SearchButton.vue'
 import SearchModal from '@/components/ui/SearchModal.vue'
 import NewspaperButton from '@/components/ui/NewspaperButton.vue'
+import DocumentTreeButton from '@/components/ui/DocumentTreeButton.vue'
+import DocumentTreeModal from '@/components/ui/DocumentTreeModal.vue'
+import GitHubButton from '@/components/ui/GitHubButton.vue'
 import InkBackground from '@/components/effects/InkBackground.vue'
 // import SnowfallEffect from '@/components/effects/SnowfallEffect.vue'
 import { SITE_CONFIG } from '@/constants'
 import { HOME_ANIMATION_DELAY_MS } from '@/constants/animation'
 
 const showSearch = ref(false)
+const showDocumentTree = ref(false)
 const animationsReady = ref(false)
 
-// 延迟加载动画，优化首屏加载时间
 onMounted(async () => {
-    // 等待页面内容渲染完成
     await nextTick()
 
-    // 使用 setTimeout 在下一个事件循环中加载动画
     setTimeout(() => {
         animationsReady.value = true
     }, HOME_ANIMATION_DELAY_MS)
@@ -87,7 +93,14 @@ onMounted(async () => {
     margin-top: var(--spacing-2xl);
 }
 
-/* 移动端响应式 */
+.hero-shortcuts {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 5rem;
+}
+
 @media (max-width: 768px) {
     .home-content {
         padding: 0 var(--spacing-md);
@@ -100,11 +113,19 @@ onMounted(async () => {
     .hero-subtitle {
         font-size: var(--font-size-sm);
     }
+
+    .hero-shortcuts {
+        gap: 0.875rem;
+    }
 }
 
 @media (max-width: 640px) {
     .hero-title {
         font-size: var(--font-size-xl);
+    }
+
+    .hero-shortcuts {
+        gap: 0.75rem;
     }
 }
 </style>

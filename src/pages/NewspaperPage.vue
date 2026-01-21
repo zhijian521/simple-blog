@@ -639,7 +639,6 @@ onMounted(() => {
         text-indent: 0.2em;
     }
 
-
     .article-excerpt {
         -webkit-line-clamp: 2;
         line-clamp: 2;
