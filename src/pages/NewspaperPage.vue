@@ -1,9 +1,7 @@
 <template>
     <div class="newspaper-page">
-        <!-- 水墨背景装饰 -->
         <div class="ink-bg-decoration"></div>
 
-        <!-- 报纸头版 -->
         <header class="newspaper-header">
             <div class="header-border-top"></div>
             <div class="header-content">
@@ -22,7 +20,6 @@
             <div class="header-border-bottom"></div>
         </header>
 
-        <!-- 瀑布流内容区 -->
         <div class="waterfall-container">
             <div
                 v-for="article in articles"
@@ -30,14 +27,11 @@
                 class="article-card"
                 :class="[article.cardStyle, { pinned: article.sticky && article.sticky > 0 }]"
             >
-                <!-- 装饰角 -->
                 <div class="card-corner-top-left"></div>
                 <div class="card-corner-bottom-right"></div>
 
-                <!-- 文章标题（包含分类标签） -->
                 <h3 class="article-title-row">
                     <router-link :to="`/article/${article.id}`" class="article-title">
-                        <!-- 分类标签 -->
                         <span
                             v-if="article.category"
                             class="article-category"
@@ -49,13 +43,10 @@
                     </router-link>
                 </h3>
 
-                <!-- 摘要 -->
                 <p class="article-excerpt">{{ article.excerpt }}</p>
 
-                <!-- 分割线 -->
                 <div class="article-divider"></div>
 
-                <!-- 底部信息 -->
                 <div class="article-footer">
                     <time class="article-date">{{ article.formattedDate }}</time>
                     <router-link :to="`/article/${article.id}`" class="article-link">
@@ -65,7 +56,6 @@
             </div>
         </div>
 
-        <!-- 页脚装饰 -->
         <div class="footer-decoration">
             <div class="footer-seal"></div>
         </div>
@@ -77,14 +67,11 @@ import { onMounted, computed } from 'vue'
 import { getArticles } from '@/utils/markdown'
 import type { Article } from '@/types/article'
 
-// 常量定义
 const EXCERPT_MAX_LENGTH = 80
 const MS_PER_WEEK = 1000 * 60 * 60 * 24 * 7
 
-// 文章卡片样式类型
 type CardStyle = 'featured' | 'highlight' | 'standard'
 
-// 扩展文章类型，添加显示所需的字段
 interface DisplayArticle extends Article {
     index: number
     cardStyle: CardStyle
@@ -92,7 +79,6 @@ interface DisplayArticle extends Article {
     formattedDate: string
 }
 
-// 获取所有文章（已按 sticky 和日期排序）
 const rawArticles = getArticles()
 const articles = computed<DisplayArticle[]>(() => {
     return rawArticles.map((article, index) => ({
@@ -104,13 +90,11 @@ const articles = computed<DisplayArticle[]>(() => {
     }))
 })
 
-// 获取当前日期的完整格式
 const currentDateFormatted = computed(() => {
     const now = new Date()
     return formatDate(now)
 })
 
-// 获取当前周数
 const currentWeekNumber = computed(() => {
     const now = new Date()
     const start = new Date(now.getFullYear(), 0, 1)
@@ -118,29 +102,15 @@ const currentWeekNumber = computed(() => {
     return Math.ceil(diff / MS_PER_WEEK)
 })
 
-/**
- * 根据索引获取卡片样式
- * @param index 文章索引
- * @returns 卡片样式类型
- */
 function getCardStyle(index: number): CardStyle {
     const styles: CardStyle[] = ['featured', 'highlight', 'standard']
     return styles[index % styles.length]
 }
 
-/**
- * 获取分类名称（从完整路径中提取最后一级）
- * @param category 分类路径
- * @returns 分类名称
- */
 function getCategoryName(category: string): string {
     return category.split('/').pop() || category
 }
 
-/**
- * 处理分类标签点击事件
- * @param category 分类路径
- */
 function handleCategoryClick(category: string): void {
     // TODO: 实现分类筛选功能
     // 当前只打印日志，未来可以跳转到分类筛选页面
@@ -148,11 +118,6 @@ function handleCategoryClick(category: string): void {
     console.log('点击分类:', category)
 }
 
-/**
- * 获取文章摘要（截断过长的文本）
- * @param article 文章对象
- * @returns 截断后的摘要文本
- */
 function getExcerpt(article: Article): string {
     const excerpt = article.excerpt || ''
     return excerpt.length > EXCERPT_MAX_LENGTH
@@ -160,11 +125,6 @@ function getExcerpt(article: Article): string {
         : excerpt
 }
 
-/**
- * 格式化日期（完整格式：YYYY年MM月DD日）
- * @param dateStr 日期字符串或日期对象
- * @returns 格式化后的日期字符串
- */
 function formatDate(dateStr: string | Date): string {
     const date = typeof dateStr === 'string' ? new Date(dateStr) : dateStr
     const year = date.getFullYear()
@@ -173,11 +133,6 @@ function formatDate(dateStr: string | Date): string {
     return `${year}年${month}月${day}日`
 }
 
-/**
- * 格式化日期（简短格式：YYYY.MM.DD）
- * @param dateStr 日期字符串
- * @returns 格式化后的日期字符串
- */
 function formatShortDate(dateStr: string): string {
     const date = new Date(dateStr)
     const year = date.getFullYear()
@@ -198,7 +153,6 @@ onMounted(() => {
     overflow-x: hidden;
 }
 
-/* 水墨背景装饰 */
 .ink-bg-decoration {
     position: fixed;
     top: 0;
@@ -218,7 +172,6 @@ onMounted(() => {
     border-bottom: 3px double #2c2c2c99;
 }
 
-/* 顶部装饰线 */
 .header-border-top {
     position: absolute;
     top: 0;
@@ -242,7 +195,6 @@ onMounted(() => {
     margin: 0 auto;
 }
 
-/* 印章装饰 */
 .header-seal {
     position: absolute;
     top: -10px;
@@ -269,7 +221,7 @@ onMounted(() => {
 .newspaper-title {
     font-family: 'Noto Serif SC', 'Songti SC', serif;
     font-size: clamp(2rem, 5vw, 3.5rem);
-    font-weight: 500;
+    font-weight: var(--font-weight-medium);
     color: #1a1a1a;
     margin: 0 0 0.75rem;
     letter-spacing: 0.35em;
@@ -320,7 +272,7 @@ onMounted(() => {
     justify-content: center;
     gap: 0.75rem;
     font-size: 0.75rem;
-    color: #888;
+    color: #666;
     font-family: 'Times New Roman', serif;
     letter-spacing: 0.05em;
 }
@@ -334,9 +286,6 @@ onMounted(() => {
     font-weight: 300;
 }
 
-/* ============================================
-   瀑布流布局 - 响应式多栏
-   ============================================ */
 .waterfall-container {
     position: relative;
     z-index: 1;
@@ -348,12 +297,9 @@ onMounted(() => {
     column-gap: 1.25rem;
 }
 
-/* ============================================
-   文章卡片 - 纸质纹理风格
-   ============================================ */
 .article-card {
     break-inside: avoid;
-    border: 1px solid rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.02);
     border-radius: 4px;
     padding: 1rem;
     margin-bottom: 1.25rem;
@@ -367,7 +313,6 @@ onMounted(() => {
     cursor: pointer;
 }
 
-/* 置顶文章样式 */
 .article-card.pinned {
     border-left: 2px solid #1a1a1a;
     background: linear-gradient(
@@ -383,7 +328,7 @@ onMounted(() => {
 
 .article-card.pinned .article-title {
     color: #1a1a1a;
-    font-weight: 500;
+    font-weight: var(--font-weight-medium);
 }
 
 .article-card.pinned:hover {
@@ -399,7 +344,6 @@ onMounted(() => {
         0 4px 12px rgba(0, 0, 0, 0.04);
 }
 
-/* 装饰角 */
 .card-corner-top-left,
 .card-corner-bottom-right {
     position: absolute;
@@ -426,9 +370,8 @@ onMounted(() => {
 
 .article-card:hover {
     box-shadow:
-        0 4px 8px rgba(0, 0, 0, 0.06),
-        0 8px 16px rgba(0, 0, 0, 0.04);
-    border-color: rgba(139, 115, 85, 0.2);
+        0 2px 4px rgba(0, 0, 0, 0.03),
+        0 4px 8px rgba(0, 0, 0, 0.02);
     background: rgba(26, 26, 26, 0.04);
 }
 
@@ -436,19 +379,14 @@ onMounted(() => {
     font-size: 1.0625rem;
 }
 
-/* 高亮文章 */
 .article-card.highlight .article-title {
     font-size: 1rem;
 }
 
-/* 标准文章 */
 .article-card.standard .article-title {
     font-size: 0.9375rem;
 }
 
-/* ============================================
-   分类标签 - 印章风格
-   ============================================ */
 .article-category {
     display: inline-block;
     padding: 0.25rem 0.625rem;
@@ -471,18 +409,12 @@ onMounted(() => {
     box-shadow: 0 2px 4px rgba(139, 115, 85, 0.3);
 }
 
-/* ============================================
-   文章标题行
-   ============================================ */
 .article-title-row {
     margin: 0 0 0.625rem;
     line-height: 1.4;
-    font-weight: 500;
+    font-weight: var(--font-weight-medium);
 }
 
-/* ============================================
-   文章标题
-   ============================================ */
 .article-title {
     color: #1a1a1a;
     text-decoration: none;
@@ -496,12 +428,9 @@ onMounted(() => {
     color: #8b7355;
 }
 
-/* ============================================
-   文章摘要
-   ============================================ */
 .article-excerpt {
     font-size: 0.8125rem;
-    color: #666;
+    color: #333;
     line-height: 1.7;
     margin: 0 0 0.875rem;
     display: -webkit-box;
@@ -512,7 +441,6 @@ onMounted(() => {
     text-overflow: ellipsis;
 }
 
-/* 分割线 */
 .article-divider {
     height: 1px;
     background: linear-gradient(
@@ -525,9 +453,6 @@ onMounted(() => {
     margin: 0.75rem 0;
 }
 
-/* ============================================
-   文章底部
-   ============================================ */
 .article-footer {
     display: flex;
     align-items: center;
@@ -537,7 +462,7 @@ onMounted(() => {
 
 .article-date {
     font-size: 0.6875rem;
-    color: #999;
+    color: #666;
     font-family: 'Times New Roman', serif;
     font-style: italic;
 }
@@ -556,9 +481,6 @@ onMounted(() => {
     color: #6b5345;
 }
 
-/* ============================================
-   页脚装饰
-   ============================================ */
 .footer-decoration {
     position: relative;
     z-index: 1;
@@ -587,12 +509,7 @@ onMounted(() => {
     font-size: 14px;
     color: #c8302c;
     font-family: 'Noto Serif SC', serif;
-    font-weight: 500;
 }
-
-/* ============================================
-   响应式布局
-   ============================================ */
 
 /* 超宽屏 (≥2560px) - 7列 */
 @media (min-width: 2560px) {
@@ -722,9 +639,6 @@ onMounted(() => {
         text-indent: 0.2em;
     }
 
-    .header-seal {
-        display: none;
-    }
 
     .article-excerpt {
         -webkit-line-clamp: 2;
