@@ -11,5 +11,5 @@ import { scanArticleIds } from '../utils/scan-articles'
 export function getIncludedRoutes(): string[] {
     const articles = scanArticleIds()
     const articleRoutes = articles.map(id => `/article/${id}`)
-    return ['/', '/articles', ...articleRoutes]
+    return ['/', '/articles', '/newspaper', ...articleRoutes]
 }

@@ -17,6 +17,7 @@ export const SITE_CONFIG = {
 export const ROUTES = {
     HOME: '/',
     ARTICLES: '/articles',
+    NEWSPAPER: '/newspaper',
     ARTICLE: (id: string) => `/article/${id}`,
 } as const
 

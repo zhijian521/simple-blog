@@ -165,6 +165,7 @@ simple-blog/
 
 - 首页 `/` - `HomePage.vue`
 - 文章列表 `/articles` - `ArticlesPage.vue`
+- 报纸排版 `/newspaper` - `NewspaperPage.vue`（瀑布流布局）
 - 文章详情 `/article/:id` - `ArticleDetailPage.vue`（使用文章 ID 作为路由参数）
 - 404 页面 `/:pathMatch(.*)*` - `NotFoundPage.vue`
 
@@ -178,6 +179,129 @@ simple-blog/
 
 - 使用 `PageLoader` 组件实现页面切换加载动画
 - 路由守卫控制加载状态，防止内容闪动
+
+### 报纸排版页面
+
+**关键文件：** `src/pages/NewspaperPage.vue`、`src/components/ui/NewspaperButton.vue`
+
+融合现代流行趋势、经典报纸风格和中国水墨画美学的瀑布流布局页面。
+
+**核心特性：**
+
+1. **视觉设计**
+   - 水墨画背景：三层渐变 + 水墨晕染效果
+   - 报纸风格：双线边框、装饰线圆点、中式印章
+   - 纸质质感：宣纸色调、细腻阴影、装饰角元素
+
+2. **性能优化**
+   - 使用 `computed` 预处理文章数据（卡片样式、摘要、格式化日期）
+   - 避免在模板中重复计算（提取为计算属性）
+   - 消除魔法数字（定义为常量 `EXCERPT_MAX_LENGTH`、`MS_PER_WEEK`）
+   - 文章排序由 `getArticles()` 处理，无需重复排序
+
+3. **TypeScript 类型系统**
+   - `CardStyle` 类型：卡片样式联合类型（`'featured' | 'highlight' | 'standard'`）
+   - `DisplayArticle` 接口：扩展 `Article` 类型，添加显示所需字段
+   - 所有函数都有明确的参数和返回值类型
+   - JSDoc 注释提供完整的函数文档
+
+4. **响应式布局**
+   - 超宽屏 (≥2560px): 7 列
+   - 大屏 (1920-2560px): 6 列
+   - 中大屏 (1600-1920px): 5 列
+   - 中等屏 (1440-1600px): 4 列
+   - 平板横屏 (1024-1440px): 3 列
+   - 平板 (768-1024px): 2 列
+   - 移动端大屏 (640-768px): 2 列紧凑
+   - 移动端 (≤640px): 1 列
+
+5. **色彩系统**
+   - 主色：黑色 (#1a1a1a) - 标题和置顶边框
+   - 辅色：灰色 (#666, #888, #999) - 正文和元信息
+   - 点缀：古铜色 (#8b7355) - 标签和装饰
+   - 装饰：朱红色 (#c8302c) - 印章装饰
+   - 颜色常量：`COLOR_DARK`、`COLOR_ACCENT`、`COLOR_BORDER_DARK`、`COLOR_SEPARATOR`
+
+6. **文章置顶功能**
+   - 使用 `sticky` 字段判断（`article.sticky && article.sticky > 0`）
+   - 置顶样式与 `ArticleCard.vue` 完全一致（左边框 + 渐变背景）
+   - Hover 效果匹配列表页面（无 transform，相同样式的阴影）
+
+7. **分类标签布局**
+   - 分类标签作为 inline span 放在标题链接内部
+   - 使用 `display: inline-block` 和 `white-space: nowrap` 防止标签换行
+   - 标题使用 `display: block` 和 `word-break: break-word` 实现自然换行
+
+8. **代码组织**
+   - 常量定义在文件顶部
+   - 类型定义清晰（`CardStyle`、`DisplayArticle`）
+   - 函数职责单一，有 JSDoc 注释
+   - 计算属性缓存重复计算
+
+**重要实现细节：**
+
+- 使用 `computed` 预处理所有文章数据，避免在模板中重复计算
+- `getCardStyle()` 函数根据索引循环分配卡片样式（featured、highlight、standard）
+- `getExcerpt()` 函数智能截断摘要，保留前 80 字符
+- `formatDate()` 返回完整格式（YYYY年MM月DD日），用于报纸头版
+- `formatShortDate()` 返回简短格式（YYYY.MM.DD），用于文章卡片
+- `getCategoryName()` 从分类路径中提取最后一级名称
+- `handleCategoryClick()` 预留分类筛选功能接口（TODO）
+
+**文章排序机制：**
+
+```typescript
+// ✅ 使用 getArticles() 获取已排序的文章
+const rawArticles = getArticles() // 已按 sticky 和 date 排序
+
+const articles = computed<DisplayArticle[]>(() => {
+    return rawArticles.map((article, index) => ({
+        ...article,
+        index,
+        cardStyle: getCardStyle(index),
+        excerpt: getExcerpt(article),
+        formattedDate: formatShortDate(article.date),
+    }))
+    // 无需再次排序，getArticles() 已处理
+})
+```
+
+**置顶样式实现：**
+
+```css
+/* 置顶文章样式 - 与 ArticleCard.vue 完全一致 */
+.article-card.pinned {
+    border-left: 2px solid #1a1a1a;
+    background: linear-gradient(
+        90deg,
+        rgba(26, 26, 26, 0.05) 0%,
+        rgba(26, 26, 26, 0.02) 50%,
+        transparent 100%
+    );
+    box-shadow:
+        0 1px 4px rgba(0, 0, 0, 0.04),
+        0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+.article-card.pinned:hover {
+    background: linear-gradient(
+        90deg,
+        rgba(26, 26, 26, 0.08) 0%,
+        rgba(26, 26, 26, 0.04) 50%,
+        transparent 100%
+    );
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.06),
+        0 4px 12px rgba(0, 0, 0, 0.04);
+}
+```
+
+**导航按钮：**
+
+- **位置**：首页右上角，搜索按钮左侧
+- **组件**：`NewspaperButton.vue`
+- **样式**：与 `SearchButton` 保持一致的尺寸和颜色
+- **功能**：点击跳转到 `/newspaper` 页面
 
 ### Canvas 动画系统
 
@@ -1413,6 +1537,7 @@ src/components/
 
 - `Dock.vue` - macOS 风格 Dock 菜单（透明液态玻璃效果）
 - `SearchButton.vue` - 搜索按钮（固定在右上角）
+- `NewspaperButton.vue` - 报纸排版按钮（首页右上角，搜索按钮左侧）
 - `SearchModal.vue` - 搜索模态框（全屏遮罩）
 - `LatestArticles.vue` - 最新文章列表（固定在页面底部）
 - `PageLoader.vue` - 页面加载动画组件

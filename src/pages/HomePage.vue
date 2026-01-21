@@ -3,6 +3,7 @@
         <InkBackground v-if="animationsReady" />
         <!-- 雪花飘落特效 -->
         <!-- <SnowfallEffect v-if="animationsReady" /> -->
+        <NewspaperButton />
         <SearchButton @open="showSearch = true" />
         <div class="home-content">
             <section class="hero">
@@ -26,6 +27,7 @@ import LatestArticles from '@/components/ui/LatestArticles.vue'
 import GitActivityChart from '@/components/ui/GitActivityChart.vue'
 import SearchButton from '@/components/ui/SearchButton.vue'
 import SearchModal from '@/components/ui/SearchModal.vue'
+import NewspaperButton from '@/components/ui/NewspaperButton.vue'
 import InkBackground from '@/components/effects/InkBackground.vue'
 // import SnowfallEffect from '@/components/effects/SnowfallEffect.vue'
 import { SITE_CONFIG } from '@/constants'
