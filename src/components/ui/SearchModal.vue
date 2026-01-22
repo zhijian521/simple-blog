@@ -1,18 +1,35 @@
 <template>
-    <div v-show="visible" class="search-modal" @click.self="handleClose">
-        <div class="modal-wrapper">
-            <div class="modal-background-layer"></div>
-            <div class="modal-container">
-                <div class="modal-header">
-                    <h2 class="modal-title">文章搜索</h2>
-                    <button aria-label="关闭" class="modal-close" @click="handleClose">
-                        <CloseIcon class="close-icon" />
-                    </button>
-                </div>
-
-                <div class="search-input-wrapper">
+    <BaseModal :visible="visible" title="文章搜索" @close="handleClose">
+        <template #default>
+            <div class="search-input-wrapper">
+                <svg
+                    class="search-icon"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    aria-hidden="true"
+                >
+                    <circle cx="11" cy="11" r="8" />
+                    <path d="M21 21l-4.35-4.35" />
+                </svg>
+                <input
+                    ref="searchInputRef"
+                    v-model="searchQuery"
+                    type="text"
+                    class="search-input"
+                    placeholder="搜索文章标题、标签..."
+                    aria-label="搜索文章"
+                    @input="handleSearch"
+                />
+                <button
+                    v-if="searchQuery"
+                    class="clear-button"
+                    aria-label="清除搜索"
+                    @click="clearSearch"
+                >
                     <svg
-                        class="search-icon"
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"
                         fill="none"
@@ -20,81 +37,52 @@
                         stroke-width="2"
                         aria-hidden="true"
                     >
-                        <circle cx="11" cy="11" r="8" />
-                        <path d="M21 21l-4.35-4.35" />
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
                     </svg>
-                    <input
-                        ref="searchInputRef"
-                        v-model="searchQuery"
-                        type="text"
-                        class="search-input"
-                        placeholder="搜索文章标题、标签..."
-                        aria-label="搜索文章"
-                        @input="handleSearch"
-                    />
-                    <button
-                        v-if="searchQuery"
-                        class="clear-button"
-                        aria-label="清除搜索"
-                        @click="clearSearch"
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            aria-hidden="true"
-                        >
-                            <line x1="18" y1="6" x2="6" y2="18" />
-                            <line x1="6" y1="6" x2="18" y2="18" />
-                        </svg>
-                    </button>
-                </div>
+                </button>
+            </div>
 
-                <div class="modal-content">
-                    <div v-if="loading" class="search-loading">
-                        <div class="loading-spinner" aria-hidden="true"></div>
-                        <span>搜索中...</span>
-                    </div>
+            <div v-if="loading" class="search-loading">
+                <div class="loading-spinner" aria-hidden="true"></div>
+                <span>搜索中...</span>
+            </div>
 
-                    <div v-else-if="searchQuery && results.length === 0" class="search-empty">
-                        <p>未找到相关文章</p>
-                    </div>
+            <div v-else-if="searchQuery && results.length === 0" class="search-empty">
+                <p>未找到相关文章</p>
+            </div>
 
-                    <div v-else-if="results.length > 0" class="results-list">
-                        <RouterLink
-                            v-for="article in results"
-                            :key="article.id"
-                            :to="`/article/${article.id}`"
-                            class="result-item"
-                            @click="handleClose"
-                        >
-                            <div class="result-header">
-                                <h3 class="result-title">{{ article.title }}</h3>
-                                <time class="result-date" :datetime="article.date">
-                                    {{ formatDate(article.date) }}
-                                </time>
-                            </div>
-                            <p class="result-excerpt">{{ article.excerpt }}</p>
-                            <div v-if="article.tags && article.tags.length" class="result-tags">
-                                <span v-for="tag in article.tags" :key="tag" class="result-tag">
-                                    {{ tag }}
-                                </span>
-                            </div>
-                        </RouterLink>
+            <div v-else-if="results.length > 0" class="results-list">
+                <RouterLink
+                    v-for="article in results"
+                    :key="article.id"
+                    :to="`/article/${article.id}`"
+                    class="result-item"
+                    @click="handleClose"
+                >
+                    <div class="result-header">
+                        <h3 class="result-title">{{ article.title }}</h3>
+                        <time class="result-date" :datetime="article.date">
+                            {{ formatDate(article.date) }}
+                        </time>
                     </div>
+                    <p class="result-excerpt">{{ article.excerpt }}</p>
+                    <div v-if="article.tags && article.tags.length" class="result-tags">
+                        <span v-for="tag in article.tags" :key="tag" class="result-tag">
+                            {{ tag }}
+                        </span>
+                    </div>
+                </RouterLink>
+            </div>
 
-                    <div v-else class="search-hint">
-                        <p>输入关键词搜索文章</p>
-                        <div class="search-tips">
-                            <span class="tip">支持搜索标题、标签和简介</span>
-                        </div>
-                    </div>
+            <div v-else class="search-hint">
+                <p>输入关键词搜索文章</p>
+                <div class="search-tips">
+                    <span class="tip">支持搜索标题、标签和简介</span>
                 </div>
             </div>
-        </div>
-    </div>
+        </template>
+    </BaseModal>
 </template>
 
 <script setup lang="ts">
@@ -106,7 +94,7 @@ import { searchArticles } from '@/utils/search'
 import { SEARCH_DEBOUNCE_MS } from '@/constants/animation'
 import type { Article } from '@/types/article'
 import { formatDate } from '@/utils/date'
-import CloseIcon from '@/components/icons/CloseIcon.vue'
+import BaseModal from './BaseModal.vue'
 
 interface Props {
     visible: boolean
@@ -175,116 +163,6 @@ watch(
 </script>
 
 <style scoped>
-.search-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    padding: 1rem;
-    background: transparent;
-}
-
-.modal-wrapper {
-    position: relative;
-    width: 100%;
-    max-width: 600px;
-    height: 600px;
-    pointer-events: auto;
-}
-
-.modal-background-layer {
-    position: absolute;
-    inset: 0;
-    border-radius: 1.5rem;
-    background: rgba(255, 255, 255, 0.5);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border: 2px solid rgba(255, 255, 255, 1);
-    box-shadow:
-        0 8px 32px rgba(0, 0, 0, 0.08),
-        inset 0 1px 0 rgba(255, 255, 255, 0.3),
-        inset 0 -1px 0 rgba(0, 0, 0, 0.02);
-    pointer-events: none;
-}
-
-.modal-background-layer::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 1.5rem;
-    background: linear-gradient(
-        135deg,
-        rgba(255, 255, 255, 0.2) 0%,
-        rgba(255, 255, 255, 0.05) 50%,
-        rgba(255, 255, 255, 0.5) 100%
-    );
-    pointer-events: none;
-}
-
-.modal-container {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    border-radius: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    z-index: 1;
-}
-
-.modal-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1rem 1rem;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-    flex-shrink: 0;
-}
-
-.modal-title {
-    margin: 0;
-    font-size: var(--font-size-base);
-    font-weight: var(--font-weight-medium);
-    color: var(--color-text);
-    letter-spacing: 0.05em;
-}
-
-.modal-close {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 1.625rem;
-    height: 1.625rem;
-    padding: 0;
-    border: none;
-    background: rgba(255, 255, 255, 0.5);
-    border: 1px solid rgba(0, 0, 0, 0.06);
-    border-radius: 0.625rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.modal-close:hover {
-    background: rgba(255, 255, 255, 0.8);
-    transform: scale(1.05);
-}
-
-.modal-close:active {
-    transform: scale(0.95);
-}
-
-.close-icon {
-    width: 0.875rem;
-    height: 0.875rem;
-    stroke: var(--color-text-light);
-    stroke-width: 2;
-}
-
 .search-input-wrapper {
     position: relative;
     display: flex;
@@ -353,31 +231,6 @@ watch(
 .clear-button svg {
     width: 0.875rem;
     height: 0.875rem;
-}
-
-.modal-content {
-    flex: 1;
-    overflow-y: auto;
-    padding: 1rem 1.5rem;
-    overflow-x: hidden;
-}
-
-.modal-content::-webkit-scrollbar {
-    width: 6px;
-}
-
-.modal-content::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.02);
-    border-radius: 3px;
-}
-
-.modal-content::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 3px;
-}
-
-.modal-content::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 0, 0, 0.15);
 }
 
 .search-loading {
@@ -505,41 +358,6 @@ watch(
 }
 
 @media (max-width: 768px) {
-    .search-modal {
-        padding: 1rem;
-    }
-
-    .modal-wrapper {
-        max-width: 500px;
-        width: calc(100% - 2rem);
-        height: 500px;
-    }
-
-    .modal-background-layer {
-        border-radius: 1.25rem;
-    }
-
-    .modal-background-layer::before {
-        border-radius: 1.25rem;
-    }
-
-    .modal-container {
-        border-radius: 1.25rem;
-    }
-
-    .modal-header {
-        padding: 0.875rem 0.875rem;
-    }
-
-    .modal-title {
-        font-size: 0.95rem;
-    }
-
-    .modal-close {
-        width: 1.5rem;
-        height: 1.5rem;
-    }
-
     .search-input-wrapper {
         padding: 0.875rem 1.25rem;
     }
@@ -555,10 +373,6 @@ watch(
 
     .clear-button {
         right: calc(1.25rem + 0.75rem);
-    }
-
-    .modal-content {
-        padding: 0.75rem 1rem;
     }
 
     .result-item {
@@ -600,46 +414,6 @@ watch(
 }
 
 @media (max-width: 480px) {
-    .search-modal {
-        padding: 0.75rem;
-    }
-
-    .modal-wrapper {
-        max-width: 400px;
-        width: calc(100% - 1.5rem);
-        height: 450px;
-    }
-
-    .modal-background-layer {
-        border-radius: 1rem;
-    }
-
-    .modal-background-layer::before {
-        border-radius: 1rem;
-    }
-
-    .modal-container {
-        border-radius: 1rem;
-    }
-
-    .modal-header {
-        padding: 0.75rem 0.75rem;
-    }
-
-    .modal-title {
-        font-size: 0.85rem;
-    }
-
-    .modal-close {
-        width: 1.375rem;
-        height: 1.375rem;
-    }
-
-    .close-icon {
-        width: 0.75rem;
-        height: 0.75rem;
-    }
-
     .search-input-wrapper {
         padding: 0.75rem 1rem;
     }
@@ -664,10 +438,6 @@ watch(
     .clear-button svg {
         width: 0.75rem;
         height: 0.75rem;
-    }
-
-    .modal-content {
-        padding: 0.625rem 0.875rem;
     }
 
     .result-item {
