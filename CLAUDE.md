@@ -1536,12 +1536,26 @@ src/components/
 **UI 组件说明：**
 
 - `Dock.vue` - macOS 风格 Dock 菜单（透明液态玻璃效果）
-- `SearchButton.vue` - 搜索按钮（固定在右上角）
-- `NewspaperButton.vue` - 报纸排版按钮（首页右上角，搜索按钮左侧）
+- `SearchButton.vue` - 搜索按钮（支持快捷键 Cmd/Ctrl+K 和 Q）
+- `IconButton.vue` - 通用图标按钮组件
+  - 支持三种标签模式：`button`、`router-link`、`a`
+  - 统一样式和交互效果
+  - 用于首页的文件树、报纸排版、GitHub 等按钮
 - `SearchModal.vue` - 搜索模态框（全屏遮罩）
 - `LatestArticles.vue` - 最新文章列表（固定在页面底部）
 - `PageLoader.vue` - 页面加载动画组件
 - `Footer.vue` - 页脚组件
+
+**Icons 组件说明：**
+
+- `DocumentTreeIcon.vue` - 文档树图标（用于文件树按钮）
+- `NewspaperIcon.vue` - 报纸图标（用于报纸排版按钮）
+- `GitHubIcon.vue` - GitHub 图标（用于 GitHub 链接按钮）
+- `SearchIcon.vue` - 搜索图标（用于搜索按钮）
+- `HomeIcon.vue` - 首页图标（用于 Dock）
+- `ListIcon.vue` - 列表图标（用于 Dock）
+- `GridIcon.vue` - 网格图标（用于 Dock）
+- 其他图标组件：`CloseIcon.vue`、`ChevronRightIcon.vue`、`ChevronDownIcon.vue`、`DocumentIcon.vue`、`FileIcon.vue`、`FolderClosedIcon.vue`、`FolderOpenIcon.vue`
 
 **Comments 组件说明：**
 
@@ -1549,6 +1563,43 @@ src/components/
   - 位置：`src/components/comments/GiscusComments.vue`
   - 用途：为文章提供基于 GitHub Discussions 的评论功能
   - 配置：`src/constants/giscus.ts`
+
+**IconButton 使用示例：**
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import IconButton from '@/components/ui/IconButton.vue'
+import DocumentTreeIcon from '@/components/icons/DocumentTreeIcon.vue'
+import NewspaperIcon from '@/components/icons/NewspaperIcon.vue'
+import GitHubIcon from '@/components/icons/GitHubIcon.vue'
+
+const showTree = ref(false)
+</script>
+
+<template>
+  <!-- Button 模式（带点击事件） -->
+  <IconButton aria-label="文章目录" title="文章目录" @click="showTree = true">
+    <DocumentTreeIcon />
+  </IconButton>
+
+  <!-- Router-link 模式 -->
+  <IconButton aria-label="报纸排版" title="报纸排版" to="/newspaper">
+    <NewspaperIcon />
+  </IconButton>
+
+  <!-- 外部链接模式 -->
+  <IconButton
+    aria-label="GitHub"
+    title="GitHub"
+    href="https://github.com/zhijian521/simple-blog"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <GitHubIcon />
+  </IconButton>
+</template>
+```
 
 ### 代码质量
 
