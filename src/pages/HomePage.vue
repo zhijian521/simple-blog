@@ -12,9 +12,25 @@
                 </div>
                 <div class="hero-shortcuts">
                     <SearchButton @open="showSearch = true" />
-                    <DocumentTreeButton @open="showDocumentTree = true" />
-                    <NewspaperButton />
-                    <GitHubButton />
+                    <IconButton
+                        aria-label="文章目录"
+                        title="文章目录"
+                        @click="showDocumentTree = true"
+                    >
+                        <DocumentTreeIcon />
+                    </IconButton>
+                    <IconButton aria-label="报纸排版" title="报纸排版" to="/newspaper">
+                        <NewspaperIcon />
+                    </IconButton>
+                    <IconButton
+                        aria-label="GitHub"
+                        title="GitHub"
+                        href="https://github.com/zhijian521/simple-blog"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <GitHubIcon />
+                    </IconButton>
                 </div>
             </section>
         </div>
@@ -32,10 +48,11 @@ import LatestArticles from '@/components/ui/LatestArticles.vue'
 import GitActivityChart from '@/components/ui/GitActivityChart.vue'
 import SearchButton from '@/components/ui/SearchButton.vue'
 import SearchModal from '@/components/ui/SearchModal.vue'
-import NewspaperButton from '@/components/ui/NewspaperButton.vue'
-import DocumentTreeButton from '@/components/ui/DocumentTreeButton.vue'
+import IconButton from '@/components/ui/IconButton.vue'
+import DocumentTreeIcon from '@/components/icons/DocumentTreeIcon.vue'
+import NewspaperIcon from '@/components/icons/NewspaperIcon.vue'
+import GitHubIcon from '@/components/icons/GitHubIcon.vue'
 import DocumentTreeModal from '@/components/ui/DocumentTreeModal.vue'
-import GitHubButton from '@/components/ui/GitHubButton.vue'
 import InkBackground from '@/components/effects/InkBackground.vue'
 // import SnowfallEffect from '@/components/effects/SnowfallEffect.vue'
 import { SITE_CONFIG } from '@/constants'
