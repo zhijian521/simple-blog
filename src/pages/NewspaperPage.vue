@@ -14,7 +14,7 @@
                     <span class="meta-separator">·</span>
                     <span class="meta-item">第 {{ currentWeekNumber }} 周</span>
                     <span class="meta-separator">·</span>
-                    <span class="meta-item">共 {{ articles.length }} 篇</span>
+                    <span class="meta-item">共 {{ totalArticles }} 篇</span>
                 </div>
             </div>
             <div class="header-border-bottom"></div>
@@ -22,36 +22,42 @@
 
         <div class="waterfall-container">
             <div
-                v-for="article in articles"
-                :key="article.id"
-                class="article-card"
-                :class="[article.cardStyle, { pinned: article.sticky && article.sticky > 0 }]"
+                v-for="(column, colIndex) in articleColumns"
+                :key="colIndex"
+                class="waterfall-column"
             >
-                <div class="card-corner-top-left"></div>
-                <div class="card-corner-bottom-right"></div>
+                <div
+                    v-for="article in column"
+                    :key="article.id"
+                    class="article-card"
+                    :class="[article.cardStyle, { pinned: article.sticky && article.sticky > 0 }]"
+                >
+                    <div class="card-corner-top-left"></div>
+                    <div class="card-corner-bottom-right"></div>
 
-                <h3 class="article-title-row">
-                    <router-link :to="`/article/${article.id}`" class="article-title">
-                        <span
-                            v-if="article.category"
-                            class="article-category"
-                            @click.stop="handleCategoryClick(article.category)"
-                        >
-                            {{ getCategoryName(article.category) }}
-                        </span>
-                        {{ article.title }}
-                    </router-link>
-                </h3>
+                    <h3 class="article-title-row">
+                        <router-link :to="`/article/${article.id}`" class="article-title">
+                            <span
+                                v-if="article.category"
+                                class="article-category"
+                                @click.stop="handleCategoryClick(article.category)"
+                            >
+                                {{ getCategoryName(article.category) }}
+                            </span>
+                            {{ article.title }}
+                        </router-link>
+                    </h3>
 
-                <p class="article-excerpt">{{ article.excerpt }}</p>
+                    <p class="article-excerpt">{{ article.excerpt }}</p>
 
-                <div class="article-divider"></div>
+                    <div class="article-divider"></div>
 
-                <div class="article-footer">
-                    <time class="article-date">{{ article.formattedDate }}</time>
-                    <router-link :to="`/article/${article.id}`" class="article-link">
-                        阅读全文 →
-                    </router-link>
+                    <div class="article-footer">
+                        <time class="article-date">{{ article.formattedDate }}</time>
+                        <router-link :to="`/article/${article.id}`" class="article-link">
+                            阅读全文 →
+                        </router-link>
+                    </div>
                 </div>
             </div>
         </div>
@@ -63,7 +69,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, computed } from 'vue'
+import { onMounted, onUnmounted, computed, ref } from 'vue'
 import { getArticles } from '@/utils/markdown'
 import type { Article } from '@/types/article'
 
@@ -79,16 +85,68 @@ interface DisplayArticle extends Article {
     formattedDate: string
 }
 
-const rawArticles = getArticles()
-const articles = computed<DisplayArticle[]>(() => {
-    return rawArticles.map((article, index) => ({
-        ...article,
-        index,
-        cardStyle: getCardStyle(index),
-        excerpt: getExcerpt(article),
-        formattedDate: formatShortDate(article.date),
-    }))
+/**
+ * 根据窗口宽度计算列数（与 CSS 媒体查询保持一致）
+ */
+function getColCount(width: number): number {
+    if (width >= 2560) return 6
+    if (width >= 1920) return 5
+    if (width >= 1600) return 4
+    if (width >= 1440) return 3
+    if (width >= 1024) return 3
+    if (width >= 768) return 2
+    if (width >= 641) return 2
+    return 1
+}
+
+const windowWidth = ref(window.innerWidth)
+
+const updateWindowWidth = (): void => {
+    windowWidth.value = window.innerWidth
+}
+
+onMounted(() => {
+    window.addEventListener('resize', updateWindowWidth)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
 })
+
+onUnmounted(() => {
+    window.removeEventListener('resize', updateWindowWidth)
+})
+
+// 缓存文章列表，避免重复调用
+const rawArticles = getArticles()
+
+/**
+ * 将文章分配到多个列中，实现错落效果
+ *
+ * 例如：5 篇文章，3 列
+ * 列 0: [文章0, 文章3]
+ * 列 1: [文章1, 文章4]
+ * 列 2: [文章2]
+ */
+const articleColumns = computed<DisplayArticle[][]>(() => {
+    const cols = getColCount(windowWidth.value)
+
+    // 创建空列
+    const columns: DisplayArticle[][] = Array.from({ length: cols }, () => [])
+
+    // 分配文章到各列（从左到右顺序）
+    rawArticles.forEach((article, index) => {
+        const colIndex = index % cols
+        columns[colIndex].push({
+            ...article,
+            index,
+            cardStyle: getCardStyle(index),
+            excerpt: getExcerpt(article),
+            formattedDate: formatShortDate(article.date),
+        })
+    })
+
+    return columns
+})
+
+const totalArticles = computed(() => rawArticles.length)
 
 const currentDateFormatted = computed(() => {
     const now = new Date()
@@ -140,10 +198,6 @@ function formatShortDate(dateStr: string): string {
     const day = String(date.getDate()).padStart(2, '0')
     return `${year}.${month}.${day}`
 }
-
-onMounted(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-})
 </script>
 
 <style scoped>
@@ -290,19 +344,27 @@ onMounted(() => {
     position: relative;
     z-index: 1;
     width: 100%;
-    max-width: 1800px;
+    max-width: 100%;
     margin: 0 auto;
     padding: 1.5rem 1rem;
-    column-count: 5;
-    column-gap: 1.25rem;
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start;
+    overflow: hidden;
+}
+
+.waterfall-column {
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    min-width: 320px;
 }
 
 .article-card {
-    break-inside: avoid;
     border: 1px solid rgba(0, 0, 0, 0.02);
     border-radius: 4px;
     padding: 1rem;
-    margin-bottom: 1.25rem;
     background: rgba(26, 26, 26, 0.02);
     box-shadow:
         0 1px 2px rgba(0, 0, 0, 0.04),
@@ -419,7 +481,12 @@ onMounted(() => {
     color: #1a1a1a;
     text-decoration: none;
     transition: color 0.25s ease;
-    display: block;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
     word-break: break-word;
     overflow-wrap: break-word;
 }
@@ -434,8 +501,8 @@ onMounted(() => {
     line-height: 1.7;
     margin: 0 0 0.875rem;
     display: -webkit-box;
-    -webkit-line-clamp: 3;
-    line-clamp: 3;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -514,46 +581,46 @@ onMounted(() => {
 /* 超宽屏 (≥2560px) - 7列 */
 @media (min-width: 2560px) {
     .waterfall-container {
-        column-count: 7;
-        column-gap: 2rem;
+        gap: 2rem;
         padding: 2.5rem 2rem;
+    }
+
+    .waterfall-column {
+        gap: 2rem;
     }
 
     .article-card {
         padding: 1.25rem;
-        margin-bottom: 2rem;
     }
 }
 
 /* 大屏 (1920-2560px) - 6列 */
-@media (max-width: 2560px) {
-    .waterfall-container {
-        column-count: 6;
-    }
-}
+/* 无需额外样式，flex 自动适应 */
 
 /* 中大屏 (1600-1920px) - 5列 */
-@media (max-width: 1920px) {
-    .waterfall-container {
-        column-count: 5;
-    }
-}
+/* 无需额外样式，flex 自动适应 */
 
 /* 中等屏 (1440-1600px) - 4列 */
 @media (max-width: 1600px) {
     .waterfall-container {
-        column-count: 4;
-        column-gap: 1.5rem;
+        gap: 1.5rem;
         padding: 1.75rem 1.25rem;
+    }
+
+    .waterfall-column {
+        gap: 1.5rem;
     }
 }
 
 /* 平板横屏 (1024-1440px) - 3列 */
 @media (max-width: 1440px) {
     .waterfall-container {
-        column-count: 3;
-        column-gap: 1.25rem;
+        gap: 1.25rem;
         padding: 1.5rem 1rem;
+    }
+
+    .waterfall-column {
+        gap: 1.25rem;
     }
 
     .newspaper-header {
@@ -564,14 +631,16 @@ onMounted(() => {
 /* 平板 (768-1024px) - 2列 */
 @media (max-width: 1024px) {
     .waterfall-container {
-        column-count: 2;
-        column-gap: 1rem;
+        gap: 1rem;
         padding: 1.25rem 0.875rem;
+    }
+
+    .waterfall-column {
+        gap: 1rem;
     }
 
     .article-card {
         padding: 0.875rem;
-        margin-bottom: 1rem;
     }
 
     .newspaper-header {
@@ -587,14 +656,16 @@ onMounted(() => {
 /* 移动端大屏 (640-768px) - 2列紧凑 */
 @media (max-width: 768px) {
     .waterfall-container {
-        column-count: 2;
-        column-gap: 0.875rem;
+        gap: 0.875rem;
         padding: 1rem 0.75rem;
+    }
+
+    .waterfall-column {
+        gap: 0.875rem;
     }
 
     .article-card {
         padding: 0.75rem;
-        margin-bottom: 0.875rem;
     }
 
     .newspaper-header {
@@ -620,9 +691,12 @@ onMounted(() => {
 /* 移动端 (≤640px) - 1列 */
 @media (max-width: 640px) {
     .waterfall-container {
-        column-count: 1;
-        column-gap: 0;
+        gap: 0;
         padding: 1rem 0.625rem;
+    }
+
+    .waterfall-column {
+        gap: 0;
     }
 
     .article-card {
