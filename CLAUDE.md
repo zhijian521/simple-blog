@@ -1541,7 +1541,23 @@ src/components/
   - 支持三种标签模式：`button`、`router-link`、`a`
   - 统一样式和交互效果
   - 用于首页的文件树、报纸排版、GitHub 等按钮
-- `SearchModal.vue` - 搜索模态框（全屏遮罩）
+- `BaseModal.vue` - 基础弹窗组件
+  - 统一弹窗结构和样式（玻璃态效果、响应式断点）
+  - 所有弹窗组件共享此基础组件
+  - 支持通过插槽注入自定义内容
+  - 统一 ESC 键关闭处理
+- `SearchModal.vue` - 搜索模态框（基于 BaseModal）
+  - 支持文章标题、标签、简介搜索
+  - 300ms 防抖输入
+  - 快捷键支持（Cmd/Ctrl+K 打开，ESC 关闭）
+- `DocumentTreeModal.vue` - 文档树模态框（基于 BaseModal）
+  - 展示文章目录树形结构
+  - 支持文件夹展开/折叠
+  - 点击文章跳转到详情页
+- `TableOfContentsModal.vue` - 文章目录模态框（基于 BaseModal）
+  - 展示单篇文章的标题目录
+  - 支持多级标题（h2, h3, h4）
+  - 点击标题滚动到对应位置
 - `LatestArticles.vue` - 最新文章列表（固定在页面底部）
 - `PageLoader.vue` - 页面加载动画组件
 - `Footer.vue` - 页脚组件
@@ -1600,6 +1616,46 @@ const showTree = ref(false)
   </IconButton>
 </template>
 ```
+
+**BaseModal 使用示例：**
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import BaseModal from '@/components/ui/BaseModal.vue'
+
+const showModal = ref(false)
+const handleClose = () => {
+  showModal.value = false
+}
+</script>
+
+<template>
+  <BaseModal :visible="showModal" title="标题" @close="handleClose">
+    <template #default>
+      <!-- 自定义内容 -->
+      <div class="custom-content">
+        <p>弹窗内容</p>
+      </div>
+    </template>
+  </BaseModal>
+</template>
+```
+
+**BaseModal 特性：**
+
+- **Props**:
+  - `visible: boolean` - 控制弹窗显示/隐藏
+  - `title: string` - 弹窗标题
+- **Events**:
+  - `@close` - 关闭弹窗时触发
+- **Slots**:
+  - `#default` - 默认插槽，注入弹窗内容
+- **样式特性**:
+  - 玻璃态背景效果（`backdrop-filter: blur(20px) saturate(180%)`）
+  - 自适应响应式布局（768px, 480px 断点）
+  - 自定义滚动条样式
+  - ESC 键自动关闭（使用 `useKeyboardShortcut` composable）
 
 ### 代码质量
 
