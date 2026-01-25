@@ -1,6 +1,6 @@
 ---
 title: AICoding 使用与推荐
-date: 2026-01-03
+date: 2026-01-25
 category: 开发/AICoding
 id: s8u9yp4g
 description: 介绍如何使用AI模型进行开发以及推荐一些好用的AI模型。
@@ -10,20 +10,21 @@ tags:
   - GLM
   - Cursor
   - Claude Code
+  - Zed
   - AI模型
 ---
 
-分享两个我常用的 AI 开发工具。
+分享我使用过的 AI 开发工具和当前的主力方案。
 
-## Cursor
+## Cursor (已停用)
 
-基于 VS Code 的 AI 编辑器，我之前使用的主力编辑器。
+基于 VS Code 的 AI 编辑器，我之前使用的主力编辑器，现已不再使用。
 
 **优势：**
 
 - 多款模型可选，且能力较强
 - 前端开发可以直接在编辑器里预览和选中 UI 进行修改
-- 编辑器内开发，可以实时查看修改代码
+- 编辑器内开发内开发，可以实时查看修改代码
 
 **劣势：**
 
@@ -31,9 +32,9 @@ tags:
 
 官网：[ https://www.cursor.so/ ](https://www.cursor.so/)
 
-## Claude Code + GLM
+## Claude Code + GLM (当前主力)
 
-一个低成本的替代方案。Claude Code 是命令行工具，配合智谱 GLM 使用。我当前主力使用的方案。
+一个低成本的替代方案。Claude Code 是命令行工具，配合智谱 GLM 使用。当前主力方案使用。
 
 **优势：**
 
@@ -70,6 +71,26 @@ npx @z_ai/coding-helper
 ```bash
 claude
 ```
+
+## Zed + GLM 4.7 Code (当前主力)
+
+当前使用方案。使用 Zed 编辑器配合智谱 GLM 4.7 Code 套餐，通过 LLM providers 实现 AI Agent Coding。
+
+**优势：**
+
+- AI 原生编辑器，深度集成 AI 能力
+- GLM 4.7 Code 模型能力强，中文理解优秀
+- 支持真正的 AI Agent，自动完成复杂任务
+- 费用合理，性价比高
+
+**配置：**
+
+安装 Zed 后，在 Settings → AI 中配置 LLM provider，添加智谱 API 密钥并选择 最新 模型。
+
+
+Zed 还支持其他模型和工具，如 Claude Code、OpenCode 等。  
+
+官网：[ https://zed.dev ](https://zed.dev)
 
 ## 其他选择
 
