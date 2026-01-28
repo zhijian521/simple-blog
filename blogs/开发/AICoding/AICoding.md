@@ -11,6 +11,8 @@ tags:
   - Cursor
   - Claude Code
   - Zed
+  - Kimi
+  - Kimi CLI
   - AI模型
 ---
 
@@ -92,12 +94,57 @@ Zed 还支持其他模型和工具，如 Claude Code、OpenCode 等。
 
 官网：[ https://zed.dev ](https://zed.dev)
 
+## Kimi 2.5 + Kimi CLI (推荐)
+
+月之暗面推出的 Kimi 2.5 模型配合官方 Kimi CLI 工具，是一个值得尝试的 AI Coding 方案。
+
+**优势：**
+
+- 模型能力强，支持超长上下文（200K+）
+- 中文理解出色，编程体验流畅
+- API 价格合理
+
+**劣势：**
+
+- 命令行工具，无图形界面
+- MCP 生态还在完善中
+
+### 配置方法
+
+安装 Kimi CLI：
+
+```bash
+# Linux / macOS
+curl -LsSf https://code.kimi.com/install.sh | bash  
+
+# Windows (PowerShell)
+Invoke-RestMethod https://code.kimi.com/install.ps1 | Invoke-Expression
+```
+
+登录：
+
+```bash
+/login
+```
+
+API 密钥在 [ Kimi Code ](https://www.kimi.com/code) 获取。
+
+### 基本使用
+
+在项目目录启动 Kimi CLI：
+
+```bash
+kimi
+```
+
+
+官网：[ https://www.kimi.com/code ](https://www.kimi.com/code)
+
 ## 其他选择
 
 看到别人推荐的，但我没有使用过：
 
 - [ MiniMax Code ](https://www.minimaxi.com/)
-- [ Kimi Code ](https://www.kimi.com/code)
 
 ## 相关链接
 
@@ -105,6 +152,8 @@ Zed 还支持其他模型和工具，如 Claude Code、OpenCode 等。
 - [ Claude Code 文档 ](https://docs.anthropic.com/en/docs/claude-code/overview)
 - [ 智谱 AI 开放平台 ](https://open.bigmodel.cn/)
 - [ GLM API 文档 ](https://open.bigmodel.cn/dev/api)
+- [ Kimi 官网 ](https://www.kimi.com)
+- [ Kimi 文档 ](https://www.kimi.com/code/docs/)
 
 ---
 
