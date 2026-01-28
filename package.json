@@ -1,6 +1,7 @@
 {
   "name": "simple-blog",
-  "version": "1.0.0",
+  "version": "1.0.1",
+  "author": "zhijian521",
   "type": "module",
   "scripts": {
     "fetch-git": "tsx scripts/fetch-git-activity.ts",
