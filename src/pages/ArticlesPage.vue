@@ -83,6 +83,9 @@ const dockItems = createDockItems(
     padding-bottom: 2rem;
     min-height: 100vh;
     position: relative;
+    overflow-x: hidden;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 /* 水墨风格装饰 */

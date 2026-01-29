@@ -76,6 +76,8 @@ function formatDate(date: string) {
 <style scoped>
 .article-card {
     display: block;
+    overflow: hidden;
+    width: 100%;
 }
 
 .article-link {
@@ -140,6 +142,7 @@ function formatDate(date: string) {
     justify-content: space-between;
     align-items: flex-start;
     gap: var(--spacing-md);
+    min-width: 0;
 }
 
 .article-title {
@@ -147,12 +150,16 @@ function formatDate(date: string) {
     font-weight: var(--font-weight-medium);
     line-height: 1.4;
     flex: 1;
+    min-width: 0;
     letter-spacing: 0.02em;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
 }
 
 /* 置顶文章标题样式 */
@@ -178,6 +185,9 @@ function formatDate(date: string) {
     line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
 }
 
 .article-footer {
@@ -191,6 +201,7 @@ function formatDate(date: string) {
     display: flex;
     gap: var(--spacing-xs);
     flex-wrap: wrap;
+    min-width: 0;
 }
 
 .article-tags .tag {
@@ -212,12 +223,26 @@ function formatDate(date: string) {
 @media (max-width: 768px) {
     .article-link {
         padding: var(--spacing-md);
+        word-break: break-word;
+        overflow-wrap: break-word;
+    }
+
+    .article-header {
+        gap: var(--spacing-sm);
+        min-width: 0;
+    }
+
+    .article-title {
+        word-break: break-word;
+        overflow-wrap: break-word;
+        hyphens: auto;
     }
 
     .article-footer {
         flex-direction: row;
         align-items: center;
         gap: var(--spacing-sm);
+        min-width: 0;
     }
 
     .article-tags {
@@ -225,22 +250,21 @@ function formatDate(date: string) {
         min-width: 0;
         display: flex;
         gap: var(--spacing-xs);
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        scrollbar-width: none;
-        -ms-overflow-style: none;
-    }
-
-    .article-tags::-webkit-scrollbar {
-        display: none;
+        flex-wrap: wrap;
+        overflow: hidden;
     }
 
     .article-tags .tag {
         flex-shrink: 0;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     .read-more {
         flex-shrink: 0;
+        white-space: nowrap;
     }
 }
 
