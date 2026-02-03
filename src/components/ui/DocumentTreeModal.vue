@@ -41,6 +41,7 @@ const emit = defineEmits<{
 
 const router = useRouter()
 const articles = getArticles() as Article[]
+const articleIdBySlug = new Map(articles.map(article => [article.slug, article.id]))
 
 // 常量配置
 const BLOG_PATH_PREFIX = '/blogs/'
@@ -69,12 +70,11 @@ const treeNodes = computed(() => {
             const isFile = i === parts.length - 1
 
             if (isFile) {
-                const article = articles.find(a => a.slug === relativePath)
                 currentLevel.push({
                     name: part,
                     path: relativePath,
                     type: 'file',
-                    id: article?.id,
+                    id: articleIdBySlug.get(relativePath),
                 })
             } else {
                 let existingNode = currentLevel.find(n => n.name === part && n.type === 'directory')

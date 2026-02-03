@@ -12,7 +12,7 @@ pre.shiki {
   overflow-x: auto;
   line-height: 1.6;
   font-size: var(--font-size-base);
-  background: var(--color-bg-secondary);
+  background: var(--color-bg-secondary) !important;
   color: var(--color-code-text);
   /* 平滑滚动 */
   scroll-behavior: smooth;
@@ -26,7 +26,7 @@ pre.shiki {
 /* ========== 代码块内部样式 ========== */
 pre.shiki code {
   font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-  background: transparent;
+  background: transparent !important;
   color: inherit;
 }
 
