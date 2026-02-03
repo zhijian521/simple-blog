@@ -1,6 +1,6 @@
 <template>
     <div class="article-detail">
-        <NotFoundPage v-if="!article" />
+        <NotFoundPage v-if="!loading && !article" />
 
         <article v-else class="article-content">
             <div class="article-header">
@@ -109,6 +109,7 @@ const sanitizedContent = computed(() => {
 
 
 const loadArticle = async (id: string) => {
+    loading.value = true
     // 验证 ID
     if (!isValidRouteId(id)) {
         console.error('Invalid article ID:', id)
