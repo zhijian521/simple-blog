@@ -128,6 +128,15 @@ const indexItems = (articleIndex as ArticleIndexItem[]).map(item => ({
     ...item,
     tags: item.tags || [],
 }))
+const searchIndex = indexItems.map(item => {
+    const title = item.title.toLowerCase()
+    const excerpt = item.excerpt.toLowerCase()
+    const tags = (item.tags || []).map(tag => tag.toLowerCase()).join(' ')
+    return {
+        id: item.id,
+        searchText: `${title} ${excerpt} ${tags}`.trim(),
+    }
+})
 const sortedIndexItems = [...indexItems].sort((a, b) => {
     const stickyA = a.sticky || 0
     const stickyB = b.sticky || 0
@@ -339,6 +348,10 @@ export function getArticleIndexById(id: string): ArticleIndexItem | null {
 
 export function getArticleIndexBySlug(slug: string): ArticleIndexItem | null {
     return indexBySlug.get(slug) || null
+}
+
+export function getSearchIndex(): Array<{ id: string; searchText: string }> {
+    return searchIndex
 }
 
 export function getArticleSlugFromPath(filePath: string): string {

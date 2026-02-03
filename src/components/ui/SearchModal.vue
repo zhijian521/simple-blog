@@ -89,8 +89,8 @@
 import { ref, watch, nextTick } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import { useKeyboardShortcut } from '@/composables/useKeyboardShortcut'
-import { getArticles } from '@/utils/markdown'
-import { searchArticles } from '@/utils/search'
+import { getArticles, getSearchIndex } from '@/utils/markdown'
+import { searchArticleIds } from '@/utils/search'
 import { SEARCH_DEBOUNCE_MS } from '@/constants/animation'
 import type { Article } from '@/types/article'
 import { formatDate } from '@/utils/date'
@@ -111,11 +111,14 @@ const searchQuery = ref('')
 const results = ref<Article[]>([])
 const loading = ref(false)
 const searchInputRef = ref<HTMLInputElement | null>(null)
+const articleIndex = getArticles()
+const articleById = new Map(articleIndex.map(article => [article.id, article]))
+const searchIndex = getSearchIndex()
 
 // 搜索输入处理（使用 VueUse 防抖）
 const performSearch = () => {
-    const articles = getArticles()
-    results.value = searchArticles(searchQuery.value, articles)
+    const ids = searchArticleIds(searchQuery.value, searchIndex)
+    results.value = ids.map(id => articleById.get(id)).filter(Boolean) as Article[]
     loading.value = false
 }
 
