@@ -21,14 +21,14 @@
   },
   {
     "id": "x4k7q2mz",
-    "slug": "开发/AICoding/Codex_APP_在Mac上免费使用GPT-5.2",
-    "title": "Codex APP：在 Mac 上体验 GPT-5-Codex",
+    "slug": "开发/AICoding/CodexAPP",
+    "title": "Codex APP：在 Mac 上体验 GPT-5.2-Codex",
     "date": "2026-02-03",
-    "excerpt": "Codex APP 提供原生桌面体验，下载后登录即可使用。本文重点介绍下载方式、使用流程，以及 GPT-5-Codex 在工程场景中的优势。",
+    "excerpt": "Codex APP 是 openAI 提供的桌面端应用，当前可以免费使用 GPT-5.2-Codex。",
     "category": "开发/AICoding",
     "tags": [
       "Codex",
-      "GPT-5-Codex",
+      "GPT-5.2-Codex",
       "macOS",
       "AI"
     ],
