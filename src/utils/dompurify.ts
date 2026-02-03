@@ -1,4 +1,4 @@
-import DOMPurify from 'dompurify'
+import DOMPurify from 'isomorphic-dompurify'
 
 const DOMPURIFY_CONFIG = {
     ALLOWED_TAGS: [
@@ -42,17 +42,5 @@ export function sanitizeHtml(html: string): string {
 }
 
 export function sanitizeHtmlWithSsr(html: string): string {
-    if (import.meta.env.SSR) {
-        return sanitizeHtmlServer(html)
-    }
     return sanitizeHtml(html)
-}
-
-function sanitizeHtmlServer(html: string): string {
-    let sanitized = html.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
-    sanitized = sanitized.replace(/\s+on\w+="[^"]*"/gi, '')
-    sanitized = sanitized.replace(/\s+on\w+='[^']*'/gi, '')
-    sanitized = sanitized.replace(/\s+on\w+=[^\s>]*/gi, '')
-    sanitized = sanitized.replace(/href\s*=\s*["']javascript:[^"']*["']/gi, '')
-    return sanitized
 }

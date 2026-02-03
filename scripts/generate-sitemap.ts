@@ -6,11 +6,10 @@
 
 import fs from 'fs'
 import path from 'path'
-import matter from 'front-matter'
 import { fileURLToPath } from 'url'
 import type { SitemapPage, Article } from './shared/types.js'
-import { walkDir } from './shared/fs.js'
 import { formatDate } from './shared/date.js'
+import { buildArticleIndex } from './shared/article-index.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -30,25 +29,15 @@ const CONFIG = {
  * 扫描文章并获取日期信息
  */
 function scanArticles(): { articles: Article[]; latestDate: string | null } {
-    const articles: Article[] = []
+    const indexItems = buildArticleIndex(CONFIG.blogsDir)
     let latestDate: string | null = null
 
-    for (const filePath of walkDir(CONFIG.blogsDir, '.md')) {
-        const content = fs.readFileSync(filePath, 'utf-8')
-        const { attributes } = matter(content)
-        const stats = fs.statSync(filePath)
-
-        const id = attributes.id
-        if (!id) continue
-
-        const articleDate = attributes.date ? formatDate(attributes.date) : formatDate(stats.mtime)
-
-        if (!latestDate || articleDate > latestDate) {
-            latestDate = articleDate
+    const articles: Article[] = indexItems.map(item => {
+        if (!latestDate || item.date > latestDate) {
+            latestDate = item.date
         }
-
-        articles.push({ id, date: articleDate })
-    }
+        return { id: item.id, date: item.date }
+    })
 
     return { articles, latestDate }
 }
