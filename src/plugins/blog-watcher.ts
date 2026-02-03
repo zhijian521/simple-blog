@@ -15,6 +15,7 @@ import fs from 'fs'
 import matter from 'front-matter'
 import type { ArticleFrontMatter } from '../types/article'
 import { generateId as sharedGenerateId } from '../utils/article-id'
+import { buildArticleIndex } from '../../scripts/shared/article-index.js'
 
 // 常量配置
 const MARKDOWN_EXTENSION = '.md'
@@ -23,6 +24,22 @@ const RELOAD_DELAY_NORMAL = 100
 const WRITE_STABILITY_THRESHOLD = 300
 const WRITE_POLL_INTERVAL = 100
 const DEBUG = process.env.NODE_ENV === 'development'
+
+/**
+ * 生成文章索引 JSON（用于列表/搜索）
+ */
+function writeArticleIndex(blogsDir: string, outputDir: string, outputPath: string): void {
+    try {
+        const items = buildArticleIndex(blogsDir)
+        fs.mkdirSync(outputDir, { recursive: true })
+        fs.writeFileSync(outputPath, JSON.stringify(items, null, 2), 'utf-8')
+        if (DEBUG) {
+            console.log(`[BlogWatcher] ✓ 文章索引已更新: ${outputPath}`)
+        }
+    } catch (error) {
+        console.error('[BlogWatcher] 生成文章索引失败:', error)
+    }
+}
 
 /**
  * 生成随机 8 位 ID（小写字母和数字）
@@ -184,12 +201,16 @@ function triggerReload(server: ViteDevServer, delay: number): void {
 export function blogWatcher(): Plugin {
     let watcher: ReturnType<typeof chokidar.watch> | null = null
     let blogsDir: string
+    let articleIndexPath: string
+    let articleIndexDir: string
 
     return {
         name: 'blog-watcher',
 
         configResolved(config) {
             blogsDir = path.resolve(config.root, 'blogs')
+            articleIndexDir = path.resolve(config.root, 'src/generated')
+            articleIndexPath = path.resolve(articleIndexDir, 'article-index.json')
         },
 
         configureServer(server) {
@@ -227,6 +248,7 @@ export function blogWatcher(): Plugin {
                 }
 
                 const updated = ensureFrontMatter(filePath, blogsDir)
+                writeArticleIndex(blogsDir, articleIndexDir, articleIndexPath)
                 triggerReload(server, updated ? RELOAD_DELAY_WITH_UPDATE : 0)
             })
 
@@ -239,6 +261,7 @@ export function blogWatcher(): Plugin {
                 }
 
                 const updated = ensureFrontMatter(filePath, blogsDir)
+                writeArticleIndex(blogsDir, articleIndexDir, articleIndexPath)
                 triggerReload(server, updated ? RELOAD_DELAY_WITH_UPDATE : RELOAD_DELAY_NORMAL)
             })
 
@@ -250,6 +273,7 @@ export function blogWatcher(): Plugin {
                     console.log(`[BlogWatcher] 🗑️  文件已删除: ${filePath}`)
                 }
 
+                writeArticleIndex(blogsDir, articleIndexDir, articleIndexPath)
                 triggerReload(server, RELOAD_DELAY_NORMAL)
             })
 

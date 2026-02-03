@@ -57,7 +57,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch, computed, nextTick } from 'vue'
+import { ref, onMounted, onUnmounted, watch, computed, nextTick, onServerPrefetch } from 'vue'
 import { useRoute } from 'vue-router'
 import { getArticleById, highlightCodeBlocks, disposeHighlighter } from '@/utils/markdown'
 import { useArticleSeo } from '@/utils/seo'
@@ -126,7 +126,7 @@ const highlightCode = async () => {
     }
 }
 
-const loadArticle = (id: string) => {
+const loadArticle = async (id: string) => {
     // 验证 ID
     if (!isValidRouteId(id)) {
         console.error('Invalid article ID:', id)
@@ -136,7 +136,7 @@ const loadArticle = (id: string) => {
     }
 
     // 获取文章数据
-    const foundArticle = getArticleById(id)
+    const foundArticle = await getArticleById(id)
 
     if (!foundArticle) {
         console.warn(`Article not found: ${id}`)
@@ -152,11 +152,18 @@ const loadArticle = (id: string) => {
 // 立即加载文章数据（支持 SSR）
 // 在服务端渲染时同步执行，确保生成的 HTML 包含完整内容
 const id = extractRouteId(route.params.id)
-loadArticle(id)
+void loadArticle(id)
+
+onServerPrefetch(async () => {
+    const serverId = extractRouteId(route.params.id)
+    if (serverId) {
+        await loadArticle(serverId)
+    }
+})
 
 onMounted(() => {
     // 客户端导航时重新加载数据
-    loadArticle(id)
+    void loadArticle(id)
     // 滚动到顶部
     window.scrollTo({ top: 0, behavior: 'auto' })
     // 高亮代码块
@@ -173,7 +180,7 @@ watch(
     async newId => {
         const validatedId = extractRouteId(newId)
         if (validatedId) {
-            loadArticle(validatedId)
+            await loadArticle(validatedId)
             // 只在客户端环境执行
             if (!import.meta.env.SSR) {
                 // 等待 DOM 更新

@@ -99,13 +99,15 @@ function getColCount(width: number): number {
     return 1
 }
 
-const windowWidth = ref(window.innerWidth)
+const windowWidth = ref(0)
 
 const updateWindowWidth = (): void => {
+    if (typeof window === 'undefined') return
     windowWidth.value = window.innerWidth
 }
 
 onMounted(() => {
+    updateWindowWidth()
     window.addEventListener('resize', updateWindowWidth)
     window.scrollTo({ top: 0, behavior: 'smooth' })
 })

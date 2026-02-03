@@ -11,7 +11,8 @@
 import MarkdownIt from 'markdown-it'
 import fm from 'front-matter'
 import { createHighlighter, type Highlighter } from 'shiki'
-import type { Article, ArticleFrontMatter } from '../types/article'
+import articleIndex from '@/generated/article-index.json'
+import type { Article, ArticleFrontMatter, ArticleIndexItem } from '../types/article'
 
 // 配置常量
 const DEFAULT_EXCERPT_LENGTH = 200
@@ -90,17 +91,36 @@ const md: MarkdownIt = new MarkdownIt({
     },
 })
 
-interface ArticlesCache {
-    bySlug: Map<string, Article>
-    byId: Map<string, Article>
-    list: Article[]
-}
+// 文章索引缓存（列表/搜索用）
+const indexItems = (articleIndex as ArticleIndexItem[]).map(item => ({
+    ...item,
+    tags: item.tags || [],
+}))
+const sortedIndexItems = [...indexItems].sort((a, b) => {
+    const stickyA = a.sticky || 0
+    const stickyB = b.sticky || 0
+    if (stickyA !== stickyB) {
+        return stickyB - stickyA
+    }
+    return new Date(b.date).getTime() - new Date(a.date).getTime()
+})
+const indexById = new Map(indexItems.map(item => [item.id, item]))
+const indexBySlug = new Map(indexItems.map(item => [item.slug, item]))
 
-const articlesCache: ArticlesCache = {
-    bySlug: new Map(),
-    byId: new Map(),
-    list: [],
-}
+// 已加载的完整文章缓存（详情页用）
+const fullArticleById = new Map<string, Article>()
+const fullArticleBySlug = new Map<string, Article>()
+
+const markdownModules = import.meta.glob('/blogs/**/*.md', {
+    query: '?raw',
+    import: 'default',
+})
+const markdownModuleBySlug = new Map<string, () => Promise<unknown>>(
+    Object.entries(markdownModules).map(([filePath, loader]) => [
+        extractSlug(filePath),
+        loader,
+    ])
+)
 
 function validateSlug(slug: string): boolean {
     const pathTraversalPatterns = ['../', './', '..\\']
@@ -144,52 +164,6 @@ function parseArticle(markdownContent: string, slug: string): Article {
         category: attributes.category,
         tags: attributes.tags || [],
         sticky: attributes.sticky || 0,
-    }
-}
-
-function loadArticles(): void {
-    try {
-        const markdownModules = import.meta.glob('/blogs/**/*.md', {
-            query: '?raw',
-            import: 'default',
-            eager: true,
-        })
-
-        Object.entries(markdownModules).forEach(([filePath, content]) => {
-            try {
-                const slug = extractSlug(filePath)
-                if (!validateSlug(slug)) {
-                    console.warn(`无效的 slug 格式: ${slug}，跳过...`)
-                    return
-                }
-
-                const article = parseArticle(String(content), slug)
-                articlesCache.bySlug.set(slug, article)
-                articlesCache.byId.set(article.id, article)
-                articlesCache.list.push(article)
-            } catch (error) {
-                console.error(`解析文章失败: ${filePath}`, error)
-            }
-        })
-
-        // 先按置顶优先级降序，再按日期降序
-        articlesCache.list.sort((a, b) => {
-            // 先比较 sticky 值（降序）
-            const stickyA = a.sticky || 0
-            const stickyB = b.sticky || 0
-            if (stickyA !== stickyB) {
-                return stickyB - stickyA
-            }
-            // sticky 相同时，按日期降序
-            return new Date(b.date).getTime() - new Date(a.date).getTime()
-        })
-
-        if (articlesCache.list.length === 0) {
-            console.warn('没有成功加载任何文章')
-        }
-    } catch (error) {
-        console.error('加载文章失败', error)
-        throw new Error('文章加载失败，请检查博客文件')
     }
 }
 
@@ -261,19 +235,53 @@ export async function highlightCodeBlocks(container: HTMLElement): Promise<void>
 }
 
 export function getArticles(): Article[] {
-    return articlesCache.list
+    return sortedIndexItems.map(item => ({
+        ...item,
+        content: '',
+    }))
 }
 
-export function getArticleBySlug(slug: string): Article | null {
+export async function getArticleBySlug(slug: string): Promise<Article | null> {
     if (!validateSlug(slug)) {
         console.error(`请求的 slug 格式无效: ${slug}`)
         return null
     }
-    return articlesCache.bySlug.get(slug) || null
+
+    const cached = fullArticleBySlug.get(slug)
+    if (cached) return cached
+
+    const indexItem = indexBySlug.get(slug)
+    if (!indexItem) return null
+
+    const loader = markdownModuleBySlug.get(slug)
+    if (!loader) {
+        console.warn(`Markdown 模块未找到: ${slug}`)
+        return null
+    }
+
+    try {
+        const raw = await loader()
+        const article = parseArticle(String(raw), slug)
+        fullArticleBySlug.set(slug, article)
+        fullArticleById.set(article.id, article)
+        if (import.meta.env.DEV) {
+            console.log(`[Article] Loaded: ${slug}`)
+        }
+        return article
+    } catch (error) {
+        console.error(`加载文章失败: ${slug}`, error)
+        return null
+    }
 }
 
-export function getArticleById(id: string): Article | null {
-    return articlesCache.byId.get(id) || null
+export async function getArticleById(id: string): Promise<Article | null> {
+    const cached = fullArticleById.get(id)
+    if (cached) return cached
+
+    const indexItem = indexById.get(id)
+    if (!indexItem) return null
+
+    return getArticleBySlug(indexItem.slug)
 }
 
 export function renderMarkdown(content: string): string {
@@ -287,4 +295,18 @@ export function disposeHighlighter(): void {
     }
 }
 
-loadArticles()
+export function getArticleIndex(): ArticleIndexItem[] {
+    return indexItems
+}
+
+export function getArticleIndexById(id: string): ArticleIndexItem | null {
+    return indexById.get(id) || null
+}
+
+export function getArticleIndexBySlug(slug: string): ArticleIndexItem | null {
+    return indexBySlug.get(slug) || null
+}
+
+export function getArticleSlugFromPath(filePath: string): string {
+    return extractSlug(filePath)
+}

@@ -34,3 +34,18 @@ export interface ArticleFrontMatter {
     sticky?: number // 置顶优先级（可选，默认为 0）
     [key: string]: unknown // 允许额外的自定义字段
 }
+
+/**
+ * 文章索引条目（用于列表/搜索，避免加载完整内容）
+ */
+export interface ArticleIndexItem {
+    id: string
+    slug: string
+    title: string
+    date: string
+    excerpt: string
+    author?: string
+    category?: string
+    tags?: string[]
+    sticky?: number
+}
