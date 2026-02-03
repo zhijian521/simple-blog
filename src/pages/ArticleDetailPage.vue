@@ -2,7 +2,7 @@
     <div class="article-detail">
         <NotFoundPage v-if="!loading && !article" />
 
-        <article v-else class="article-content">
+        <article v-else-if="article" class="article-content">
             <div class="article-header">
                 <h1 class="article-title">{{ article.title }}</h1>
                 <ArticleBreadcrumb :category="article.category" :date="article.date" />
@@ -29,12 +29,7 @@
         </article>
 
         <!-- macOS 风格 Dock 菜单栏 -->
-        <Dock
-            v-if="!loading && article"
-            :items="dockItems"
-            position="bottom"
-            :search-visible="showSearch"
-        />
+        <Dock v-if="!loading && article" :items="dockItems" position="bottom" :search-visible="showSearch" />
 
         <!-- 搜索模态框 -->
         <SearchModal v-if="!loading && article" :visible="showSearch" @close="showSearch = false" />
