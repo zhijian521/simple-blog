@@ -31,7 +31,7 @@ const DOMPURIFY_CONFIG = {
         'th',
         'td',
     ],
-    ALLOWED_ATTR: ['href', 'title', 'src', 'alt', 'class', 'id', 'target', 'rel'],
+    ALLOWED_ATTR: ['href', 'title', 'src', 'alt', 'class', 'id', 'target', 'rel', 'style'],
     ALLOW_DATA_ATTR: false,
     ALLOWED_URI_REGEXP:
         /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp):|[^a-z]|[a-z+.-]+(?:[^a-z+.\-:]|$))/i,

@@ -59,7 +59,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch, computed, nextTick, onServerPrefetch } from 'vue'
 import { useRoute } from 'vue-router'
-import { getArticleById, highlightCodeBlocks, disposeHighlighter } from '@/utils/markdown'
+import { getArticleById, disposeHighlighter } from '@/utils/markdown'
 import { useArticleSeo } from '@/utils/seo'
 import { sanitizeHtmlWithSsr } from '@/utils/dompurify'
 import { extractRouteId, isValidRouteId } from '@/utils/router'
@@ -78,7 +78,6 @@ import type { Article } from '@/types/article'
 const route = useRoute()
 const article = ref<Article | null>(null)
 const loading = ref(true)
-const highlighting = ref(false)
 const showSearch = ref(false)
 const showDocumentTree = ref(false)
 const showToc = ref(false)
@@ -108,23 +107,6 @@ const sanitizedContent = computed(() => {
     return sanitizeHtmlWithSsr(article.value.content)
 })
 
-// 高亮代码块
-const highlightCode = async () => {
-    if (highlighting.value) return
-
-    highlighting.value = true
-    try {
-        await nextTick()
-        const container = document.querySelector('.article-body')
-        if (container) {
-            await highlightCodeBlocks(container as HTMLElement)
-        }
-    } catch (error) {
-        console.error('代码高亮失败:', error)
-    } finally {
-        highlighting.value = false
-    }
-}
 
 const loadArticle = async (id: string) => {
     // 验证 ID
@@ -166,8 +148,7 @@ onMounted(() => {
     void loadArticle(id)
     // 滚动到顶部
     window.scrollTo({ top: 0, behavior: 'auto' })
-    // 高亮代码块
-    highlightCode()
+    // 文章内容已在渲染阶段高亮
 })
 
 onUnmounted(() => {
@@ -187,8 +168,7 @@ watch(
                 await nextTick()
                 // 滚动到顶部
                 window.scrollTo({ top: 0, behavior: 'auto' })
-                // 高亮代码
-                highlightCode()
+                // 文章内容已在渲染阶段高亮
             }
         }
     }

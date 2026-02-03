@@ -81,15 +81,47 @@ async function loadLanguageIfNeeded(lang: string): Promise<void> {
     loadedLanguages.add(lang)
 }
 
-const md: MarkdownIt = new MarkdownIt({
+const mdPlain: MarkdownIt = new MarkdownIt({
     html: true,
     linkify: true,
     typographer: true,
     highlight: (str: string, lang: string): string => {
         const language = lang || 'plaintext'
-        return `<pre><code class="language-${language}">${md.utils.escapeHtml(str)}</code></pre>`
+        return `<pre><code class="language-${language}">${mdPlain.utils.escapeHtml(str)}</code></pre>`
     },
 })
+
+let mdWithShiki: MarkdownIt | null = null
+
+async function getMarkdownWithShiki(): Promise<MarkdownIt> {
+    if (mdWithShiki) return mdWithShiki
+
+    const highlighter = await initHighlighter()
+    mdWithShiki = new MarkdownIt({
+        html: true,
+        linkify: true,
+        typographer: true,
+        highlight: (str: string, lang: string): string => {
+            const language = lang || 'plaintext'
+            const isSupported = SUPPORTED_LANGUAGES.includes(
+                language as (typeof SUPPORTED_LANGUAGES)[number]
+            )
+
+            if (!isSupported) {
+                return `<pre><code class="language-${language}">${mdPlain.utils.escapeHtml(
+                    str
+                )}</code></pre>`
+            }
+
+            return highlighter.codeToHtml(str, {
+                lang: language as (typeof SUPPORTED_LANGUAGES)[number],
+                theme: SHIKI_THEME,
+            })
+        },
+    })
+
+    return mdWithShiki
+}
 
 // 文章索引缓存（列表/搜索用）
 const indexItems = (articleIndex as ArticleIndexItem[]).map(item => ({
@@ -140,7 +172,7 @@ function extractExcerpt(content: string, maxLength = DEFAULT_EXCERPT_LENGTH): st
     return plainText.slice(0, maxLength) + '...'
 }
 
-function parseArticle(markdownContent: string, slug: string): Article {
+async function parseArticle(markdownContent: string, slug: string): Promise<Article> {
     const { attributes, body } = fm<ArticleFrontMatter>(markdownContent)
 
     let validDate = attributes.date
@@ -153,13 +185,15 @@ function parseArticle(markdownContent: string, slug: string): Article {
         throw new Error(`文章 "${slug}" 缺少必需的 id 字段，请运行 npm run ensure-ids 生成 id`)
     }
 
+    const renderer = await getMarkdownWithShiki()
+
     return {
         id: attributes.id,
         slug,
         title: attributes.title || '无标题',
         date: validDate || new Date().toISOString().split('T')[0],
         excerpt: attributes.excerpt || attributes.description || extractExcerpt(body),
-        content: md.render(body),
+        content: renderer.render(body),
         author: attributes.author,
         category: attributes.category,
         tags: attributes.tags || [],
@@ -261,7 +295,7 @@ export async function getArticleBySlug(slug: string): Promise<Article | null> {
 
     try {
         const raw = await loader()
-        const article = parseArticle(String(raw), slug)
+        const article = await parseArticle(String(raw), slug)
         fullArticleBySlug.set(slug, article)
         fullArticleById.set(article.id, article)
         if (import.meta.env.DEV) {
@@ -285,7 +319,7 @@ export async function getArticleById(id: string): Promise<Article | null> {
 }
 
 export function renderMarkdown(content: string): string {
-    return md.render(content)
+    return mdPlain.render(content)
 }
 
 export function disposeHighlighter(): void {
