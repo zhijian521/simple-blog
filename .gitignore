@@ -30,6 +30,7 @@ Thumbs.db
 dist
 build
 *.tsbuildinfo
+.vite-ssg-temp
 
 # Environment files
 .env
