@@ -57,9 +57,10 @@ export async function initHighlighter(): Promise<Highlighter> {
     if (!highlighterInstance) {
         highlighterInstance = await createHighlighter({
             themes: [SHIKI_THEME],
-            langs: [...CORE_LANGUAGES],
+            langs: [...SUPPORTED_LANGUAGES],
         })
         CORE_LANGUAGES.forEach(lang => loadedLanguages.add(lang))
+        SUPPORTED_LANGUAGES.forEach(lang => loadedLanguages.add(lang))
     }
     return highlighterInstance
 }
@@ -113,10 +114,17 @@ async function getMarkdownWithShiki(): Promise<MarkdownIt> {
                 )}</code></pre>`
             }
 
-            return highlighter.codeToHtml(str, {
-                lang: language as (typeof SUPPORTED_LANGUAGES)[number],
-                theme: SHIKI_THEME,
-            })
+            try {
+                return highlighter.codeToHtml(str, {
+                    lang: language as (typeof SUPPORTED_LANGUAGES)[number],
+                    theme: SHIKI_THEME,
+                })
+            } catch (error) {
+                console.warn(`[Article] Highlight failed for ${language}`, error)
+                return `<pre><code class="language-${language}">${mdPlain.utils.escapeHtml(
+                    str
+                )}</code></pre>`
+            }
         },
     })
 
