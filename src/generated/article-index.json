@@ -78,36 +78,6 @@
     "sticky": 0
   },
   {
-    "id": "ngbqsy5p",
-    "slug": "开发/NPM/NPM常见问题",
-    "title": "NPM 常见问题",
-    "date": "2024-08-20",
-    "excerpt": "NPM 使用中常见问题及解决方法",
-    "category": "开发/NPM",
-    "tags": [
-      "NPM",
-      "问题解决",
-      "前端工具"
-    ],
-    "sticky": 0
-  },
-  {
-    "id": "kwthekfy",
-    "slug": "开发/NPM/包管理器",
-    "title": "前端包管理器",
-    "date": "2024-08-19",
-    "excerpt": "npm、Yarn、pnpm、Bun 选哪个？",
-    "category": "开发/NPM",
-    "tags": [
-      "NPM",
-      "Yarn",
-      "pnpm",
-      "Bun",
-      "包管理器"
-    ],
-    "sticky": 0
-  },
-  {
     "id": "zsavdegc",
     "slug": "开发/NodeJS/JS模块系统CJS与ESM详解",
     "title": "JS 模块系统：CJS 与 ESM 详解",
@@ -149,6 +119,51 @@
       "Node.js",
       "Volta",
       "版本管理"
+    ],
+    "sticky": 0
+  },
+  {
+    "id": "ngbqsy5p",
+    "slug": "开发/NPM/NPM常见问题",
+    "title": "NPM 常见问题",
+    "date": "2024-08-20",
+    "excerpt": "NPM 使用中常见问题及解决方法",
+    "category": "开发/NPM",
+    "tags": [
+      "NPM",
+      "问题解决",
+      "前端工具"
+    ],
+    "sticky": 0
+  },
+  {
+    "id": "kwthekfy",
+    "slug": "开发/NPM/包管理器",
+    "title": "前端包管理器",
+    "date": "2024-08-19",
+    "excerpt": "npm、Yarn、pnpm、Bun 选哪个？",
+    "category": "开发/NPM",
+    "tags": [
+      "NPM",
+      "Yarn",
+      "pnpm",
+      "Bun",
+      "包管理器"
+    ],
+    "sticky": 0
+  },
+  {
+    "id": "soj25lib",
+    "slug": "开发/前端优化/2025主流JS工具总结",
+    "title": "2025 主流 JS 工具生态速览",
+    "date": "2026-02-04",
+    "excerpt": "State of JS 2025 Libraries 的前端工具生态速览",
+    "category": "开发/前端优化",
+    "tags": [
+      "State of JS",
+      "JavaScript",
+      "工具链",
+      "前端生态"
     ],
     "sticky": 0
   },
