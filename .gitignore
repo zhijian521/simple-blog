@@ -31,6 +31,7 @@ dist
 build
 *.tsbuildinfo
 .vite-ssg-temp
+app/public/images
 
 # Environment files
 .env
