@@ -206,19 +206,20 @@ export const GISCUS_CONFIG = {
 
 ## 🛠️ 可用脚本
 
-| 命令                       | 说明                         |
-| -------------------------- | ---------------------------- |
-| `npm run dev`              | 启动开发服务器（端口 3000）  |
-| `npm run build`            | 生产构建到 `dist/` 目录      |
-| `npm run preview`          | 预览生产构建                 |
-| `npm run fetch-git`        | 获取 Git 提交活动数据        |
-| `npm run ensure-ids`       | 为缺失 ID 的文章生成唯一标识 |
-| `npm run generate-sitemap` | 生成 sitemap.xml             |
-| `npm run sync-images`      | 同步 images 到 app/public    |
-| `npm run lint`             | 代码检查                     |
-| `npm run lint:fix`         | 自动修复代码问题             |
-| `npm run format`           | 格式化代码                   |
-| `npm run format:check`     | 检查代码格式                 |
+| 命令                           | 说明                                               |
+| ------------------------------ | -------------------------------------------------- |
+| `npm run dev`                  | 启动开发服务器（端口 3000）                        |
+| `npm run build`                | 生产构建到 `dist/` 目录                            |
+| `npm run preview`              | 预览生产构建                                       |
+| `npm run prepare`              | 同步图片、获取 Git 活动、补全 ID、生成文章索引      |
+| `npm run prepare:build`        | 同步图片、补全 ID、生成文章索引、生成 sitemap       |
+| `npm run sync-images`          | 同步 `images/` 到 `app/public/images/`             |
+| `npm run fetch-git`            | 生成 Git 活动数据                                  |
+| `npm run ensure-ids`           | 为缺失 ID 的文章生成唯一标识                       |
+| `npm run generate-article-index` | 生成文章索引                                      |
+| `npm run generate-sitemap`     | 生成 sitemap                                       |
+| `npm run lint`                 | 代码检查                                           |
+| `npm run format`               | 格式化代码                                         |
 
 ---
 
@@ -250,6 +251,7 @@ simple-blog/
 │   ├── scripts/              # 构建脚本
 │   │   ├── fetch-git-activity.ts
 │   │   ├── ensure-article-ids.ts
+│   │   ├── generate-article-index.ts
 │   │   ├── generate-sitemap.ts
 │   │   └── sync-images.ts
 │   ├── src/

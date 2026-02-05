@@ -9,35 +9,32 @@
 ## 开发命令
 
 ```bash
-# 开发模式（端口 3000，自动执行 Git 活动数据获取和文章 ID 检查）
+# 开发模式（端口 3000，自动同步图片、获取 Git 活动、补全 ID、生成文章索引）
 npm run dev
 
-# 生产构建（自动执行 Git 活动数据获取、文章 ID 检查和 sitemap 生成）
+# 生产构建（自动同步图片、补全 ID、生成文章索引和 sitemap）
 npm run build
 
 # 预览生产构建
 npm run preview
 
-# 获取 Git 提交活动数据（生成 app/public/git-activity.json）
+# 聚合脚本（与 dev/build 前置步骤一致）
+npm run prepare
+npm run prepare:build
+
+# 单独脚本
+npm run sync-images
 npm run fetch-git
-
-# 确保所有文章都有 ID 字段（自动为缺失 ID 的文章生成 8 位 ID）
 npm run ensure-ids
-
-# 生成 sitemap.xml
+npm run generate-article-index
 npm run generate-sitemap
 
 # 代码检查
 npm run lint
 
-# 自动修复代码问题
-npm run lint:fix
-
 # 格式化代码
 npm run format
 
-# 检查代码格式
-npm run format:check
 ```
 
 ## 技术栈
@@ -87,7 +84,9 @@ simple-blog/
 │   ├── scripts/              # 构建和工具脚本（TypeScript）
 │   │   ├── fetch-git-activity.ts
 │   │   ├── ensure-article-ids.ts
-│   │   └── generate-sitemap.ts
+│   │   ├── generate-article-index.ts
+│   │   ├── generate-sitemap.ts
+│   │   └── sync-images.ts
 │   ├── src/
 │   │   ├── assets/           # 静态资源
 │   │   ├── components/       # 组件目录
@@ -605,7 +604,7 @@ const dockItems = createDockItems(() => {
 - 数据由 `app/scripts/fetch-git-activity.ts` 脚本生成
 - 脚本获取最近 30 天的 Git 提交记录
 - 数据保存到 `app/public/git-activity.json`
-- 在 `npm run dev` 和 `npm run build` 前自动执行
+- 在 `npm run dev` 前自动执行（也可手动运行 `npm run fetch-git`）
 
 ### SEO 优化
 
@@ -1468,7 +1467,7 @@ function calculatePrice(price: number) {
 # 2. 检查是否需要更新 app/CLAUDE.md
 # 3. 运行代码格式化和检查
 npm run format
-npm run lint:fix
+npm run lint -- --fix
 # 4. 更新 app/CLAUDE.md 相关章节
 # 5. 提交变更
 git add app/CLAUDE.md
@@ -1706,7 +1705,6 @@ const handleClose = () => {
 
 - 使用默认配置
 - 运行 `npm run format` 格式化所有文件
-- 运行 `npm run format:check` 检查格式
 
 ## 重要实现细节
 

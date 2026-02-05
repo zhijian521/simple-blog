@@ -7,15 +7,15 @@
     "sync-images": "tsx app/scripts/sync-images.ts",
     "fetch-git": "tsx app/scripts/fetch-git-activity.ts",
     "ensure-ids": "tsx app/scripts/ensure-article-ids.ts",
-    "generate-sitemap": "tsx app/scripts/generate-sitemap.ts",
     "generate-article-index": "tsx app/scripts/generate-article-index.ts",
-    "dev": "npm run sync-images && npm run fetch-git && npm run ensure-ids && npm run generate-article-index && vite --config app/vite.config.ts",
-    "build": "npm run sync-images && npm run ensure-ids && npm run generate-article-index && npm run generate-sitemap && vite-ssg build --config app/vite.config.ts",
+    "generate-sitemap": "tsx app/scripts/generate-sitemap.ts",
+    "prepare": "npm run sync-images && npm run fetch-git && npm run ensure-ids && npm run generate-article-index",
+    "prepare:build": "npm run sync-images && npm run ensure-ids && npm run generate-article-index && npm run generate-sitemap",
+    "dev": "npm run prepare && vite --config app/vite.config.ts",
+    "build": "npm run prepare:build && vite-ssg build --config app/vite.config.ts",
     "preview": "vite-ssg preview --config app/vite.config.ts",
     "format": "prettier --config app/.prettierrc --ignore-path app/.prettierignore --write .",
-    "format:check": "prettier --config app/.prettierrc --ignore-path app/.prettierignore --check .",
-    "lint": "eslint --config app/eslint.config.js .",
-    "lint:fix": "eslint --config app/eslint.config.js . --fix"
+    "lint": "eslint --config app/eslint.config.js ."
   },
   "dependencies": {
     "@vercel/analytics": "^1.6.1",
