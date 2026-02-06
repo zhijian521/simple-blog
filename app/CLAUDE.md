@@ -9,7 +9,7 @@
 ## 开发命令
 
 ```bash
-# 开发模式（端口 3000，自动同步图片、获取 Git 活动、补全 ID、生成文章索引）
+# 开发模式（端口 3000，自动获取 Git 活动、补全 ID、生成文章索引；图片由 dev 监听同步）
 npm run dev
 
 # 生产构建（自动同步图片、补全 ID、生成文章索引和 sitemap）
@@ -18,7 +18,7 @@ npm run build
 # 预览生产构建
 npm run preview
 
-# 聚合脚本（与 dev/build 前置步骤一致）
+# 聚合脚本（分别对应 dev/build 前置步骤）
 npm run prepare
 npm run prepare:build
 
@@ -129,7 +129,7 @@ simple-blog/
 - 模块加载时自动执行 `loadArticles()`，将文章解析并缓存到内存
 - 通过 `front-matter` 解析元数据（标题、日期、作者、标签等）
 - 使用 `markdown-it` 渲染 Markdown 内容为 HTML
-- 使用 Shiki 实现代码语法高亮（支持按需加载语言）
+- 使用 Shiki 实现代码语法高亮（高亮器实例在客户端复用）
 - 文章通过三种方式访问：`getArticles()`、`getArticleBySlug()`、`getArticleById()`
 
 **安全机制：**
@@ -140,7 +140,7 @@ simple-blog/
 **代码高亮：**
 
 - 支持语言：`bash`, `javascript`, `typescript`, `vue`, `json`, `html`, `css`, `python`, `java`, `go`, `rust`, `markdown`, `yaml`, `sql`, `dockerfile` 等
-- 核心语言在初始化时加载，其他语言按需加载
+- 高亮器初始化时加载支持语言列表
 - 主题：`github-light`
 
 ### 文章 front-matter 管理
@@ -166,14 +166,14 @@ simple-blog/
 **共享工具模块：**
 
 - `app/src/utils/article-id.ts` - 文章 ID 生成和验证（8 位小写字母和数字）
-- `app/src/utils/scan-articles.ts` - 文章扫描工具（递归扫描 docs 目录）
+- `app/src/utils/scan-articles.ts` - 文章扫描工具（递归扫描 docs 目录，使用 front-matter 解析 id/date）
 
 ### 路由和页面结构
 
 **关键文件：** `app/src/router/index.ts`
 
 - 首页 `/` - `HomePage.vue`
-- 文章列表 `/articles` - `ArticlesPage.vue`
+- 文章列表 `/articles` - `ArticlesPage.vue`（支持 `?category=分类路径` 过滤）
 - 报纸排版 `/newspaper` - `NewspaperPage.vue`（瀑布流布局）
 - 文章详情 `/article/:id` - `ArticleDetailPage.vue`（使用文章 ID 作为路由参数）
 - 404 页面 `/:pathMatch(.*)*` - `NotFoundPage.vue`
@@ -255,7 +255,7 @@ simple-blog/
 - `formatDate()` 返回完整格式（YYYY年MM月DD日），用于报纸头版
 - `formatShortDate()` 返回简短格式（YYYY.MM.DD），用于文章卡片
 - `getCategoryName()` 从分类路径中提取最后一级名称
-- `handleCategoryClick()` 预留分类筛选功能接口（TODO）
+- `handleCategoryClick()` 点击分类跳转到文章列表并按分类过滤
 
 **文章排序机制：**
 

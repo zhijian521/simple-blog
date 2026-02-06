@@ -21,7 +21,7 @@
                     class="search-input"
                     placeholder="搜索文章标题、标签..."
                     aria-label="搜索文章"
-                    @input="handleSearch"
+                    @input="handleSearchInput"
                 />
                 <button
                     v-if="searchQuery"
@@ -125,6 +125,12 @@ const performSearch = () => {
 const handleSearch = useDebounceFn(() => {
     performSearch()
 }, SEARCH_DEBOUNCE_MS)
+
+const handleSearchInput = () => {
+    const query = searchQuery.value.trim()
+    loading.value = query.length > 0
+    handleSearch()
+}
 
 // 清除搜索
 const clearSearch = () => {

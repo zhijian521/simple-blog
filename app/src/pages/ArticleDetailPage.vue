@@ -52,9 +52,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch, computed, nextTick, onServerPrefetch } from 'vue'
+import { ref, onMounted, watch, computed, nextTick, onServerPrefetch } from 'vue'
 import { useRoute } from 'vue-router'
-import { getArticleById, disposeHighlighter } from '@/utils/markdown'
+import { getArticleById } from '@/utils/markdown'
 import { useArticleSeo } from '@/utils/seo'
 import { sanitizeHtmlWithSsr } from '@/utils/dompurify'
 import { extractRouteId, isValidRouteId } from '@/utils/router'
@@ -127,11 +127,6 @@ const loadArticle = async (id: string) => {
     loading.value = false
 }
 
-// 立即加载文章数据（支持 SSR）
-// 在服务端渲染时同步执行，确保生成的 HTML 包含完整内容
-const id = extractRouteId(route.params.id)
-void loadArticle(id)
-
 onServerPrefetch(async () => {
     const serverId = extractRouteId(route.params.id)
     if (serverId) {
@@ -140,16 +135,14 @@ onServerPrefetch(async () => {
 })
 
 onMounted(() => {
-    // 客户端导航时重新加载数据
-    void loadArticle(id)
+    // 客户端加载数据（SSR 已预取时跳过重复加载）
+    const currentId = extractRouteId(route.params.id)
+    if (!article.value || article.value.id !== currentId) {
+        void loadArticle(currentId)
+    }
     // 滚动到顶部
     window.scrollTo({ top: 0, behavior: 'auto' })
     // 文章内容已在渲染阶段高亮
-})
-
-onUnmounted(() => {
-    // 清理 Shiki 高亮器实例，释放资源
-    disposeHighlighter()
 })
 
 watch(

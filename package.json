@@ -9,7 +9,7 @@
     "ensure-ids": "tsx app/scripts/ensure-article-ids.ts",
     "generate-article-index": "tsx app/scripts/generate-article-index.ts",
     "generate-sitemap": "tsx app/scripts/generate-sitemap.ts",
-    "prepare": "npm run sync-images && npm run fetch-git && npm run ensure-ids && npm run generate-article-index",
+    "prepare": "npm run fetch-git && npm run ensure-ids && npm run generate-article-index",
     "prepare:build": "npm run sync-images && npm run ensure-ids && npm run generate-article-index && npm run generate-sitemap",
     "dev": "npm run prepare && vite --config app/vite.config.ts",
     "build": "npm run prepare:build && vite-ssg build --config app/vite.config.ts",

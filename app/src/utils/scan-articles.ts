@@ -1,5 +1,6 @@
 import { readFileSync, readdirSync, statSync } from 'fs'
 import { resolve } from 'path'
+import matter from 'front-matter'
 
 export interface ArticleInfo {
     id: string
@@ -24,9 +25,9 @@ export function scanArticles(dir: string): ArticleInfo[] {
                 scanDirectory(fullPath)
             } else if (file.name.endsWith('.md')) {
                 const content = readFileSync(fullPath, 'utf-8')
-                const match = content.match(/^id:\s*(.+)$/m)
-                if (match) {
-                    const id = match[1].trim()
+                const { attributes } = matter<Record<string, unknown>>(content)
+                const id = attributes.id ? String(attributes.id).trim() : ''
+                if (id) {
                     articles.push({ id, path: fullPath })
                 }
             }
@@ -53,13 +54,12 @@ export function scanArticlesWithStats(dir: string): ArticleInfoWithFileStats[] {
                 scanDirectory(fullPath)
             } else if (file.name.endsWith('.md')) {
                 const content = readFileSync(fullPath, 'utf-8')
-                const idMatch = content.match(/^id:\s*(.+)$/m)
-                const dateMatch = content.match(/^date:\s*(.+)$/m)
+                const { attributes } = matter<Record<string, unknown>>(content)
+                const id = attributes.id ? String(attributes.id).trim() : ''
+                const date = attributes.date ? String(attributes.date).trim() : undefined
                 const stats = statSync(fullPath)
 
-                if (idMatch) {
-                    const id = idMatch[1].trim()
-                    const date = dateMatch ? dateMatch[1].trim() : undefined
+                if (id) {
                     articles.push({ id, date, path: fullPath, stats: { mtime: stats.mtime } })
                 }
             }

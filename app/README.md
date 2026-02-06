@@ -3,9 +3,9 @@
 > 简约优雅的静态博客系统，基于 Vue 3 + Vite + TypeScript 构建
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Vue](https://img.shields.io/badge/Vue-3.5-42b883?logo=vue.js&logoColor=white)](https://vuejs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178c6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Vite](https://img.shields.io/badge/Vite-6.0-646cff?logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Vue](https://img.shields.io/badge/Vue-3.4-42b883?logo=vue.js&logoColor=white)](https://vuejs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.3-3178c6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-5.0-646cff?logo=vite&logoColor=white)](https://vitejs.dev/)
 
 ---
 
@@ -211,7 +211,7 @@ export const GISCUS_CONFIG = {
 | `npm run dev`                  | 启动开发服务器（端口 3000）                        |
 | `npm run build`                | 生产构建到 `dist/` 目录                            |
 | `npm run preview`              | 预览生产构建                                       |
-| `npm run prepare`              | 同步图片、获取 Git 活动、补全 ID、生成文章索引      |
+| `npm run prepare`              | 获取 Git 活动、补全 ID、生成文章索引                |
 | `npm run prepare:build`        | 同步图片、补全 ID、生成文章索引、生成 sitemap       |
 | `npm run sync-images`          | 同步 `images/` 到 `app/public/images/`             |
 | `npm run fetch-git`            | 生成 Git 活动数据                                  |
@@ -315,8 +315,7 @@ simple-blog/
 
 - **XSS 防护** - 使用 DOMPurify 净化 HTML 内容
 - **路径遍历防护** - 严格的文章 slug 验证
-- **CSP 支持** - 内容安全策略配置
-- **HTTPS 强制** - 生产环境强制使用 HTTPS
+- **安全响应头** - 基础安全响应头（X-Content-Type-Options、X-Frame-Options、X-XSS-Protection）
 
 ---
 
@@ -325,8 +324,8 @@ simple-blog/
 ### 核心
 
 - [Vue 3](https://vuejs.org/) - 渐进式 JavaScript 框架
-- [Vite 6](https://vitejs.dev/) - 下一代前端构建工具
-- [TypeScript 5](https://www.typescriptlang.org/) - JavaScript 的超集
+- [Vite 5](https://vitejs.dev/) - 下一代前端构建工具
+- [TypeScript 5.3](https://www.typescriptlang.org/) - JavaScript 的超集
 - [Vue Router 4](https://router.vuejs.org/) - 官方路由管理器
 
 ### 内容处理

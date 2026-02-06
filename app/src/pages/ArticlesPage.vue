@@ -12,7 +12,7 @@
 
         <!-- 分页组件 -->
         <Pagination
-            v-if="allArticles.length > 0"
+            v-if="filteredArticles.length > 0"
             :current-page="currentPage"
             :total-pages="totalPages"
             @page-change="handlePageChange"
@@ -30,7 +30,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import { getArticles } from '@/utils/markdown'
 import ArticleCard from '@/components/article/ArticleCard.vue'
 import EmptyState from '@/components/ui/EmptyState.vue'
@@ -43,19 +44,35 @@ import { PAGINATION } from '@/constants'
 import type { Article } from '@/types/article'
 
 const allArticles = getArticles() as Article[]
+const route = useRoute()
 const showSearch = ref(false)
 const showDocumentTree = ref(false)
 const currentPage = ref(1)
 const pageSize = PAGINATION.DEFAULT_PAGE_SIZE
 
+const selectedCategory = computed(() => {
+    const raw = route.query.category
+    if (Array.isArray(raw)) {
+        return raw[0] || ''
+    }
+    return typeof raw === 'string' ? raw : ''
+})
+
+const filteredArticles = computed(() => {
+    if (!selectedCategory.value) {
+        return allArticles
+    }
+    return allArticles.filter(article => article.category === selectedCategory.value)
+})
+
 // 计算总页数
-const totalPages = computed(() => Math.ceil(allArticles.length / pageSize))
+const totalPages = computed(() => Math.ceil(filteredArticles.value.length / pageSize))
 
 // 当前页的文章列表
 const articles = computed(() => {
     const start = (currentPage.value - 1) * pageSize
     const end = start + pageSize
-    return allArticles.slice(start, end)
+    return filteredArticles.value.slice(start, end)
 })
 
 // 切换页面
@@ -63,6 +80,10 @@ const handlePageChange = (page: number) => {
     currentPage.value = page
     window.scrollTo({ top: 0, behavior: 'smooth' })
 }
+
+watch(selectedCategory, () => {
+    currentPage.value = 1
+})
 
 // 创建 Dock 配置，传入搜索和列表动作
 const dockItems = createDockItems(

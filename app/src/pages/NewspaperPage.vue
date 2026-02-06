@@ -70,6 +70,7 @@
 
 <script setup lang="ts">
 import { onMounted, onUnmounted, computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { getArticles } from '@/utils/markdown'
 import type { Article } from '@/types/article'
 
@@ -100,6 +101,7 @@ function getColCount(width: number): number {
 }
 
 const windowWidth = ref(0)
+const router = useRouter()
 
 const updateWindowWidth = (): void => {
     if (typeof window === 'undefined') return
@@ -172,10 +174,7 @@ function getCategoryName(category: string): string {
 }
 
 function handleCategoryClick(category: string): void {
-    // TODO: 实现分类筛选功能
-    // 当前只打印日志，未来可以跳转到分类筛选页面
-    // router.push({ path: '/articles', query: { category } })
-    console.log('点击分类:', category)
+    void router.push({ path: '/articles', query: { category } })
 }
 
 function getExcerpt(article: Article): string {
