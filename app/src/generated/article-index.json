@@ -50,6 +50,34 @@
     "sticky": 0
   },
   {
+    "id": "n53c0vm2",
+    "slug": "开发/Git/GitHub中文汉化",
+    "title": "GitHub 中文汉化",
+    "date": "2026-02-06",
+    "excerpt": "通过 Tampermonkey 脚本实现 GitHub 页面中文汉化",
+    "category": "开发/Git",
+    "tags": [
+      "GitHub",
+      "汉化",
+      "Tampermonkey"
+    ],
+    "sticky": 0
+  },
+  {
+    "id": "f1n46p7i",
+    "slug": "开发/Git/GitHub令牌登录",
+    "title": "GitHub 令牌登录",
+    "date": "2026-02-06",
+    "excerpt": "使用 Personal Access Token 代替账号密码进行 GitHub 登录与 Git 操作",
+    "category": "开发/Git",
+    "tags": [
+      "GitHub",
+      "令牌",
+      "安全"
+    ],
+    "sticky": 0
+  },
+  {
     "id": "nwd0bpy4",
     "slug": "开发/Git/Git基础命令",
     "title": "Git 基础命令",
