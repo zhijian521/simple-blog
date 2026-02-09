@@ -668,7 +668,7 @@ ssgOptions: {
    - 例如：`2025-01-20`
 
 3. **category** - 从完整目录路径推断
-   - 例如：`docs/开发/建站部署/建站说明.md` → `category: 开发/建站部署`
+   - 例如：`docs/开发/网站运维/部署发布/建站说明.md` → `category: 开发/网站运维/部署发布`
    - 根目录文件不添加 category
 
 4. **id** - 生成 8 位随机 ID（小写字母和数字）
@@ -679,13 +679,13 @@ ssgOptions: {
 
 **示例：**
 
-创建新文件 `docs/开发/Vue3入门.md`，插件自动补全为：
+创建新文件 `docs/开发/前端/工程优化/Vue3入门.md`，插件自动补全为：
 
 ```yaml
 ---
 title: Vue3入门
 date: 2025-01-20
-category: 开发
+category: 开发/前端/工程优化
 id: a3b5c7d9
 ---
 # Vue3 入门教程
@@ -696,11 +696,11 @@ id: a3b5c7d9
 **控制台输出示例：**
 
 ```
-[BlogWatcher] 📝 检测到新文件: E:\YevinWork\simple-blog\docs\开发\Vue3入门.md
+[BlogWatcher] 📝 检测到新文件: E:\YevinWork\simple-blog\docs\开发\前端\工程优化\Vue3入门.md
 [BlogWatcher] ✓ 为 Vue3入门.md 添加字段:
   - title: "Vue3入门"
   - date: 2025-01-20
-  - category: 开发
+  - category: 开发/前端/工程优化
   - id: a3b5c7d9
 ```
 
@@ -795,7 +795,7 @@ id: a3b5c7d9
 
 **示例：**
 
-创建文件 `docs/开发/Vue3实战.md`：
+创建文件 `docs/开发/前端/工程优化/Vue3实战.md`：
 
 ```markdown
 # Vue3 实战指南
@@ -809,7 +809,7 @@ id: a3b5c7d9
 ---
 title: Vue3实战
 date: 2025-01-20
-category: 开发
+category: 开发/前端/工程优化
 id: a3b5c7d9
 ---
 # Vue3 实战指南

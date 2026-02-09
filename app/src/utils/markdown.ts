@@ -156,6 +156,26 @@ const sortedIndexItems = [...indexItems].sort((a, b) => {
 const indexById = new Map(indexItems.map(item => [item.id, item]))
 const indexBySlug = new Map(indexItems.map(item => [item.slug, item]))
 
+const LEGACY_SLUG_PREFIX_MAP: Array<[string, string]> = [
+    ['开发/AICoding/', '开发/AI工具/'],
+    ['开发/Git/', '开发/Git协作/'],
+    ['开发/NodeJS/', '开发/Node生态/Node.js/'],
+    ['开发/NPM/', '开发/Node生态/包管理/'],
+    ['开发/前端问题/', '开发/前端/基础问题/'],
+    ['开发/前端优化/', '开发/前端/工程优化/'],
+    ['开发/建站部署/', '开发/网站运维/部署发布/'],
+    ['开发/Cesium/', '开发/地图可视化/'],
+]
+
+const LEGACY_SLUG_EXACT_MAP = new Map<string, string>([
+    ['开发/前端优化/SEO最佳实践探索', '开发/网站运维/SEO与增长/SEO最佳实践探索'],
+    [
+        '开发/建站部署/Google Search Console 使用指南',
+        '开发/网站运维/SEO与增长/Google Search Console 使用指南',
+    ],
+    ['开发/地图可视化/Cesium/Cesium演示示例', '开发/地图可视化/Cesium演示示例'],
+])
+
 // 已加载的完整文章缓存（详情页用）
 const fullArticleById = new Map<string, Article>()
 const fullArticleBySlug = new Map<string, Article>()
@@ -185,6 +205,21 @@ function extractSlug(filePath: string): string {
         .replace(/^@docs[/\\]/, '')
         .replace(/^.*[/\\]docs[/\\]/, '')
         .replace(/\.md$/, '')
+}
+
+function normalizeLegacySlug(slug: string): string {
+    const exactMappedSlug = LEGACY_SLUG_EXACT_MAP.get(slug)
+    if (exactMappedSlug) {
+        return exactMappedSlug
+    }
+
+    for (const [legacyPrefix, currentPrefix] of LEGACY_SLUG_PREFIX_MAP) {
+        if (slug.startsWith(legacyPrefix)) {
+            return `${currentPrefix}${slug.slice(legacyPrefix.length)}`
+        }
+    }
+
+    return slug
 }
 
 function extractExcerpt(content: string, maxLength = DEFAULT_EXCERPT_LENGTH): string {
@@ -301,29 +336,32 @@ export async function getArticleBySlug(slug: string): Promise<Article | null> {
         return null
     }
 
-    const cached = fullArticleBySlug.get(slug)
+    const normalizedSlug = normalizeLegacySlug(slug)
+
+    const cached = fullArticleBySlug.get(normalizedSlug)
     if (cached) return cached
 
-    const indexItem = indexBySlug.get(slug)
+    const indexItem = indexBySlug.get(normalizedSlug)
     if (!indexItem) return null
 
-    const loader = markdownModuleBySlug.get(slug)
+    const loader = markdownModuleBySlug.get(indexItem.slug)
     if (!loader) {
-        console.warn(`Markdown 模块未找到: ${slug}`)
+        console.warn(`Markdown 模块未找到: ${indexItem.slug}`)
         return null
     }
 
     try {
         const raw = await loader()
-        const article = await parseArticle(String(raw), slug)
-        fullArticleBySlug.set(slug, article)
+        const article = await parseArticle(String(raw), indexItem.slug)
+        fullArticleBySlug.set(indexItem.slug, article)
+        fullArticleBySlug.set(normalizedSlug, article)
         fullArticleById.set(article.id, article)
         if (import.meta.env.DEV) {
-            console.log(`[Article] Loaded: ${slug}`)
+            console.log(`[Article] Loaded: ${indexItem.slug}`)
         }
         return article
     } catch (error) {
-        console.error(`加载文章失败: ${slug}`, error)
+        console.error(`加载文章失败: ${indexItem.slug}`, error)
         return null
     }
 }
@@ -358,7 +396,8 @@ export function getArticleIndexById(id: string): ArticleIndexItem | null {
 }
 
 export function getArticleIndexBySlug(slug: string): ArticleIndexItem | null {
-    return indexBySlug.get(slug) || null
+    const normalizedSlug = normalizeLegacySlug(slug)
+    return indexBySlug.get(normalizedSlug) || null
 }
 
 export function getSearchIndex(): Array<{ id: string; searchText: string }> {

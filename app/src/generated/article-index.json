@@ -1,11 +1,11 @@
 [
   {
     "id": "s8u9yp4g",
-    "slug": "开发/AICoding/AICoding",
+    "slug": "开发/AI工具/AICoding",
     "title": "AICoding 使用与推荐",
     "date": "2026-01-25",
     "excerpt": "介绍如何使用AI模型进行开发以及推荐一些好用的AI模型。",
-    "category": "开发/AICoding",
+    "category": "开发/AI工具",
     "tags": [
       "AICoding",
       "Vibe Coding",
@@ -21,11 +21,11 @@
   },
   {
     "id": "x4k7q2mz",
-    "slug": "开发/AICoding/CodexAPP",
+    "slug": "开发/AI工具/CodexAPP",
     "title": "Codex APP：在 Mac 上体验 GPT-5.2-Codex",
     "date": "2026-02-03",
     "excerpt": "Codex APP 是 openAI 提供的桌面端应用，当前可以免费使用 GPT-5.2-Codex。",
-    "category": "开发/AICoding",
+    "category": "开发/AI工具",
     "tags": [
       "Codex",
       "GPT-5.2-Codex",
@@ -36,11 +36,11 @@
   },
   {
     "id": "k3n7m9p2",
-    "slug": "开发/AICoding/Confirmo-桌面AI小宠物",
+    "slug": "开发/AI工具/Confirmo-桌面AI小宠物",
     "title": "Confirmo - 桌面 AI 小宠物",
     "date": "2026-01-27",
     "excerpt": "一个可爱的桌面 AI 编程伴侣，让你的编程时光不再孤单。",
-    "category": "开发/AICoding",
+    "category": "开发/AI工具",
     "tags": [
       "AICoding",
       "桌面宠物",
@@ -50,27 +50,12 @@
     "sticky": 0
   },
   {
-    "id": "c8m2yq1v",
-    "slug": "开发/Cesium/Cesium演示示例",
-    "title": "Cesium 演示示例",
-    "date": "2026-02-09",
-    "excerpt": "记录我的 Cesium 示例站点，整理几个正在做的三维地图练习。",
-    "category": "开发/Cesium",
-    "tags": [
-      "Cesium",
-      "3D地图",
-      "WebGIS",
-      "可视化"
-    ],
-    "sticky": 0
-  },
-  {
     "id": "n53c0vm2",
-    "slug": "开发/Git/GitHub中文汉化",
+    "slug": "开发/Git协作/GitHub中文汉化",
     "title": "GitHub 中文汉化",
     "date": "2026-02-06",
     "excerpt": "通过 Tampermonkey 脚本实现 GitHub 页面中文汉化",
-    "category": "开发/Git",
+    "category": "开发/Git协作",
     "tags": [
       "GitHub",
       "汉化",
@@ -80,11 +65,11 @@
   },
   {
     "id": "f1n46p7i",
-    "slug": "开发/Git/GitHub令牌登录",
+    "slug": "开发/Git协作/GitHub令牌登录",
     "title": "GitHub 令牌登录",
     "date": "2026-02-06",
     "excerpt": "使用 Personal Access Token 代替账号密码进行 GitHub 登录与 Git 操作",
-    "category": "开发/Git",
+    "category": "开发/Git协作",
     "tags": [
       "GitHub",
       "令牌",
@@ -94,11 +79,11 @@
   },
   {
     "id": "nwd0bpy4",
-    "slug": "开发/Git/Git基础命令",
+    "slug": "开发/Git协作/Git基础命令",
     "title": "Git 基础命令",
     "date": "2024-05-11",
     "excerpt": "Git 版本控制常用命令汇总",
-    "category": "开发/Git",
+    "category": "开发/Git协作",
     "tags": [
       "Git",
       "版本控制",
@@ -108,11 +93,11 @@
   },
   {
     "id": "hleayr4y",
-    "slug": "开发/Git/Git提交规范",
+    "slug": "开发/Git协作/Git提交规范",
     "title": "Git 提交规范",
     "date": "2024-05-16",
     "excerpt": "规范化 Git 提交信息的最佳实践",
-    "category": "开发/Git",
+    "category": "开发/Git协作",
     "tags": [
       "Git",
       "提交规范",
@@ -122,11 +107,11 @@
   },
   {
     "id": "zsavdegc",
-    "slug": "开发/NodeJS/JS模块系统CJS与ESM详解",
+    "slug": "开发/Node生态/Node.js/JS模块系统CJS与ESM详解",
     "title": "JS 模块系统：CJS 与 ESM 详解",
     "date": "2025-01-19",
     "excerpt": "一文看懂 CommonJS 和 ES Modules 的区别与使用",
-    "category": "开发/NodeJS",
+    "category": "开发/Node生态/Node.js",
     "tags": [
       "Node.js",
       "JavaScript",
@@ -136,11 +121,11 @@
   },
   {
     "id": "zjfqwa97",
-    "slug": "开发/NodeJS/NodeJS版本管理",
+    "slug": "开发/Node生态/Node.js/NodeJS版本管理",
     "title": "Node.js 版本管理",
     "date": "2024-06-01",
     "excerpt": "Node.js 版本管理工具, 推荐使用 nvm 进行 Node.js 版本管理。",
-    "category": "开发/NodeJS",
+    "category": "开发/Node生态/Node.js",
     "tags": [
       "NodeJS",
       "前端开发",
@@ -153,11 +138,11 @@
   },
   {
     "id": "ey7ifhsn",
-    "slug": "开发/NodeJS/NodeJS自动版本管理Volta",
+    "slug": "开发/Node生态/Node.js/NodeJS自动版本管理Volta",
     "title": "Node.js 版本管理：Volta 使用指南",
     "date": "2025-06-15",
     "excerpt": "介绍 Volta - 自动化的 Node.js 版本管理工具，支持跨平台和团队协作",
-    "category": "开发/NodeJS",
+    "category": "开发/Node生态/Node.js",
     "tags": [
       "Node.js",
       "Volta",
@@ -167,11 +152,11 @@
   },
   {
     "id": "ngbqsy5p",
-    "slug": "开发/NPM/NPM常见问题",
+    "slug": "开发/Node生态/包管理/NPM常见问题",
     "title": "NPM 常见问题",
     "date": "2024-08-20",
     "excerpt": "NPM 使用中常见问题及解决方法",
-    "category": "开发/NPM",
+    "category": "开发/Node生态/包管理",
     "tags": [
       "NPM",
       "问题解决",
@@ -181,11 +166,11 @@
   },
   {
     "id": "kwthekfy",
-    "slug": "开发/NPM/包管理器",
+    "slug": "开发/Node生态/包管理/包管理器",
     "title": "前端包管理器",
     "date": "2024-08-19",
     "excerpt": "npm、Yarn、pnpm、Bun 选哪个？",
-    "category": "开发/NPM",
+    "category": "开发/Node生态/包管理",
     "tags": [
       "NPM",
       "Yarn",
@@ -196,12 +181,55 @@
     "sticky": 0
   },
   {
+    "id": "hi817y1c",
+    "slug": "开发/前端/基础问题/DOM事件流与事件委托",
+    "title": "DOM事件流与事件委托：深入理解JavaScript事件机制",
+    "date": "2025-01-24",
+    "excerpt": "从DOM事件流的三阶段讲起，深入剖析事件委托原理、应用场景与最佳实践",
+    "category": "开发/前端/基础问题",
+    "tags": [
+      "JavaScript",
+      "DOM",
+      "性能优化"
+    ],
+    "sticky": 0
+  },
+  {
+    "id": "opxf4eir",
+    "slug": "开发/前端/基础问题/H5点击背景问题",
+    "title": "H5页面点击体验优化：彻底解决移动端点击高亮问题",
+    "date": "2024-05-29",
+    "excerpt": "深入解析移动端点击高亮问题的多种解决方案，从CSS属性到现代交互实践",
+    "category": "开发/前端/基础问题",
+    "tags": [
+      "CSS",
+      "H5",
+      "移动端"
+    ],
+    "sticky": 0
+  },
+  {
+    "id": "156ko5ip",
+    "slug": "开发/前端/基础问题/前端页面加载流程与阻塞机制",
+    "title": "前端页面加载流程：CSS与JavaScript的阻塞机制详解",
+    "date": "2025-01-13",
+    "excerpt": "深入解析浏览器页面加载的完整流程，CSS和JavaScript的渲染阻塞机制及最佳优化策略",
+    "category": "开发/前端/基础问题",
+    "tags": [
+      "性能优化",
+      "浏览器原理",
+      "CSS",
+      "JavaScript"
+    ],
+    "sticky": 0
+  },
+  {
     "id": "soj25lib",
-    "slug": "开发/前端优化/2025主流JS工具总结",
+    "slug": "开发/前端/工程优化/2025主流JS工具总结",
     "title": "2025 主流 JS 工具生态速览",
     "date": "2026-02-04",
     "excerpt": "State of JS 2025 Libraries 的前端工具生态速览",
-    "category": "开发/前端优化",
+    "category": "开发/前端/工程优化",
     "tags": [
       "State of JS",
       "JavaScript",
@@ -211,26 +239,12 @@
     "sticky": 0
   },
   {
-    "id": "nc06s8ot",
-    "slug": "开发/前端优化/SEO最佳实践探索",
-    "title": "SEO最佳实践探索",
-    "date": "2024-05-09",
-    "excerpt": "2026年现代化SEO优化指南",
-    "category": "开发/前端优化",
-    "tags": [
-      "前端优化",
-      "SEO",
-      "网站运营"
-    ],
-    "sticky": 0
-  },
-  {
     "id": "gn8jnw9p",
-    "slug": "开发/前端优化/Vue项目中集成PWA实践指南",
+    "slug": "开发/前端/工程优化/Vue项目中集成PWA实践指南",
     "title": "Vue 项目中集成 PWA 实践指南",
     "date": "2025-01-19",
     "excerpt": "使用 vite-plugin-pwa 在 Vue 项目中集成 Progressive Web App",
-    "category": "开发/前端优化",
+    "category": "开发/前端/工程优化",
     "tags": [
       "Vue",
       "PWA",
@@ -240,11 +254,11 @@
   },
   {
     "id": "lcf84kaw",
-    "slug": "开发/前端优化/前端开发规范梳理",
+    "slug": "开发/前端/工程优化/前端开发规范梳理",
     "title": "前端开发规范梳理",
     "date": "2024-05-09",
     "excerpt": "2026年前端开发规范梳理与最佳实践",
-    "category": "开发/前端优化",
+    "category": "开发/前端/工程优化",
     "tags": [
       "前端优化",
       "前端开发规范",
@@ -254,11 +268,11 @@
   },
   {
     "id": "wjjyecqf",
-    "slug": "开发/前端优化/前端微服务架构实践指南",
+    "slug": "开发/前端/工程优化/前端微服务架构实践指南",
     "title": "前端微服务架构：构建可扩展的大型前端应用",
     "date": "2025-01-09",
     "excerpt": "深入解析前端微服务架构原理、主流解决方案及最佳实践",
-    "category": "开发/前端优化",
+    "category": "开发/前端/工程优化",
     "tags": [
       "微前端",
       "架构设计",
@@ -269,55 +283,27 @@
     "sticky": 0
   },
   {
-    "id": "hi817y1c",
-    "slug": "开发/前端问题/DOM事件流与事件委托",
-    "title": "DOM事件流与事件委托：深入理解JavaScript事件机制",
-    "date": "2025-01-24",
-    "excerpt": "从DOM事件流的三阶段讲起，深入剖析事件委托原理、应用场景与最佳实践",
-    "category": "开发/前端问题",
+    "id": "c8m2yq1v",
+    "slug": "开发/地图可视化/Cesium演示示例",
+    "title": "Cesium 演示示例",
+    "date": "2026-02-09",
+    "excerpt": "记录我的 Cesium 示例站点，整理几个正在做的三维地图练习。",
+    "category": "开发/地图可视化",
     "tags": [
-      "JavaScript",
-      "DOM",
-      "性能优化"
-    ],
-    "sticky": 0
-  },
-  {
-    "id": "opxf4eir",
-    "slug": "开发/前端问题/H5点击背景问题",
-    "title": "H5页面点击体验优化：彻底解决移动端点击高亮问题",
-    "date": "2024-05-29",
-    "excerpt": "深入解析移动端点击高亮问题的多种解决方案，从CSS属性到现代交互实践",
-    "category": "开发/前端问题",
-    "tags": [
-      "CSS",
-      "H5",
-      "移动端"
-    ],
-    "sticky": 0
-  },
-  {
-    "id": "156ko5ip",
-    "slug": "开发/前端问题/前端页面加载流程与阻塞机制",
-    "title": "前端页面加载流程：CSS与JavaScript的阻塞机制详解",
-    "date": "2025-01-13",
-    "excerpt": "深入解析浏览器页面加载的完整流程，CSS和JavaScript的渲染阻塞机制及最佳优化策略",
-    "category": "开发/前端问题",
-    "tags": [
-      "性能优化",
-      "浏览器原理",
-      "CSS",
-      "JavaScript"
+      "Cesium",
+      "3D地图",
+      "WebGIS",
+      "可视化"
     ],
     "sticky": 0
   },
   {
     "id": "kz2m5xeo",
-    "slug": "开发/建站部署/Google Search Console 使用指南",
+    "slug": "开发/网站运维/SEO与增长/Google Search Console 使用指南",
     "title": "Google Search Console 完全指南：让个人网站被搜索到",
     "date": "2025-01-18",
     "excerpt": "详细介绍如何使用 Google Search Console 优化个人网站 SEO，提升搜索排名",
-    "category": "开发/建站部署",
+    "category": "开发/网站运维/SEO与增长",
     "tags": [
       "SEO",
       "Google",
@@ -327,12 +313,26 @@
     "sticky": 0
   },
   {
+    "id": "nc06s8ot",
+    "slug": "开发/网站运维/SEO与增长/SEO最佳实践探索",
+    "title": "SEO最佳实践探索",
+    "date": "2024-05-09",
+    "excerpt": "2026年现代化SEO优化指南",
+    "category": "开发/网站运维/SEO与增长",
+    "tags": [
+      "前端优化",
+      "SEO",
+      "网站运营"
+    ],
+    "sticky": 0
+  },
+  {
     "id": "ko1f4cao",
-    "slug": "开发/建站部署/Vercel部署个人网站指南",
+    "slug": "开发/网站运维/部署发布/Vercel部署个人网站指南",
     "title": "从零开始部署个人网站：Vercel + Name.com + GitHub 指南",
     "date": "2026-01-18",
     "excerpt": "详细介绍如何使用 Vercel 免费部署个人网站，通过 Name.com 配置自定义域名，并使用 GitHub 进行版本管理",
-    "category": "开发/建站部署",
+    "category": "开发/网站运维/部署发布",
     "tags": [
       "Vercel",
       "部署",
@@ -343,11 +343,11 @@
   },
   {
     "id": "qq3fsftw",
-    "slug": "开发/建站部署/使用Giscus为博客添加评论功能",
+    "slug": "开发/网站运维/部署发布/使用Giscus为博客添加评论功能",
     "title": "使用 Giscus 为网站添加评论功能",
     "date": "2026-01-20",
     "excerpt": "Giscus 是基于 GitHub Discussions 的轻量级评论系统，完全免费且零维护。本文介绍快速集成方法。",
-    "category": "开发/建站部署",
+    "category": "开发/网站运维/部署发布",
     "tags": [
       "Giscus",
       "评论系统",
@@ -357,11 +357,11 @@
   },
   {
     "id": "ut1aooki",
-    "slug": "开发/建站部署/腾讯云快速搭建个人网站",
+    "slug": "开发/网站运维/部署发布/腾讯云快速搭建个人网站",
     "title": "腾讯云建站实战：从零搭建个人网站",
     "date": "2024-05-29",
     "excerpt": "使用腾讯云轻量应用服务器和宝塔面板快速搭建个人网站的完整教程",
-    "category": "开发/建站部署",
+    "category": "开发/网站运维/部署发布",
     "tags": [
       "腾讯云",
       "宝塔面板",

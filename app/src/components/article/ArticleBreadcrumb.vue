@@ -2,12 +2,12 @@
   ArticleBreadcrumb - 文章面包屑导航组件
 
   用途：
-  - 显示文章的分类路径（如：开发 / AICoding）
+  - 显示文章的分类路径（如：开发 / AI工具）
   - 显示文章发布时间
   - 用于文章详情页顶部
 
   Props:
-  - category?: string - 文章分类路径（如 "开发/AICoding"）
+  - category?: string - 文章分类路径（如 "开发/AI工具"）
   - date: string - 文章发布日期
 -->
 <template>

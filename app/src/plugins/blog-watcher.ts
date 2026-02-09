@@ -58,7 +58,7 @@ function isMarkdownFile(filePath: string): boolean {
 
 /**
  * 从文件路径推断分类
- * 例如：docs/开发/建站部署/建站说明.md → "开发/建站部署"
+ * 例如：docs/开发/网站运维/部署发布/建站说明.md → "开发/网站运维/部署发布"
  */
 function inferCategory(filePath: string, docsDir: string): string | null {
     const relativePath = path.relative(docsDir, filePath)
