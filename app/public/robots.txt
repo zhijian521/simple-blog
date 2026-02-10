@@ -6,7 +6,6 @@ Allow: /
 Disallow: /sw.js
 Disallow: /workbox-*.js
 Disallow: /worker-*.js
-Disallow: /assets/
 
 # 站点地图
 Sitemap: https://www.yuwb.dev/sitemap.xml

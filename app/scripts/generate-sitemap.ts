@@ -23,6 +23,7 @@ const CONFIG = {
     pages: [
         { loc: '/', changefreq: 'daily' as const, priority: '1.0' as const },
         { loc: '/articles', changefreq: 'weekly' as const, priority: '0.8' as const },
+        { loc: '/newspaper', changefreq: 'weekly' as const, priority: '0.7' as const },
     ] satisfies SitemapPage[],
 } as const
 
