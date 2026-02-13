@@ -10,9 +10,6 @@ tags:
 id: n53c0vm2
 ---
 
-
-# GitHub 中文汉化
-
 > 汉化 GitHub 网站，使中文用户能够更方便地使用 GitHub。
 
 
@@ -40,5 +37,3 @@ id: n53c0vm2
 
 
 ​
-
-

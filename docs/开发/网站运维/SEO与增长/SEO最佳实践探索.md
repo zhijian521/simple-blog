@@ -11,7 +11,6 @@ tags:
 id: nc06s8ot
 ---
 
-# 2026 年 SEO 最佳实践探索
 
 ## 前言
 
@@ -609,6 +608,3 @@ SEO 是一个长期的过程，需要持续的学习和优化。记住以下核�
 - [Web.dev - Core Web Vitals](https://web.dev/vitals/)
 - [Schema.org](https://schema.org/)
 - [PageSpeed Insights](https://pagespeed.web.dev/)
-
-
-
