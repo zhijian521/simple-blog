@@ -263,20 +263,71 @@ watch(
 
 /* 链接样式 */
 .article-body :deep(a) {
-    color: var(--color-accent);
+    color: rgba(58, 58, 58, 0.92);
+    font-weight: 500;
+    font-size: 0.75rem;
     text-decoration: none;
-    border-bottom: 1px solid transparent;
-    transition: all var(--transition-fast) ease;
-    position: relative;
+    display: inline-flex;
+    align-items: center;
+    vertical-align: middle;
+    background-image: linear-gradient(
+        90deg,
+        rgba(26, 26, 26, 0.07) 0%,
+        rgba(26, 26, 26, 0.02) 50%,
+        rgba(26, 26, 26, 0.07) 100%
+    );
+    border-bottom: 1px solid rgba(26, 26, 26, 0.32);
+    border-radius: 3px;
+    padding: 0.08em 0.4em 0.08em 0.45em;
+    margin: 0 0.12em;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+    transition:
+        color var(--transition-fast) ease,
+        background-image var(--transition-fast) ease,
+        border-bottom-color var(--transition-fast) ease;
+}
+
+.article-body :deep(a)::before {
+    content: '';
+    width: 0.8rem;
+    height: 0.8rem;
+    margin-left: 0.08em;
+    margin-right: 0.38em;
+    flex: 0 0 auto;
+    background: currentColor;
+    mask: url('../assets/link-icon.svg') no-repeat center / contain;
+    -webkit-mask: url('../assets/link-icon.svg') no-repeat center / contain;
+    opacity: 0.85;
 }
 
 .article-body :deep(a:hover) {
-    border-bottom-color: var(--color-accent);
-    opacity: 0.7;
+    color: var(--color-accent);
+    background-image: linear-gradient(
+        90deg,
+        rgba(26, 26, 26, 0.1) 0%,
+        rgba(26, 26, 26, 0.04) 50%,
+        rgba(26, 26, 26, 0.1) 100%
+    );
+    border-bottom-color: rgba(26, 26, 26, 0.5);
+}
+
+.article-body :deep(a:focus-visible) {
+    outline: 2px solid rgba(26, 26, 26, 0.35);
+    outline-offset: 1px;
+    background-image: linear-gradient(
+        90deg,
+        rgba(26, 26, 26, 0.12) 0%,
+        rgba(26, 26, 26, 0.05) 50%,
+        rgba(26, 26, 26, 0.12) 100%
+    );
+    border-bottom-color: rgba(26, 26, 26, 0.56);
 }
 
 .article-body :deep(a code) {
     color: inherit;
+    background: rgba(26, 26, 26, 0.12);
+    border-radius: 3px;
 }
 
 /* 列表样式 */
@@ -346,10 +397,6 @@ watch(
     font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
     color: var(--color-text);
     word-wrap: break-word;
-}
-
-.article-body :deep(a code) {
-    background: rgba(26, 26, 26, 0.08);
 }
 
 /* 代码块样式由全局 code-block.css 控制 */
