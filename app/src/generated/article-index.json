@@ -3,18 +3,18 @@
     "id": "s8u9yp4g",
     "slug": "开发/AI工具/AICoding",
     "title": "AICoding 使用与推荐",
-    "date": "2026-01-25",
-    "excerpt": "介绍如何使用AI模型进行开发以及推荐一些好用的AI模型。",
+    "date": "2026-03-05",
+    "excerpt": "介绍如何使用 AI 模型进行开发，以及当前推荐方案。",
     "category": "开发/AI工具",
     "tags": [
       "AICoding",
       "Vibe Coding",
-      "GLM",
+      "Codex",
       "Cursor",
       "Claude Code",
       "Zed",
       "Kimi",
-      "Kimi CLI",
+      "GLM",
       "AI模型"
     ],
     "sticky": 0
