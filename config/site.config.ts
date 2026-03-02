@@ -3,8 +3,11 @@
  */
 export const SITE_CONFIG = {
     title: '耶温博客',
-    description: '记录思考，分享知识',
-    keywords: '耶温博客, 技术博客, 编程, 开发, 前端, 后端, 全栈',
+    subtitle: '记录思考，分享知识',
+    description:
+        '耶温博客专注前端工程化、Node.js 生态、AI 编程工具、SEO 增长与网站部署实践，持续更新可落地的教程与经验总结。',
+    keywords:
+        '耶温博客,技术博客,前端开发,JavaScript,TypeScript,Vue,Node.js,AI编程,SEO优化,网站部署,工程化,GitHub,Vercel',
     author: '耶温',
     url: 'https://www.yuwb.dev',
     copyright: {

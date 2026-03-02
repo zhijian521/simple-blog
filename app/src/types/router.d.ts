@@ -30,6 +30,18 @@ declare module 'vue-router' {
         description?: string
 
         /**
+         * 页面关键词
+         * 用于 SEO 优化
+         */
+        keywords?: string | string[]
+
+        /**
+         * 搜索引擎抓取策略
+         * 例如：index, follow / noindex, nofollow
+         */
+        robots?: string
+
+        /**
          * 是否显示在导航菜单中
          */
         showInNav?: boolean

@@ -6,7 +6,7 @@
         <div class="home-content">
             <section class="hero">
                 <h1 class="hero-title">{{ SITE_CONFIG.title }}</h1>
-                <p class="hero-subtitle">{{ SITE_CONFIG.description }}</p>
+                <p class="hero-subtitle">{{ SITE_CONFIG.subtitle || '记录思考，分享知识' }}</p>
                 <div class="hero-actions">
                     <ViewArticleButton to="/articles" text="查看文章" />
                 </div>

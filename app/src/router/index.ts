@@ -4,38 +4,39 @@ import {
     createMemoryHistory,
     type RouteRecordRaw,
 } from 'vue-router'
+import { ROUTE_SEO_META } from './route-seo'
 
 const routes: RouteRecordRaw[] = [
     {
         path: '/',
         name: 'Home',
         component: () => import('../pages/HomePage.vue'),
-        meta: { title: '首页' },
+        meta: ROUTE_SEO_META.Home,
     },
     {
         path: '/articles',
         name: 'Articles',
         component: () => import('../pages/ArticlesPage.vue'),
-        meta: { title: '文章列表' },
+        meta: ROUTE_SEO_META.Articles,
     },
     {
         path: '/newspaper',
         name: 'Newspaper',
         component: () => import('../pages/NewspaperPage.vue'),
-        meta: { title: '文章列表' },
+        meta: ROUTE_SEO_META.Newspaper,
     },
     {
         path: '/article/:id',
         name: 'ArticleDetail',
         component: () => import('../pages/ArticleDetailPage.vue'),
         props: true,
-        meta: { title: '文章详情' },
+        meta: ROUTE_SEO_META.ArticleDetail,
     },
     {
         path: '/:pathMatch(.*)*',
         name: 'NotFound',
         component: () => import('../pages/NotFoundPage.vue'),
-        meta: { title: '页面未找到' },
+        meta: ROUTE_SEO_META.NotFound,
     },
 ]
 

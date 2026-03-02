@@ -22,12 +22,39 @@ import { SITE_CONFIG } from '@/constants'
 import { PAGE_LOADER_DELAY_MS } from '@/constants/animation'
 import { SpeedInsights } from '@vercel/speed-insights/vue'
 import { Analytics } from '@vercel/analytics/vue'
+import articleIndex from '@/generated/article-index.json'
+import {
+    extractCategoryFromQuery,
+    resolvePageDescription,
+    resolvePageKeywords,
+    resolvePageRobots,
+    resolvePageTitle,
+    resolveSelectedCategory,
+} from '@/utils/seo-global'
+
+function getAllCategories(): Set<string> {
+    const categories = new Set<string>()
+    for (const item of articleIndex as Array<{ category?: string }>) {
+        const category = (item.category || '').trim()
+        if (category) {
+            categories.add(category)
+        }
+    }
+    return categories
+}
 
 const route = useRoute()
 const router = useRouter()
+const allCategories = getAllCategories()
 const pageLoader = ref<InstanceType<typeof PageLoader> | null>(null)
 const isLoading = ref(false)
 const isHomePage = computed(() => route.path === '/')
+const categoryFromQuery = computed(() => {
+    return extractCategoryFromQuery(route.name, route.query.category)
+})
+const selectedCategory = computed(() => {
+    return resolveSelectedCategory(categoryFromQuery.value, allCategories)
+})
 
 const showLoader = () => {
     isLoading.value = true
@@ -74,30 +101,61 @@ onMounted(() => {
 })
 
 const pageTitle = computed(() => {
-    const title = route.meta.title as string | undefined
-    return title ? `${title} - ${SITE_CONFIG.title}` : SITE_CONFIG.title
+    return resolvePageTitle({
+        routeName: route.name,
+        routeMetaTitle: route.meta.title as string | undefined,
+        selectedCategory: selectedCategory.value,
+        siteTitle: SITE_CONFIG.title,
+    })
+})
+
+const pageDescription = computed(() => {
+    return resolvePageDescription({
+        routeName: route.name,
+        routeMetaDescription: route.meta.description as string | undefined,
+        selectedCategory: selectedCategory.value,
+        siteDescription: SITE_CONFIG.description,
+    })
+})
+
+const pageKeywords = computed(() => {
+    return resolvePageKeywords({
+        routeMetaKeywords: route.meta.keywords as string | string[] | undefined,
+        selectedCategory: selectedCategory.value,
+        siteKeywords: SITE_CONFIG.keywords,
+    })
 })
 
 const pageUrl = computed(() => `${SITE_CONFIG.url}${route.path}`)
+const pageRobots = computed(() => {
+    return resolvePageRobots({
+        routeName: route.name,
+        routeMetaRobots: route.meta.robots as string | undefined,
+        categoryFromQuery: categoryFromQuery.value,
+        selectedCategory: selectedCategory.value,
+    })
+})
 
 useHead({
     title: pageTitle,
     htmlAttrs: { lang: 'zh-CN' },
     link: [{ rel: 'canonical', href: pageUrl }],
     meta: [
-        { name: 'description', content: SITE_CONFIG.description },
+        { name: 'description', content: pageDescription },
         { name: 'author', content: SITE_CONFIG.author },
-        { name: 'keywords', content: SITE_CONFIG.keywords },
+        { name: 'keywords', content: pageKeywords },
+        { name: 'robots', content: pageRobots },
         { property: 'og:title', content: pageTitle },
-        { property: 'og:description', content: SITE_CONFIG.description },
+        { property: 'og:description', content: pageDescription },
         { property: 'og:type', content: 'website' },
         { property: 'og:url', content: pageUrl },
         { property: 'og:image', content: `${SITE_CONFIG.url}/logo.png` },
         { property: 'og:locale', content: 'zh_CN' },
         { property: 'og:site_name', content: SITE_CONFIG.title },
         { name: 'twitter:card', content: 'summary_large_image' },
+        { name: 'twitter:url', content: pageUrl },
         { name: 'twitter:title', content: pageTitle },
-        { name: 'twitter:description', content: SITE_CONFIG.description },
+        { name: 'twitter:description', content: pageDescription },
         { name: 'twitter:image', content: `${SITE_CONFIG.url}/logo.png` },
     ],
 })
