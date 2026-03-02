@@ -19,11 +19,11 @@ const CONFIG = {
     docsDir: path.resolve(__dirname, '../../docs'),
     outputPath: path.resolve(__dirname, '../public/sitemap.xml'),
     articlePriority: '0.6' as const,
-    articleChangefreq: 'monthly' as const,
+    articleChangefreq: 'daily' as const,
     pages: [
         { loc: '/', changefreq: 'daily' as const, priority: '1.0' as const },
-        { loc: '/articles', changefreq: 'weekly' as const, priority: '0.8' as const },
-        { loc: '/newspaper', changefreq: 'weekly' as const, priority: '0.7' as const },
+        { loc: '/articles', changefreq: 'daily' as const, priority: '0.6' as const },
+        { loc: '/newspaper', changefreq: 'daily' as const, priority: '0.6' as const },
     ] satisfies SitemapPage[],
 } as const
 
