@@ -99,6 +99,18 @@
                 </div>
                 <!-- eslint-disable-next-line vue/no-v-html -->
                 <article class="article-body" v-html="sanitizedContent"></article>
+
+                <GiscusComments
+                    v-if="giscusEnabled && activeArticle"
+                    :repo="GISCUS_CONFIG.repo"
+                    :repo-id="GISCUS_CONFIG.repoId"
+                    :category-id="GISCUS_CONFIG.categoryId"
+                    :mapping="'specific'"
+                    :term="`/article/${activeArticle.id}`"
+                    :theme="GISCUS_CONFIG.theme"
+                    :input-position="GISCUS_CONFIG.inputPosition"
+                    :lazy-load="GISCUS_CONFIG.lazyLoad"
+                />
             </div>
             <div v-else class="preview-state">没有找到文章内容</div>
         </section>
@@ -118,7 +130,9 @@ import FocusTreeIcon from '@/components/icons/FocusTreeIcon.vue'
 import GitHubIcon from '@/components/icons/GitHubIcon.vue'
 import HomeIcon from '@/components/icons/HomeIcon.vue'
 import SearchIcon from '@/components/icons/SearchIcon.vue'
+import GiscusComments from '@/components/comments/GiscusComments.vue'
 import SearchModal from '@/components/ui/SearchModal.vue'
+import { GISCUS_CONFIG, isGiscusConfigured } from '@/constants/giscus'
 import { useKeyboardShortcut } from '@/composables/useKeyboardShortcut'
 import { sanitizeHtmlWithSsr } from '@/utils/dompurify'
 import { formatDate } from '@/utils/date'
@@ -156,6 +170,8 @@ const sanitizedContent = computed(() => {
     }
     return sanitizeHtmlWithSsr(activeArticle.value.content)
 })
+
+const giscusEnabled = computed(() => isGiscusConfigured())
 
 let loadingToken = 0
 

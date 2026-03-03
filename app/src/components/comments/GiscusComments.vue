@@ -167,6 +167,9 @@ defineExpose({
     margin-top: var(--spacing-2xl);
     padding-top: var(--spacing-xl);
     border-top: 1px solid var(--color-border);
+    max-width: 720px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* Giscus iframe 样式 */
