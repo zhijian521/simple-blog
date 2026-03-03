@@ -1,25 +1,40 @@
 <template>
     <div class="explorer-page">
-        <aside class="activity-bar" aria-label="快捷操作">
-            <button class="activity-btn" title="返回首页" aria-label="返回首页" @click="goHome">
-                <HomeIcon />
-            </button>
-            <button class="activity-btn" title="搜索文章" aria-label="搜索文章" @click="openSearch">
-                <SearchIcon />
-            </button>
-            <button class="activity-btn" title="折叠所有文件树" aria-label="折叠所有文件树" @click="collapseAllDirectories">
-                <CollapseAllIcon />
-            </button>
-            <button
-                class="activity-btn"
-                title="只展开当前文章所在文件树"
-                aria-label="只展开当前文章所在文件树"
-                :disabled="!activeArticleId"
-                @click="focusActiveArticleTree"
+        <div class="activity-rail">
+            <aside class="activity-bar" aria-label="快捷操作">
+                <div class="activity-actions">
+                    <button class="activity-btn" title="返回首页" aria-label="返回首页" @click="goHome">
+                        <HomeIcon />
+                    </button>
+                    <button class="activity-btn" title="搜索文章" aria-label="搜索文章" @click="openSearch">
+                        <SearchIcon />
+                    </button>
+                    <button class="activity-btn" title="折叠所有文件树" aria-label="折叠所有文件树" @click="collapseAllDirectories">
+                        <CollapseAllIcon />
+                    </button>
+                    <button
+                        class="activity-btn"
+                        title="只展开当前文章所在文件树"
+                        aria-label="只展开当前文章所在文件树"
+                        :disabled="!activeArticleId"
+                        @click="focusActiveArticleTree"
+                    >
+                        <FocusTreeIcon />
+                    </button>
+                </div>
+            </aside>
+
+            <a
+                class="activity-btn activity-bottom-link"
+                href="https://github.com/zhijian521/simple-blog"
+                title="GitHub"
+                aria-label="GitHub"
+                target="_blank"
+                rel="noopener noreferrer"
             >
-                <FocusTreeIcon />
-            </button>
-        </aside>
+                <GitHubIcon />
+            </a>
+        </div>
 
         <aside class="tree-panel">
             <header class="panel-header">
@@ -55,6 +70,13 @@
                     >
                         <ExplorerDocumentIcon class="tab-icon" />
                         <span class="tab-label">{{ tab.title }}</span>
+                        <span
+                            class="tab-close"
+                            title="关闭页签"
+                            @click.stop="closeTab(tab.id)"
+                        >
+                            <CloseIcon />
+                        </span>
                     </button>
                 </div>
                 <div v-else class="tabs-empty">未打开文章</div>
@@ -90,8 +112,10 @@ import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import ExplorerTreeNode from '@/components/explorer/ExplorerTreeNode.vue'
 import CollapseAllIcon from '@/components/icons/CollapseAllIcon.vue'
+import CloseIcon from '@/components/icons/CloseIcon.vue'
 import ExplorerDocumentIcon from '@/components/icons/ExplorerDocumentIcon.vue'
 import FocusTreeIcon from '@/components/icons/FocusTreeIcon.vue'
+import GitHubIcon from '@/components/icons/GitHubIcon.vue'
 import HomeIcon from '@/components/icons/HomeIcon.vue'
 import SearchIcon from '@/components/icons/SearchIcon.vue'
 import SearchModal from '@/components/ui/SearchModal.vue'
@@ -150,6 +174,42 @@ function ensureTabOpened(id: string): void {
     }
 
     openTabs.value.push({ id, title: nextTitle })
+}
+
+function resolveNextTabId(closedId: string, tabs: OpenTab[]): string {
+    const closedIndex = tabs.findIndex(tab => tab.id === closedId)
+    if (closedIndex === -1) {
+        return ''
+    }
+
+    const rightTab = tabs[closedIndex + 1]
+    if (rightTab) {
+        return rightTab.id
+    }
+
+    const leftTab = tabs[closedIndex - 1]
+    return leftTab?.id || ''
+}
+
+function closeTab(id: string): void {
+    const previousTabs = openTabs.value
+    const nextActiveId = resolveNextTabId(id, previousTabs)
+    const wasActive = activeArticleId.value === id
+    openTabs.value = previousTabs.filter(tab => tab.id !== id)
+
+    if (!wasActive) {
+        return
+    }
+
+    if (!nextActiveId) {
+        loadingToken++
+        loadingArticle.value = false
+        activeArticle.value = null
+        activeArticleId.value = ''
+        return
+    }
+
+    void selectArticle(nextActiveId)
 }
 
 function goHome(): void {
@@ -263,14 +323,27 @@ onMounted(() => {
     overflow: hidden;
 }
 
-.activity-bar {
+.activity-rail {
     grid-area: activity;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.activity-bar {
     align-self: start;
     border: 1px solid rgba(255, 255, 255, 0.38);
     box-shadow:
         0 8px 24px rgba(0, 0, 0, 0.06),
         inset 0 1px 0 rgba(255, 255, 255, 0.42);
     padding: 0.6rem 0.35rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.activity-actions {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -308,6 +381,17 @@ onMounted(() => {
 .activity-btn:disabled:hover {
     background: transparent;
     color: var(--color-text-light);
+}
+
+.activity-bottom-link {
+    width: 36px;
+    height: 36px;
+    text-decoration: none;
+}
+
+.activity-bottom-link :deep(svg) {
+    width: 17px;
+    height: 17px;
 }
 
 .activity-btn :deep(svg) {
@@ -461,10 +545,51 @@ onMounted(() => {
 }
 
 .tab-label {
+    flex: 1;
+    min-width: 0;
     font-size: 12px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.tab-close {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-lighter);
+    cursor: pointer;
+    flex-shrink: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition:
+        opacity 0.18s ease,
+        background 0.18s ease,
+        color 0.18s ease;
+}
+
+.tab-item:hover .tab-close,
+.tab-item.is-active .tab-close {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.tab-close:hover {
+    background: rgba(0, 0, 0, 0.08);
+    color: var(--color-text);
+}
+
+.tab-close:focus-visible {
+    outline: 1px solid rgba(26, 26, 26, 0.3);
+    outline-offset: 1px;
+}
+
+.tab-close :deep(svg) {
+    width: 10px;
+    height: 10px;
 }
 
 .tabs-empty {
