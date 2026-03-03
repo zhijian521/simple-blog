@@ -7,6 +7,18 @@
             <button class="activity-btn" title="搜索文章" aria-label="搜索文章" @click="openSearch">
                 <SearchIcon />
             </button>
+            <button class="activity-btn" title="折叠所有文件树" aria-label="折叠所有文件树" @click="collapseAllDirectories">
+                <CollapseAllIcon />
+            </button>
+            <button
+                class="activity-btn"
+                title="只展开当前文章所在文件树"
+                aria-label="只展开当前文章所在文件树"
+                :disabled="!activeArticleId"
+                @click="focusActiveArticleTree"
+            >
+                <FocusTreeIcon />
+            </button>
         </aside>
 
         <aside class="tree-panel">
@@ -41,7 +53,7 @@
                         :title="tab.title"
                         @click="selectArticle(tab.id)"
                     >
-                        <FileIcon class="tab-icon" />
+                        <ExplorerDocumentIcon class="tab-icon" />
                         <span class="tab-label">{{ tab.title }}</span>
                     </button>
                 </div>
@@ -77,7 +89,9 @@
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import ExplorerTreeNode from '@/components/explorer/ExplorerTreeNode.vue'
-import FileIcon from '@/components/icons/FileIcon.vue'
+import CollapseAllIcon from '@/components/icons/CollapseAllIcon.vue'
+import ExplorerDocumentIcon from '@/components/icons/ExplorerDocumentIcon.vue'
+import FocusTreeIcon from '@/components/icons/FocusTreeIcon.vue'
 import HomeIcon from '@/components/icons/HomeIcon.vue'
 import SearchIcon from '@/components/icons/SearchIcon.vue'
 import SearchModal from '@/components/ui/SearchModal.vue'
@@ -150,6 +164,18 @@ function toggleDirectory(path: string): void {
         next.add(path)
     }
     expandedPaths.value = next
+}
+
+function collapseAllDirectories(): void {
+    expandedPaths.value = new Set()
+}
+
+function focusActiveArticleTree(): void {
+    const indexItem = articleIndexById.get(activeArticleId.value)
+    if (!indexItem) {
+        return
+    }
+    expandedPaths.value = expandParentPaths(new Set<string>(), indexItem.slug)
 }
 
 function ensureParentDirectoriesExpanded(id: string): void {
@@ -274,6 +300,16 @@ onMounted(() => {
     outline-offset: 1px;
 }
 
+.activity-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.activity-btn:disabled:hover {
+    background: transparent;
+    color: var(--color-text-light);
+}
+
 .activity-btn :deep(svg) {
     width: 15px;
     height: 15px;
@@ -296,7 +332,7 @@ onMounted(() => {
     padding: 0 1rem;
     display: flex;
     align-items: center;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.32) 0%, rgba(255, 255, 255, 0.04) 100%);
+    background: rgba(0, 0, 0, 0.02);
 }
 
 .panel-title {
@@ -329,7 +365,7 @@ onMounted(() => {
     padding: 0;
     height: 40px;
     min-height: 40px;
-    background: transparent;
+    background: rgba(0, 0, 0, 0.02);
     position: relative;
     z-index: 1;
     overflow: hidden;

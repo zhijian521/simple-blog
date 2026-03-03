@@ -22,9 +22,9 @@
                 :is="
                     node.type === 'directory'
                         ? isExpanded
-                            ? FolderOpenIcon
-                            : FolderClosedIcon
-                        : FileIcon
+                            ? ExplorerFolderOpenIcon
+                            : ExplorerFolderClosedIcon
+                        : ExplorerDocumentIcon
                 "
                 class="node-type-icon"
             />
@@ -50,9 +50,9 @@
 import { computed } from 'vue'
 import ChevronDownIcon from '@/components/icons/ChevronDownIcon.vue'
 import ChevronRightIcon from '@/components/icons/ChevronRightIcon.vue'
-import FileIcon from '@/components/icons/FileIcon.vue'
-import FolderClosedIcon from '@/components/icons/FolderClosedIcon.vue'
-import FolderOpenIcon from '@/components/icons/FolderOpenIcon.vue'
+import ExplorerDocumentIcon from '@/components/icons/ExplorerDocumentIcon.vue'
+import ExplorerFolderClosedIcon from '@/components/icons/ExplorerFolderClosedIcon.vue'
+import ExplorerFolderOpenIcon from '@/components/icons/ExplorerFolderOpenIcon.vue'
 import type { ExplorerNode } from '@/types/explorer'
 
 defineOptions({
