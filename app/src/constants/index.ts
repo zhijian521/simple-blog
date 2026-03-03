@@ -8,6 +8,7 @@ export const ROUTES = {
     HOME: '/',
     ARTICLES: '/articles',
     NEWSPAPER: '/newspaper',
+    EXPLORER: '/explorer',
     ARTICLE: (id: string) => `/article/${id}`,
 } as const
 

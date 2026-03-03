@@ -6,7 +6,7 @@
                 <component :is="Component" :key="route.path" />
             </router-view>
         </main>
-        <Footer v-if="!isHomePage && !isLoading" />
+        <Footer v-if="showFooter" />
         <SpeedInsights />
         <Analytics />
     </div>
@@ -49,6 +49,9 @@ const allCategories = getAllCategories()
 const pageLoader = ref<InstanceType<typeof PageLoader> | null>(null)
 const isLoading = ref(false)
 const isHomePage = computed(() => route.path === '/')
+const showFooter = computed(() => {
+    return !isLoading.value && !isHomePage.value && route.name !== 'Explorer'
+})
 const categoryFromQuery = computed(() => {
     return extractCategoryFromQuery(route.name, route.query.category)
 })

@@ -19,6 +19,9 @@
                     >
                         <DocumentTreeIcon />
                     </IconButton>
+                    <IconButton aria-label="文档浏览器" title="文档浏览器" to="/explorer">
+                        <DocumentBrowserIcon />
+                    </IconButton>
                     <IconButton aria-label="报纸排版" title="报纸排版" to="/newspaper">
                         <NewspaperIcon />
                     </IconButton>
@@ -50,6 +53,7 @@ import SearchButton from '@/components/ui/SearchButton.vue'
 import SearchModal from '@/components/ui/SearchModal.vue'
 import IconButton from '@/components/ui/IconButton.vue'
 import DocumentTreeIcon from '@/components/icons/DocumentTreeIcon.vue'
+import DocumentBrowserIcon from '@/components/icons/DocumentBrowserIcon.vue'
 import NewspaperIcon from '@/components/icons/NewspaperIcon.vue'
 import GitHubIcon from '@/components/icons/GitHubIcon.vue'
 import DocumentTreeModal from '@/components/ui/DocumentTreeModal.vue'

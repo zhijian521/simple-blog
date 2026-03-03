@@ -1,7 +1,7 @@
 import type { RouteMeta } from 'vue-router'
 
 export const ROUTE_SEO_META: Record<
-    'Home' | 'Articles' | 'Newspaper' | 'ArticleDetail' | 'NotFound',
+    'Home' | 'Articles' | 'Newspaper' | 'Explorer' | 'ArticleDetail' | 'NotFound',
     RouteMeta
 > = {
     Home: {
@@ -46,6 +46,19 @@ export const ROUTE_SEO_META: Record<
             'Node.js 文章',
             'AI 技术资讯',
             '网站运维实践',
+        ],
+    },
+    Explorer: {
+        title: '文档浏览器',
+        description:
+            '以资源管理器视图浏览所有文档目录，支持文件夹展开与文章快速预览，提升技术文章检索和阅读效率。',
+        keywords: [
+            '文档浏览器',
+            '资源管理器',
+            '文章目录',
+            'Markdown 预览',
+            '技术文档检索',
+            '博客阅读器',
         ],
     },
     ArticleDetail: {

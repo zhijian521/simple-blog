@@ -26,6 +26,12 @@ const routes: RouteRecordRaw[] = [
         meta: ROUTE_SEO_META.Newspaper,
     },
     {
+        path: '/explorer',
+        name: 'Explorer',
+        component: () => import('../pages/ExplorerPage.vue'),
+        meta: ROUTE_SEO_META.Explorer,
+    },
+    {
         path: '/article/:id',
         name: 'ArticleDetail',
         component: () => import('../pages/ArticleDetailPage.vue'),
