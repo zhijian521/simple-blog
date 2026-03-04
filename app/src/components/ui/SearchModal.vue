@@ -53,26 +53,50 @@
             </div>
 
             <div v-else-if="results.length > 0" class="results-list">
-                <button
-                    v-for="article in results"
-                    :key="article.id"
-                    type="button"
-                    class="result-item"
-                    @click="handleSelect(article.id)"
-                >
-                    <div class="result-header">
-                        <h3 class="result-title">{{ article.title }}</h3>
-                        <time class="result-date" :datetime="article.date">
-                            {{ formatDate(article.date) }}
-                        </time>
-                    </div>
-                    <p class="result-excerpt">{{ article.excerpt }}</p>
-                    <div v-if="article.tags && article.tags.length" class="result-tags">
-                        <span v-for="tag in article.tags" :key="tag" class="result-tag">
-                            {{ tag }}
-                        </span>
-                    </div>
-                </button>
+                <template v-if="props.navigateOnSelect">
+                    <RouterLink
+                        v-for="article in results"
+                        :key="article.id"
+                        :to="{ name: 'ArticleDetail', params: { id: article.id } }"
+                        class="result-item"
+                        @click="handleNavigateSelect(article.id)"
+                    >
+                        <div class="result-header">
+                            <h3 class="result-title">{{ article.title }}</h3>
+                            <time class="result-date" :datetime="article.date">
+                                {{ formatDate(article.date) }}
+                            </time>
+                        </div>
+                        <p class="result-excerpt">{{ article.excerpt }}</p>
+                        <div v-if="article.tags && article.tags.length" class="result-tags">
+                            <span v-for="tag in article.tags" :key="tag" class="result-tag">
+                                {{ tag }}
+                            </span>
+                        </div>
+                    </RouterLink>
+                </template>
+                <template v-else>
+                    <button
+                        v-for="article in results"
+                        :key="article.id"
+                        type="button"
+                        class="result-item"
+                        @click="handleLocalSelect(article.id)"
+                    >
+                        <div class="result-header">
+                            <h3 class="result-title">{{ article.title }}</h3>
+                            <time class="result-date" :datetime="article.date">
+                                {{ formatDate(article.date) }}
+                            </time>
+                        </div>
+                        <p class="result-excerpt">{{ article.excerpt }}</p>
+                        <div v-if="article.tags && article.tags.length" class="result-tags">
+                            <span v-for="tag in article.tags" :key="tag" class="result-tag">
+                                {{ tag }}
+                            </span>
+                        </div>
+                    </button>
+                </template>
             </div>
 
             <div v-else class="search-hint">
@@ -87,7 +111,6 @@
 
 <script setup lang="ts">
 import { ref, watch, nextTick } from 'vue'
-import { useRouter } from 'vue-router'
 import { useDebounceFn } from '@vueuse/core'
 import { useKeyboardShortcut } from '@/composables/useKeyboardShortcut'
 import { getArticles, getSearchIndex } from '@/utils/markdown'
@@ -102,8 +125,9 @@ interface Props {
     navigateOnSelect?: boolean
 }
 
-const props = defineProps<Props>()
-const router = useRouter()
+const props = withDefaults(defineProps<Props>(), {
+    navigateOnSelect: true,
+})
 
 const emit = defineEmits<{
     (e: 'close'): void
@@ -149,11 +173,13 @@ const handleClose = () => {
     emit('close')
 }
 
-const handleSelect = (articleId: string) => {
+const handleNavigateSelect = (articleId: string) => {
     emit('select', articleId)
-    if (props.navigateOnSelect !== false) {
-        void router.push(`/article/${articleId}`)
-    }
+    handleClose()
+}
+
+const handleLocalSelect = (articleId: string) => {
+    emit('select', articleId)
     handleClose()
 }
 
