@@ -57,26 +57,38 @@
 
         <section class="preview-panel">
             <header class="preview-header">
-                <div v-if="openTabs.length > 0" class="tabs-wrap" role="tablist" aria-label="已打开文章">
-                    <button
-                        v-for="tab in openTabs"
-                        :key="tab.id"
-                        class="tab-item"
-                        :class="{ 'is-active': tab.id === activeArticleId }"
-                        role="tab"
-                        :aria-selected="tab.id === activeArticleId"
-                        :title="tab.title"
-                        @click="selectArticle(tab.id)"
-                    >
-                        <ExplorerDocumentIcon class="tab-icon" />
-                        <span class="tab-label">{{ tab.title }}</span>
-                        <span
-                            class="tab-close"
-                            title="关闭页签"
-                            @click.stop="closeTab(tab.id)"
+                <div v-if="openTabs.length > 0" class="tabs-wrap" aria-label="已打开文章">
+                    <div class="tabs-scroll" role="tablist" aria-label="已打开文章">
+                        <button
+                            v-for="tab in openTabs"
+                            :key="tab.id"
+                            class="tab-item"
+                            :class="{ 'is-active': tab.id === activeArticleId }"
+                            role="tab"
+                            :aria-selected="tab.id === activeArticleId"
+                            :title="tab.title"
+                            @click="selectArticle(tab.id)"
+                            @contextmenu.prevent="openTabContextMenu(tab.id, $event)"
                         >
-                            <CloseIcon />
-                        </span>
+                            <ExplorerDocumentIcon class="tab-icon" />
+                            <span class="tab-label">{{ tab.title }}</span>
+                            <span
+                                class="tab-close"
+                                title="关闭页签"
+                                @click.stop="closeTab(tab.id)"
+                            >
+                                <CloseIcon />
+                            </span>
+                        </button>
+                    </div>
+                    <button
+                        class="tabs-more-btn"
+                        type="button"
+                        title="更多页签操作"
+                        aria-label="更多页签操作"
+                        @click.stop="openMoreTabMenu($event)"
+                    >
+                        <MoreHorizontalIcon />
                     </button>
                 </div>
                 <div v-else class="tabs-empty">未打开文章</div>
@@ -116,11 +128,61 @@
         </section>
 
         <SearchModal :visible="showSearch" @close="showSearch = false" />
+
+        <Teleport to="body">
+            <div
+                v-if="tabMenu.visible"
+                ref="tabMenuRef"
+                class="tab-context-menu"
+                :style="{ left: `${tabMenu.x}px`, top: `${tabMenu.y}px` }"
+                @contextmenu.prevent
+            >
+                <template v-if="tabMenu.scope?.type === 'tab'">
+                    <button
+                        class="tab-menu-item"
+                        :disabled="!canCloseLeftOf(tabMenu.scope.id)"
+                        @click="handleTabMenuAction('close-left')"
+                    >
+                        关闭左侧页签
+                    </button>
+                    <button
+                        class="tab-menu-item"
+                        :disabled="!canCloseRightOf(tabMenu.scope.id)"
+                        @click="handleTabMenuAction('close-right')"
+                    >
+                        关闭右侧页签
+                    </button>
+                    <button
+                        class="tab-menu-item"
+                        :disabled="openTabs.length === 0"
+                        @click="handleTabMenuAction('close-all')"
+                    >
+                        关闭全部页签
+                    </button>
+                </template>
+                <template v-else>
+                    <button
+                        class="tab-menu-item"
+                        :disabled="!canCloseOthers()"
+                        @click="handleTabMenuAction('close-others')"
+                    >
+                        关闭其他页签
+                    </button>
+                    <button
+                        class="tab-menu-item"
+                        :disabled="openTabs.length === 0"
+                        @click="handleTabMenuAction('close-all')"
+                    >
+                        关闭全部页签
+                    </button>
+                </template>
+            </div>
+        </Teleport>
     </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import ExplorerTreeNode from '@/components/explorer/ExplorerTreeNode.vue'
 import CollapseAllIcon from '@/components/icons/CollapseAllIcon.vue'
@@ -129,6 +191,7 @@ import ExplorerDocumentIcon from '@/components/icons/ExplorerDocumentIcon.vue'
 import FocusTreeIcon from '@/components/icons/FocusTreeIcon.vue'
 import GitHubIcon from '@/components/icons/GitHubIcon.vue'
 import HomeIcon from '@/components/icons/HomeIcon.vue'
+import MoreHorizontalIcon from '@/components/icons/MoreHorizontalIcon.vue'
 import SearchIcon from '@/components/icons/SearchIcon.vue'
 import GiscusComments from '@/components/comments/GiscusComments.vue'
 import SearchModal from '@/components/ui/SearchModal.vue'
@@ -157,7 +220,17 @@ interface OpenTab {
     title: string
 }
 
+type TabMenuAction = 'close-left' | 'close-right' | 'close-others' | 'close-all'
+type TabMenuScope = { type: 'tab'; id: string } | { type: 'more' } | null
+
 const openTabs = ref<OpenTab[]>([])
+const tabMenuRef = ref<HTMLElement | null>(null)
+const tabMenu = ref<{ visible: boolean; x: number; y: number; scope: TabMenuScope }>({
+    visible: false,
+    x: 0,
+    y: 0,
+    scope: null,
+})
 
 const indexItems = getArticleIndex()
 const articleIndexById = new Map(indexItems.map(item => [item.id, item]))
@@ -226,6 +299,171 @@ function closeTab(id: string): void {
     }
 
     void selectArticle(nextActiveId)
+}
+
+function resetActiveArticleState(): void {
+    loadingToken++
+    loadingArticle.value = false
+    activeArticle.value = null
+    activeArticleId.value = ''
+}
+
+function applyTabs(nextTabs: OpenTab[], preferredActiveId = ''): void {
+    openTabs.value = nextTabs
+    if (nextTabs.length === 0) {
+        resetActiveArticleState()
+        return
+    }
+
+    const hasPreferred = preferredActiveId && nextTabs.some(tab => tab.id === preferredActiveId)
+    const hasCurrentActive = activeArticleId.value && nextTabs.some(tab => tab.id === activeArticleId.value)
+    const nextActiveId = hasPreferred
+        ? preferredActiveId
+        : hasCurrentActive
+          ? activeArticleId.value
+          : nextTabs[0].id
+
+    if (nextActiveId !== activeArticleId.value || !activeArticle.value) {
+        void selectArticle(nextActiveId)
+    }
+}
+
+function findTabIndex(id: string): number {
+    return openTabs.value.findIndex(tab => tab.id === id)
+}
+
+function canCloseLeftOf(id: string): boolean {
+    return findTabIndex(id) > 0
+}
+
+function canCloseRightOf(id: string): boolean {
+    const index = findTabIndex(id)
+    return index !== -1 && index < openTabs.value.length - 1
+}
+
+function getPrimaryTabId(): string {
+    return activeArticleId.value || openTabs.value[0]?.id || ''
+}
+
+function canCloseOthers(): boolean {
+    return openTabs.value.length > 1 && !!getPrimaryTabId()
+}
+
+function closeTabsLeftOf(id: string): void {
+    const index = findTabIndex(id)
+    if (index <= 0) {
+        return
+    }
+    const nextTabs = openTabs.value.filter((_, tabIndex) => tabIndex >= index)
+    applyTabs(nextTabs, id)
+}
+
+function closeTabsRightOf(id: string): void {
+    const index = findTabIndex(id)
+    if (index === -1 || index >= openTabs.value.length - 1) {
+        return
+    }
+    const nextTabs = openTabs.value.filter((_, tabIndex) => tabIndex <= index)
+    applyTabs(nextTabs, id)
+}
+
+function closeOtherTabs(keepId: string): void {
+    if (!keepId) {
+        return
+    }
+    const nextTabs = openTabs.value.filter(tab => tab.id === keepId)
+    applyTabs(nextTabs, keepId)
+}
+
+function closeAllTabs(): void {
+    applyTabs([])
+}
+
+function closeTabMenu(): void {
+    tabMenu.value.visible = false
+    tabMenu.value.scope = null
+}
+
+function openTabMenu(scope: TabMenuScope, x: number, y: number): void {
+    tabMenu.value.visible = true
+    tabMenu.value.scope = scope
+    tabMenu.value.x = x
+    tabMenu.value.y = y
+
+    void nextTick(() => {
+        if (!tabMenu.value.visible || !tabMenuRef.value) {
+            return
+        }
+
+        const menuWidth = tabMenuRef.value.offsetWidth
+        const menuHeight = tabMenuRef.value.offsetHeight
+        const margin = 8
+        const maxX = window.innerWidth - menuWidth - margin
+        const maxY = window.innerHeight - menuHeight - margin
+
+        tabMenu.value.x = Math.max(margin, Math.min(tabMenu.value.x, maxX))
+        tabMenu.value.y = Math.max(margin, Math.min(tabMenu.value.y, maxY))
+    })
+}
+
+function openTabContextMenu(id: string, event: MouseEvent): void {
+    openTabMenu({ type: 'tab', id }, event.clientX, event.clientY)
+}
+
+function openMoreTabMenu(event: MouseEvent): void {
+    const target = event.currentTarget as HTMLElement | null
+    if (!target) {
+        return
+    }
+    const rect = target.getBoundingClientRect()
+    openTabMenu({ type: 'more' }, rect.left, rect.bottom + 6)
+}
+
+function handleTabMenuAction(action: TabMenuAction): void {
+    const scope = tabMenu.value.scope
+    if (!scope) {
+        return
+    }
+
+    switch (action) {
+        case 'close-left':
+            if (scope.type === 'tab') {
+                closeTabsLeftOf(scope.id)
+            }
+            break
+        case 'close-right':
+            if (scope.type === 'tab') {
+                closeTabsRightOf(scope.id)
+            }
+            break
+        case 'close-others': {
+            const keepId = scope.type === 'tab' ? scope.id : getPrimaryTabId()
+            closeOtherTabs(keepId)
+            break
+        }
+        case 'close-all':
+            closeAllTabs()
+            break
+    }
+
+    closeTabMenu()
+}
+
+function onGlobalPointerDown(event: MouseEvent): void {
+    if (!tabMenu.value.visible) {
+        return
+    }
+    const target = event.target as Node | null
+    if (target && tabMenuRef.value?.contains(target)) {
+        return
+    }
+    closeTabMenu()
+}
+
+function onGlobalKeyDown(event: KeyboardEvent): void {
+    if (event.key === 'Escape') {
+        closeTabMenu()
+    }
 }
 
 function goHome(): void {
@@ -305,10 +543,18 @@ useKeyboardShortcut('q', openSearch, {
 })
 
 onMounted(() => {
+    window.addEventListener('mousedown', onGlobalPointerDown)
+    window.addEventListener('keydown', onGlobalKeyDown)
+
     const defaultArticleId = getArticles()[0]?.id
     if (defaultArticleId) {
         void selectArticle(defaultArticleId)
     }
+})
+
+onUnmounted(() => {
+    window.removeEventListener('mousedown', onGlobalPointerDown)
+    window.removeEventListener('keydown', onGlobalKeyDown)
 })
 </script>
 
@@ -473,15 +719,24 @@ onMounted(() => {
 
 .tabs-wrap {
     display: flex;
-    gap: 0.12rem;
     align-items: flex-end;
-    overflow-x: auto;
-    overflow-y: hidden;
     height: 37px;
     margin-top: 3px;
     width: 100%;
     padding: 0 0.3rem;
     position: relative;
+    overflow: hidden;
+}
+
+.tabs-scroll {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    display: flex;
+    gap: 0.12rem;
+    align-items: flex-end;
+    overflow-x: auto;
+    overflow-y: hidden;
 }
 
 .tabs-wrap::after {
@@ -496,7 +751,7 @@ onMounted(() => {
     z-index: 0;
 }
 
-.tabs-wrap::-webkit-scrollbar {
+.tabs-scroll::-webkit-scrollbar {
     height: 4px;
 }
 
@@ -606,6 +861,88 @@ onMounted(() => {
 .tab-close :deep(svg) {
     width: 10px;
     height: 10px;
+}
+
+.tabs-more-btn {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    margin: 0 0.16rem 0 0.2rem;
+    padding: 0;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-lighter);
+    flex-shrink: 0;
+    position: relative;
+    z-index: 2;
+    align-self: center;
+    transform: translateY(-1px);
+    transition:
+        background 0.18s ease,
+        color 0.18s ease;
+}
+
+.tabs-more-btn :deep(svg) {
+    width: 14px;
+    height: 14px;
+}
+
+.tabs-more-btn:hover {
+    background: rgba(0, 0, 0, 0.06);
+    color: var(--color-text);
+}
+
+.tabs-more-btn:focus-visible {
+    outline: 1px solid rgba(26, 26, 26, 0.3);
+    outline-offset: 1px;
+}
+
+.tab-context-menu {
+    position: fixed;
+    width: max-content;
+    min-width: 0;
+    max-width: min(220px, calc(100vw - 16px));
+    padding: 0.28rem;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    border-radius: 10px;
+    background: rgba(241, 234, 220, 0.98);
+    box-shadow:
+        0 10px 28px rgba(0, 0, 0, 0.16),
+        inset 0 1px 0 rgba(255, 255, 255, 0.55);
+    z-index: 2200;
+}
+
+.tab-menu-item {
+    width: auto;
+    display: flex;
+    align-items: center;
+    min-height: 30px;
+    padding: 0 0.65rem;
+    border-radius: 6px;
+    text-align: left;
+    white-space: nowrap;
+    color: var(--color-text-light);
+    font-size: 12px;
+    transition:
+        background 0.15s ease,
+        color 0.15s ease;
+}
+
+.tab-menu-item:hover {
+    background: rgba(0, 0, 0, 0.06);
+    color: var(--color-text);
+}
+
+.tab-menu-item:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.tab-menu-item:disabled:hover {
+    background: transparent;
+    color: var(--color-text-light);
 }
 
 .tabs-empty {
