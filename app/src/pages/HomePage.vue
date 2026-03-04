@@ -1,8 +1,7 @@
 <template>
     <div class="home-page">
         <InkBackground v-if="animationsReady" />
-        <!-- 雪花飘落特效 -->
-        <!-- <SnowfallEffect v-if="animationsReady" /> -->
+        <SpringEffect v-if="animationsReady" />
         <div class="home-content">
             <section class="hero">
                 <h1 class="hero-title">{{ SITE_CONFIG.title }}</h1>
@@ -58,7 +57,7 @@ import NewspaperIcon from '@/components/icons/NewspaperIcon.vue'
 import GitHubIcon from '@/components/icons/GitHubIcon.vue'
 import DocumentTreeModal from '@/components/ui/DocumentTreeModal.vue'
 import InkBackground from '@/components/effects/InkBackground.vue'
-// import SnowfallEffect from '@/components/effects/SnowfallEffect.vue'
+import SpringEffect from '@/components/effects/SpringEffect.vue'
 import { SITE_CONFIG } from '@/constants'
 import { HOME_ANIMATION_DELAY_MS } from '@/constants/animation'
 
