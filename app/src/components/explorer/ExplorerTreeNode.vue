@@ -31,18 +31,22 @@
             <span class="node-name">{{ node.name }}</span>
         </button>
 
-        <div v-if="node.type === 'directory' && isExpanded" class="node-children">
-            <ExplorerTreeNode
-                v-for="child in node.children || []"
-                :key="child.path"
-                :node="child"
-                :level="level + 1"
-                :expanded-paths="expandedPaths"
-                :active-article-id="activeArticleId"
-                @toggle-directory="$emit('toggle-directory', $event)"
-                @select-article="$emit('select-article', $event)"
-            />
-        </div>
+        <Transition name="tree-expand">
+            <div v-if="node.type === 'directory' && isExpanded" class="node-children-wrap">
+                <div class="node-children">
+                    <ExplorerTreeNode
+                        v-for="child in node.children || []"
+                        :key="child.path"
+                        :node="child"
+                        :level="level + 1"
+                        :expanded-paths="expandedPaths"
+                        :active-article-id="activeArticleId"
+                        @toggle-directory="$emit('toggle-directory', $event)"
+                        @select-article="$emit('select-article', $event)"
+                    />
+                </div>
+            </div>
+        </Transition>
     </div>
 </template>
 
@@ -74,7 +78,7 @@ const emit = defineEmits<{
 }>()
 
 const BASE_PADDING = 12
-const INDENT_STEP = 18
+const INDENT_STEP = 15
 
 const isExpanded = computed(() => {
     if (props.node.type !== 'directory') {
@@ -178,9 +182,35 @@ const handleClick = () => {
     white-space: nowrap;
 }
 
+.node-children-wrap {
+    display: grid;
+    grid-template-rows: 1fr;
+}
+
 .node-children {
+    min-height: 0;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     gap: 2px;
+}
+
+.tree-expand-enter-active,
+.tree-expand-leave-active {
+    transition:
+        grid-template-rows 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 0.18s ease;
+}
+
+.tree-expand-enter-from,
+.tree-expand-leave-to {
+    grid-template-rows: 0fr;
+    opacity: 0;
+}
+
+.tree-expand-enter-to,
+.tree-expand-leave-from {
+    grid-template-rows: 1fr;
+    opacity: 1;
 }
 </style>
