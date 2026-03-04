@@ -53,12 +53,12 @@
             </div>
 
             <div v-else-if="results.length > 0" class="results-list">
-                <RouterLink
+                <button
                     v-for="article in results"
                     :key="article.id"
-                    :to="`/article/${article.id}`"
+                    type="button"
                     class="result-item"
-                    @click="handleClose"
+                    @click="handleSelect(article.id)"
                 >
                     <div class="result-header">
                         <h3 class="result-title">{{ article.title }}</h3>
@@ -72,7 +72,7 @@
                             {{ tag }}
                         </span>
                     </div>
-                </RouterLink>
+                </button>
             </div>
 
             <div v-else class="search-hint">
@@ -87,6 +87,7 @@
 
 <script setup lang="ts">
 import { ref, watch, nextTick } from 'vue'
+import { useRouter } from 'vue-router'
 import { useDebounceFn } from '@vueuse/core'
 import { useKeyboardShortcut } from '@/composables/useKeyboardShortcut'
 import { getArticles, getSearchIndex } from '@/utils/markdown'
@@ -98,12 +99,15 @@ import BaseModal from './BaseModal.vue'
 
 interface Props {
     visible: boolean
+    navigateOnSelect?: boolean
 }
 
 const props = defineProps<Props>()
+const router = useRouter()
 
 const emit = defineEmits<{
     (e: 'close'): void
+    (e: 'select', articleId: string): void
 }>()
 
 // 响应式状态
@@ -143,6 +147,14 @@ const clearSearch = () => {
 // 关闭弹窗
 const handleClose = () => {
     emit('close')
+}
+
+const handleSelect = (articleId: string) => {
+    emit('select', articleId)
+    if (props.navigateOnSelect !== false) {
+        void router.push(`/article/${articleId}`)
+    }
+    handleClose()
 }
 
 // ESC: 关闭弹窗（只在弹窗可见时生效）
@@ -313,8 +325,13 @@ watch(
 
 .result-item {
     display: block;
+    width: 100%;
     padding: 0.75rem;
+    border: none;
+    background: transparent;
     border-radius: 0.5rem;
+    text-align: left;
+    font: inherit;
     text-decoration: none;
     color: var(--color-text);
     transition: all 0.2s ease;

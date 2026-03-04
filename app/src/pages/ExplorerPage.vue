@@ -127,7 +127,12 @@
             <div v-else class="preview-state">没有找到文章内容</div>
         </section>
 
-        <SearchModal :visible="showSearch" @close="showSearch = false" />
+        <SearchModal
+            :visible="showSearch"
+            :navigate-on-select="false"
+            @close="showSearch = false"
+            @select="handleSearchSelect"
+        />
 
         <Teleport to="body">
             <div
@@ -140,40 +145,61 @@
                 <template v-if="tabMenu.scope?.type === 'tab'">
                     <button
                         class="tab-menu-item"
-                        :disabled="!canCloseLeftOf(tabMenu.scope.id)"
-                        @click="handleTabMenuAction('close-left')"
+                        :disabled="!canCloseTab(tabMenu.scope.id)"
+                        @click="handleTabMenuAction('close')"
                     >
-                        关闭左侧页签
+                        {{ TAB_MENU_LABELS.close }}
+                    </button>
+                    <button
+                        class="tab-menu-item"
+                        :disabled="!canCloseOthersExcept(tabMenu.scope.id)"
+                        @click="handleTabMenuAction('close-others')"
+                    >
+                        {{ TAB_MENU_LABELS.closeOthers }}
                     </button>
                     <button
                         class="tab-menu-item"
                         :disabled="!canCloseRightOf(tabMenu.scope.id)"
                         @click="handleTabMenuAction('close-right')"
                     >
-                        关闭右侧页签
+                        {{ TAB_MENU_LABELS.closeRight }}
+                    </button>
+                    <button
+                        class="tab-menu-item"
+                        :disabled="!canCloseLeftOf(tabMenu.scope.id)"
+                        @click="handleTabMenuAction('close-left')"
+                    >
+                        {{ TAB_MENU_LABELS.closeLeft }}
                     </button>
                     <button
                         class="tab-menu-item"
                         :disabled="openTabs.length === 0"
                         @click="handleTabMenuAction('close-all')"
                     >
-                        关闭全部页签
+                        {{ TAB_MENU_LABELS.closeAllForTab }}
                     </button>
                 </template>
                 <template v-else>
                     <button
                         class="tab-menu-item"
+                        :disabled="!canClosePrimaryTab()"
+                        @click="handleTabMenuAction('close')"
+                    >
+                        {{ TAB_MENU_LABELS.close }}
+                    </button>
+                    <button
+                        class="tab-menu-item"
                         :disabled="!canCloseOthers()"
                         @click="handleTabMenuAction('close-others')"
                     >
-                        关闭其他页签
+                        {{ TAB_MENU_LABELS.closeOthers }}
                     </button>
                     <button
                         class="tab-menu-item"
                         :disabled="openTabs.length === 0"
                         @click="handleTabMenuAction('close-all')"
                     >
-                        关闭全部页签
+                        {{ TAB_MENU_LABELS.closeAllForMore }}
                     </button>
                 </template>
             </div>
@@ -220,8 +246,17 @@ interface OpenTab {
     title: string
 }
 
-type TabMenuAction = 'close-left' | 'close-right' | 'close-others' | 'close-all'
+type TabMenuAction = 'close' | 'close-left' | 'close-right' | 'close-others' | 'close-all'
 type TabMenuScope = { type: 'tab'; id: string } | { type: 'more' } | null
+
+const TAB_MENU_LABELS = {
+    close: '\u5173\u95ed',
+    closeOthers: '\u5173\u95ed\u5176\u4ed6',
+    closeRight: '\u5173\u95ed\u53f3\u4fa7\u6807\u7b7e\u9875',
+    closeLeft: '\u5173\u95ed\u5de6\u4fa7\u6807\u7b7e\u9875',
+    closeAllForTab: '\u5168\u90e8\u5173\u95ed',
+    closeAllForMore: '\u5173\u95ed\u5168\u90e8',
+} as const
 
 const openTabs = ref<OpenTab[]>([])
 const tabMenuRef = ref<HTMLElement | null>(null)
@@ -250,6 +285,10 @@ let loadingToken = 0
 
 function openSearch(): void {
     showSearch.value = true
+}
+
+function handleSearchSelect(articleId: string): void {
+    void selectArticle(articleId)
 }
 
 function ensureTabOpened(id: string): void {
@@ -349,6 +388,18 @@ function canCloseOthers(): boolean {
     return openTabs.value.length > 1 && !!getPrimaryTabId()
 }
 
+function canCloseTab(id: string): boolean {
+    return findTabIndex(id) !== -1
+}
+
+function canClosePrimaryTab(): boolean {
+    return !!getPrimaryTabId()
+}
+
+function canCloseOthersExcept(id: string): boolean {
+    return findTabIndex(id) !== -1 && openTabs.value.length > 1
+}
+
 function closeTabsLeftOf(id: string): void {
     const index = findTabIndex(id)
     if (index <= 0) {
@@ -426,6 +477,16 @@ function handleTabMenuAction(action: TabMenuAction): void {
     }
 
     switch (action) {
+        case 'close':
+            if (scope.type === 'tab') {
+                closeTab(scope.id)
+            } else {
+                const primaryId = getPrimaryTabId()
+                if (primaryId) {
+                    closeTab(primaryId)
+                }
+            }
+            break
         case 'close-left':
             if (scope.type === 'tab') {
                 closeTabsLeftOf(scope.id)
