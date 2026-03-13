@@ -224,6 +224,21 @@
     "sticky": 0
   },
   {
+    "id": "8v3m2nqk",
+    "slug": "开发/前端/基础问题/浏览器页签复用与管理实践指南",
+    "title": "浏览器页签复用与管理实践指南",
+    "date": "2025-07-10",
+    "excerpt": "用 window.open 实现同一业务只打开一个页签，并梳理复用、聚焦、关闭和常见限制",
+    "category": "开发/前端/基础问题",
+    "tags": [
+      "JavaScript",
+      "Browser API",
+      "window.open",
+      "页面跳转"
+    ],
+    "sticky": 0
+  },
+  {
     "id": "soj25lib",
     "slug": "开发/前端/工程优化/2025主流JS工具总结",
     "title": "2025 主流 JS 工具生态速览",
