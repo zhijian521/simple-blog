@@ -1,7 +1,7 @@
 ﻿---
 title: Git 提交规范
 date: 2024-05-16
-category: 开发/Git协作
+category: 开发/Git协作/Git基础
 description: 规范化 Git 提交信息的最佳实践
 tags:
   - Git

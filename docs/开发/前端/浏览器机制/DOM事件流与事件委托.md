@@ -1,7 +1,7 @@
 ﻿---
 title: DOM事件流与事件委托：深入理解JavaScript事件机制
 date: 2025-01-24
-category: 开发/前端/基础问题
+category: 开发/前端/浏览器机制
 description: 从DOM事件流的三阶段讲起，深入剖析事件委托原理、应用场景与最佳实践
 tags:
   - JavaScript

@@ -1,7 +1,7 @@
 ---
 title: CSS中transform和filter对fixed定位的影响
 date: 2024-12-02
-category: 开发/前端/基础问题
+category: 开发/前端/CSS布局
 description: fixed 本该相对视口定位，但父元素使用 transform 或 filter 后，fixed 可能看起来像失效了一样
 tags:
   - CSS

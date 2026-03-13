@@ -1,7 +1,7 @@
 ﻿---
 title: GitHub 中文汉化
 date: 2026-02-06
-category: 开发/Git协作
+category: 开发/Git协作/GitHub
 description: 通过 Tampermonkey 脚本实现 GitHub 页面中文汉化
 tags:
   - GitHub

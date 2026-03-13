@@ -1,7 +1,7 @@
 ﻿---
 title: JS 模块系统：CJS 与 ESM 详解
 date: 2025-01-19
-category: 开发/Node生态/Node.js
+category: 开发/Node生态/Node.js基础
 description: 一文看懂 CommonJS 和 ES Modules 的区别与使用
 tags:
   - Node.js

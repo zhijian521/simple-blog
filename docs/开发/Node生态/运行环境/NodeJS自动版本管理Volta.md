@@ -1,7 +1,7 @@
 ﻿---
 title: Node.js 版本管理：Volta 使用指南
 date: 2025-06-15
-category: 开发/Node生态/Node.js
+category: 开发/Node生态/运行环境
 description: 介绍 Volta - 自动化的 Node.js 版本管理工具，支持跨平台和团队协作
 tags:
   - Node.js

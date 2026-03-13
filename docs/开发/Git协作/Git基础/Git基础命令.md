@@ -1,7 +1,7 @@
 ﻿---
 title: Git 基础命令
 date: 2024-05-11
-category: 开发/Git协作
+category: 开发/Git协作/Git基础
 description: Git 版本控制常用命令汇总
 tags:
   - Git

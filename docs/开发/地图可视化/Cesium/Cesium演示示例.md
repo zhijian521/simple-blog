@@ -1,7 +1,7 @@
 ﻿---
 title: Cesium 演示示例
 date: 2026-02-13
-category: 开发/地图可视化
+category: 开发/地图可视化/Cesium
 description: 记录我的 Cesium 示例站点，现有 6 个三维地图演示页面。
 tags:
   - Cesium

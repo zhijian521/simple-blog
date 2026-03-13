@@ -1,7 +1,7 @@
 ﻿---
 title: GitHub 令牌登录
 date: 2026-02-06
-category: 开发/Git协作
+category: 开发/Git协作/GitHub
 description: 使用 Personal Access Token 代替账号密码进行 GitHub 登录与 Git 操作
 tags:
   - GitHub

@@ -1,7 +1,7 @@
 ﻿---
 title: Confirmo - 桌面 AI 小宠物
 date: 2026-01-27
-category: 开发/AI工具
+category: 开发/AI工具/桌面应用
 id: k3n7m9p2
 description: 一个可爱的桌面 AI 编程伴侣，让你的编程时光不再孤单。
 tags:

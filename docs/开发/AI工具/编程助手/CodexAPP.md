@@ -2,7 +2,7 @@
 id: x4k7q2mz
 title: Codex APP：在 Mac 上体验 GPT-5.2-Codex
 date: 2026-02-03
-category: 开发/AI工具
+category: 开发/AI工具/编程助手
 tags:
   - Codex
   - GPT-5.2-Codex

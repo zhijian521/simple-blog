@@ -1,7 +1,7 @@
 ﻿---
 title: Vue 项目中集成 PWA 实践指南
 date: 2025-01-19
-category: 开发/前端/工程优化
+category: 开发/前端/工程化
 description: 使用 vite-plugin-pwa 在 Vue 项目中集成 Progressive Web App
 tags:
   - Vue

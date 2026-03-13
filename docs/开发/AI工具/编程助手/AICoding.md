@@ -1,7 +1,7 @@
 ---
 title: AICoding 使用与推荐
 date: 2026-03-05
-category: 开发/AI工具
+category: 开发/AI工具/编程助手
 id: s8u9yp4g
 description: 介绍如何使用 AI 模型进行开发，以及当前推荐方案。
 tags:

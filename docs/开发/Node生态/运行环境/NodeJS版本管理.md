@@ -1,7 +1,7 @@
 ﻿---
 title: Node.js 版本管理
 date: 2024-06-01
-category: 开发/Node生态/Node.js
+category: 开发/Node生态/运行环境
 id: zjfqwa97
 description: Node.js 版本管理工具, 推荐使用 nvm 进行 Node.js 版本管理。
 tags:

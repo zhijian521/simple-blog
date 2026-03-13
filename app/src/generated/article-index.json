@@ -1,11 +1,26 @@
 [
   {
+    "id": "k3n7m9p2",
+    "slug": "开发/AI工具/桌面应用/Confirmo-桌面AI小宠物",
+    "title": "Confirmo - 桌面 AI 小宠物",
+    "date": "2026-01-27",
+    "excerpt": "一个可爱的桌面 AI 编程伴侣，让你的编程时光不再孤单。",
+    "category": "开发/AI工具/桌面应用",
+    "tags": [
+      "AICoding",
+      "桌面宠物",
+      "AI伴侣",
+      "编程工具"
+    ],
+    "sticky": 0
+  },
+  {
     "id": "s8u9yp4g",
-    "slug": "开发/AI工具/AICoding",
+    "slug": "开发/AI工具/编程助手/AICoding",
     "title": "AICoding 使用与推荐",
     "date": "2026-03-05",
     "excerpt": "介绍如何使用 AI 模型进行开发，以及当前推荐方案。",
-    "category": "开发/AI工具",
+    "category": "开发/AI工具/编程助手",
     "tags": [
       "AICoding",
       "Vibe Coding",
@@ -21,11 +36,11 @@
   },
   {
     "id": "x4k7q2mz",
-    "slug": "开发/AI工具/CodexAPP",
+    "slug": "开发/AI工具/编程助手/CodexAPP",
     "title": "Codex APP：在 Mac 上体验 GPT-5.2-Codex",
     "date": "2026-02-03",
     "excerpt": "Codex APP 是 openAI 提供的桌面端应用，当前可以免费使用 GPT-5.2-Codex。",
-    "category": "开发/AI工具",
+    "category": "开发/AI工具/编程助手",
     "tags": [
       "Codex",
       "GPT-5.2-Codex",
@@ -35,27 +50,12 @@
     "sticky": 0
   },
   {
-    "id": "k3n7m9p2",
-    "slug": "开发/AI工具/Confirmo-桌面AI小宠物",
-    "title": "Confirmo - 桌面 AI 小宠物",
-    "date": "2026-01-27",
-    "excerpt": "一个可爱的桌面 AI 编程伴侣，让你的编程时光不再孤单。",
-    "category": "开发/AI工具",
-    "tags": [
-      "AICoding",
-      "桌面宠物",
-      "AI伴侣",
-      "编程工具"
-    ],
-    "sticky": 0
-  },
-  {
     "id": "n53c0vm2",
-    "slug": "开发/Git协作/GitHub中文汉化",
+    "slug": "开发/Git协作/GitHub/GitHub中文汉化",
     "title": "GitHub 中文汉化",
     "date": "2026-02-06",
     "excerpt": "通过 Tampermonkey 脚本实现 GitHub 页面中文汉化",
-    "category": "开发/Git协作",
+    "category": "开发/Git协作/GitHub",
     "tags": [
       "GitHub",
       "汉化",
@@ -65,11 +65,11 @@
   },
   {
     "id": "f1n46p7i",
-    "slug": "开发/Git协作/GitHub令牌登录",
+    "slug": "开发/Git协作/GitHub/GitHub令牌登录",
     "title": "GitHub 令牌登录",
     "date": "2026-02-06",
     "excerpt": "使用 Personal Access Token 代替账号密码进行 GitHub 登录与 Git 操作",
-    "category": "开发/Git协作",
+    "category": "开发/Git协作/GitHub",
     "tags": [
       "GitHub",
       "令牌",
@@ -79,11 +79,11 @@
   },
   {
     "id": "nwd0bpy4",
-    "slug": "开发/Git协作/Git基础命令",
+    "slug": "开发/Git协作/Git基础/Git基础命令",
     "title": "Git 基础命令",
     "date": "2024-05-11",
     "excerpt": "Git 版本控制常用命令汇总",
-    "category": "开发/Git协作",
+    "category": "开发/Git协作/Git基础",
     "tags": [
       "Git",
       "版本控制",
@@ -93,11 +93,11 @@
   },
   {
     "id": "hleayr4y",
-    "slug": "开发/Git协作/Git提交规范",
+    "slug": "开发/Git协作/Git基础/Git提交规范",
     "title": "Git 提交规范",
     "date": "2024-05-16",
     "excerpt": "规范化 Git 提交信息的最佳实践",
-    "category": "开发/Git协作",
+    "category": "开发/Git协作/Git基础",
     "tags": [
       "Git",
       "提交规范",
@@ -107,61 +107,15 @@
   },
   {
     "id": "zsavdegc",
-    "slug": "开发/Node生态/Node.js/JS模块系统CJS与ESM详解",
+    "slug": "开发/Node生态/Node.js基础/JS模块系统CJS与ESM详解",
     "title": "JS 模块系统：CJS 与 ESM 详解",
     "date": "2025-01-19",
     "excerpt": "一文看懂 CommonJS 和 ES Modules 的区别与使用",
-    "category": "开发/Node生态/Node.js",
+    "category": "开发/Node生态/Node.js基础",
     "tags": [
       "Node.js",
       "JavaScript",
       "模块系统"
-    ],
-    "sticky": 0
-  },
-  {
-    "id": "zjfqwa97",
-    "slug": "开发/Node生态/Node.js/NodeJS版本管理",
-    "title": "Node.js 版本管理",
-    "date": "2024-06-01",
-    "excerpt": "Node.js 版本管理工具, 推荐使用 nvm 进行 Node.js 版本管理。",
-    "category": "开发/Node生态/Node.js",
-    "tags": [
-      "NodeJS",
-      "前端开发",
-      "NodeJS版本管理",
-      "nvm",
-      "nvm-windows",
-      "内网"
-    ],
-    "sticky": 0
-  },
-  {
-    "id": "ey7ifhsn",
-    "slug": "开发/Node生态/Node.js/NodeJS自动版本管理Volta",
-    "title": "Node.js 版本管理：Volta 使用指南",
-    "date": "2025-06-15",
-    "excerpt": "介绍 Volta - 自动化的 Node.js 版本管理工具，支持跨平台和团队协作",
-    "category": "开发/Node生态/Node.js",
-    "tags": [
-      "Node.js",
-      "Volta",
-      "版本管理"
-    ],
-    "sticky": 0
-  },
-  {
-    "id": "q7m4x2kc",
-    "slug": "开发/Node生态/Node.js/WebSocket连接失败排查与修复",
-    "title": "WebSocket连接失败排查与修复",
-    "date": "2025-07-10",
-    "excerpt": "本地能连但联调环境连接失败时，优先排查目标端口是否监听、是否被防火墙拦截",
-    "category": "开发/Node生态/Node.js",
-    "tags": [
-      "Node.js",
-      "WebSocket",
-      "网络排查",
-      "Windows"
     ],
     "sticky": 0
   },
@@ -196,12 +150,58 @@
     "sticky": 0
   },
   {
+    "id": "q7m4x2kc",
+    "slug": "开发/Node生态/网络通信/WebSocket连接失败排查与修复",
+    "title": "WebSocket连接失败排查与修复",
+    "date": "2025-07-10",
+    "excerpt": "本地能连但联调环境连接失败时，优先排查目标端口是否监听、是否被防火墙拦截",
+    "category": "开发/Node生态/网络通信",
+    "tags": [
+      "Node.js",
+      "WebSocket",
+      "网络排查",
+      "Windows"
+    ],
+    "sticky": 0
+  },
+  {
+    "id": "zjfqwa97",
+    "slug": "开发/Node生态/运行环境/NodeJS版本管理",
+    "title": "Node.js 版本管理",
+    "date": "2024-06-01",
+    "excerpt": "Node.js 版本管理工具, 推荐使用 nvm 进行 Node.js 版本管理。",
+    "category": "开发/Node生态/运行环境",
+    "tags": [
+      "NodeJS",
+      "前端开发",
+      "NodeJS版本管理",
+      "nvm",
+      "nvm-windows",
+      "内网"
+    ],
+    "sticky": 0
+  },
+  {
+    "id": "ey7ifhsn",
+    "slug": "开发/Node生态/运行环境/NodeJS自动版本管理Volta",
+    "title": "Node.js 版本管理：Volta 使用指南",
+    "date": "2025-06-15",
+    "excerpt": "介绍 Volta - 自动化的 Node.js 版本管理工具，支持跨平台和团队协作",
+    "category": "开发/Node生态/运行环境",
+    "tags": [
+      "Node.js",
+      "Volta",
+      "版本管理"
+    ],
+    "sticky": 0
+  },
+  {
     "id": "540mx9hn",
-    "slug": "开发/前端/基础问题/CSS中transform和filter对fixed定位的影响",
+    "slug": "开发/前端/CSS布局/CSS中transform和filter对fixed定位的影响",
     "title": "CSS中transform和filter对fixed定位的影响",
     "date": "2024-12-02",
     "excerpt": "fixed 本该相对视口定位，但父元素使用 transform 或 filter 后，fixed 可能看起来像失效了一样",
-    "category": "开发/前端/基础问题",
+    "category": "开发/前端/CSS布局",
     "tags": [
       "CSS",
       "定位",
@@ -211,85 +211,12 @@
     "sticky": 0
   },
   {
-    "id": "hi817y1c",
-    "slug": "开发/前端/基础问题/DOM事件流与事件委托",
-    "title": "DOM事件流与事件委托：深入理解JavaScript事件机制",
-    "date": "2025-01-24",
-    "excerpt": "从DOM事件流的三阶段讲起，深入剖析事件委托原理、应用场景与最佳实践",
-    "category": "开发/前端/基础问题",
-    "tags": [
-      "JavaScript",
-      "DOM",
-      "性能优化"
-    ],
-    "sticky": 0
-  },
-  {
-    "id": "opxf4eir",
-    "slug": "开发/前端/基础问题/H5点击背景问题",
-    "title": "H5页面点击体验优化：彻底解决移动端点击高亮问题",
-    "date": "2024-05-29",
-    "excerpt": "深入解析移动端点击高亮问题的多种解决方案，从CSS属性到现代交互实践",
-    "category": "开发/前端/基础问题",
-    "tags": [
-      "CSS",
-      "H5",
-      "移动端"
-    ],
-    "sticky": 0
-  },
-  {
-    "id": "156ko5ip",
-    "slug": "开发/前端/基础问题/前端页面加载流程与阻塞机制",
-    "title": "前端页面加载流程：CSS与JavaScript的阻塞机制详解",
-    "date": "2025-01-13",
-    "excerpt": "深入解析浏览器页面加载的完整流程，CSS和JavaScript的渲染阻塞机制及最佳优化策略",
-    "category": "开发/前端/基础问题",
-    "tags": [
-      "性能优化",
-      "浏览器原理",
-      "CSS",
-      "JavaScript"
-    ],
-    "sticky": 0
-  },
-  {
-    "id": "8v3m2nqk",
-    "slug": "开发/前端/基础问题/浏览器页签复用与管理实践指南",
-    "title": "浏览器页签复用与管理实践指南",
-    "date": "2025-07-10",
-    "excerpt": "用 window.open 实现同一业务只打开一个页签，并梳理复用、聚焦、关闭和常见限制",
-    "category": "开发/前端/基础问题",
-    "tags": [
-      "JavaScript",
-      "Browser API",
-      "window.open",
-      "页面跳转"
-    ],
-    "sticky": 0
-  },
-  {
-    "id": "gwsjdmeo",
-    "slug": "开发/前端/基础问题/轻松上传文件：通过拖拽和粘贴实现",
-    "title": "轻松上传文件：通过拖拽和粘贴实现",
-    "date": "2024-12-02",
-    "excerpt": "除了 input[type=file]，还可以通过 drop 和 paste 事件获取文件，适合做更顺手的上传体验",
-    "category": "开发/前端/基础问题",
-    "tags": [
-      "JavaScript",
-      "HTML",
-      "文件上传",
-      "拖拽上传"
-    ],
-    "sticky": 0
-  },
-  {
     "id": "soj25lib",
-    "slug": "开发/前端/工程优化/2025主流JS工具总结",
+    "slug": "开发/前端/工程化/2025主流JS工具总结",
     "title": "2025 主流 JS 工具生态速览",
     "date": "2026-02-04",
     "excerpt": "State of JS 2025 Libraries 的前端工具生态速览",
-    "category": "开发/前端/工程优化",
+    "category": "开发/前端/工程化",
     "tags": [
       "State of JS",
       "JavaScript",
@@ -300,11 +227,11 @@
   },
   {
     "id": "gn8jnw9p",
-    "slug": "开发/前端/工程优化/Vue项目中集成PWA实践指南",
+    "slug": "开发/前端/工程化/Vue项目中集成PWA实践指南",
     "title": "Vue 项目中集成 PWA 实践指南",
     "date": "2025-01-19",
     "excerpt": "使用 vite-plugin-pwa 在 Vue 项目中集成 Progressive Web App",
-    "category": "开发/前端/工程优化",
+    "category": "开发/前端/工程化",
     "tags": [
       "Vue",
       "PWA",
@@ -314,11 +241,11 @@
   },
   {
     "id": "lcf84kaw",
-    "slug": "开发/前端/工程优化/前端开发规范梳理",
+    "slug": "开发/前端/工程化/前端开发规范梳理",
     "title": "前端开发规范梳理",
     "date": "2024-05-09",
     "excerpt": "2026年前端开发规范梳理与最佳实践",
-    "category": "开发/前端/工程优化",
+    "category": "开发/前端/工程化",
     "tags": [
       "前端优化",
       "前端开发规范",
@@ -328,11 +255,11 @@
   },
   {
     "id": "wjjyecqf",
-    "slug": "开发/前端/工程优化/前端微服务架构实践指南",
+    "slug": "开发/前端/工程化/前端微服务架构实践指南",
     "title": "前端微服务架构：构建可扩展的大型前端应用",
     "date": "2025-01-09",
     "excerpt": "深入解析前端微服务架构原理、主流解决方案及最佳实践",
-    "category": "开发/前端/工程优化",
+    "category": "开发/前端/工程化",
     "tags": [
       "微前端",
       "架构设计",
@@ -343,12 +270,85 @@
     "sticky": 0
   },
   {
+    "id": "opxf4eir",
+    "slug": "开发/前端/浏览器交互/H5点击背景问题",
+    "title": "H5页面点击体验优化：彻底解决移动端点击高亮问题",
+    "date": "2024-05-29",
+    "excerpt": "深入解析移动端点击高亮问题的多种解决方案，从CSS属性到现代交互实践",
+    "category": "开发/前端/浏览器交互",
+    "tags": [
+      "CSS",
+      "H5",
+      "移动端"
+    ],
+    "sticky": 0
+  },
+  {
+    "id": "8v3m2nqk",
+    "slug": "开发/前端/浏览器交互/浏览器页签复用与管理实践指南",
+    "title": "浏览器页签复用与管理实践指南",
+    "date": "2025-07-10",
+    "excerpt": "用 window.open 实现同一业务只打开一个页签，并梳理复用、聚焦、关闭和常见限制",
+    "category": "开发/前端/浏览器交互",
+    "tags": [
+      "JavaScript",
+      "Browser API",
+      "window.open",
+      "页面跳转"
+    ],
+    "sticky": 0
+  },
+  {
+    "id": "gwsjdmeo",
+    "slug": "开发/前端/浏览器交互/轻松上传文件：通过拖拽和粘贴实现",
+    "title": "轻松上传文件：通过拖拽和粘贴实现",
+    "date": "2024-12-02",
+    "excerpt": "除了 input[type=file]，还可以通过 drop 和 paste 事件获取文件，适合做更顺手的上传体验",
+    "category": "开发/前端/浏览器交互",
+    "tags": [
+      "JavaScript",
+      "HTML",
+      "文件上传",
+      "拖拽上传"
+    ],
+    "sticky": 0
+  },
+  {
+    "id": "hi817y1c",
+    "slug": "开发/前端/浏览器机制/DOM事件流与事件委托",
+    "title": "DOM事件流与事件委托：深入理解JavaScript事件机制",
+    "date": "2025-01-24",
+    "excerpt": "从DOM事件流的三阶段讲起，深入剖析事件委托原理、应用场景与最佳实践",
+    "category": "开发/前端/浏览器机制",
+    "tags": [
+      "JavaScript",
+      "DOM",
+      "性能优化"
+    ],
+    "sticky": 0
+  },
+  {
+    "id": "156ko5ip",
+    "slug": "开发/前端/浏览器机制/前端页面加载流程与阻塞机制",
+    "title": "前端页面加载流程：CSS与JavaScript的阻塞机制详解",
+    "date": "2025-01-13",
+    "excerpt": "深入解析浏览器页面加载的完整流程，CSS和JavaScript的渲染阻塞机制及最佳优化策略",
+    "category": "开发/前端/浏览器机制",
+    "tags": [
+      "性能优化",
+      "浏览器原理",
+      "CSS",
+      "JavaScript"
+    ],
+    "sticky": 0
+  },
+  {
     "id": "c8m2yq1v",
-    "slug": "开发/地图可视化/Cesium演示示例",
+    "slug": "开发/地图可视化/Cesium/Cesium演示示例",
     "title": "Cesium 演示示例",
     "date": "2026-02-13",
     "excerpt": "记录我的 Cesium 示例站点，现有 6 个三维地图演示页面。",
-    "category": "开发/地图可视化",
+    "category": "开发/地图可视化/Cesium",
     "tags": [
       "Cesium",
       "3D地图",

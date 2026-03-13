@@ -1,7 +1,7 @@
 ---
 title: WebSocket连接失败排查与修复
 date: 2025-07-10
-category: 开发/Node生态/Node.js
+category: 开发/Node生态/网络通信
 description: 本地能连但联调环境连接失败时，优先排查目标端口是否监听、是否被防火墙拦截
 tags:
   - Node.js
