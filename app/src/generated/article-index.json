@@ -151,6 +151,21 @@
     "sticky": 0
   },
   {
+    "id": "q7m4x2kc",
+    "slug": "开发/Node生态/Node.js/WebSocket连接失败排查与修复",
+    "title": "WebSocket连接失败排查与修复",
+    "date": "2025-07-10",
+    "excerpt": "本地能连但联调环境连接失败时，优先排查目标端口是否监听、是否被防火墙拦截",
+    "category": "开发/Node生态/Node.js",
+    "tags": [
+      "Node.js",
+      "WebSocket",
+      "网络排查",
+      "Windows"
+    ],
+    "sticky": 0
+  },
+  {
     "id": "ngbqsy5p",
     "slug": "开发/Node生态/包管理/NPM常见问题",
     "title": "NPM 常见问题",
@@ -177,6 +192,21 @@
       "pnpm",
       "Bun",
       "包管理器"
+    ],
+    "sticky": 0
+  },
+  {
+    "id": "540mx9hn",
+    "slug": "开发/前端/基础问题/CSS中transform和filter对fixed定位的影响",
+    "title": "CSS中transform和filter对fixed定位的影响",
+    "date": "2024-12-02",
+    "excerpt": "fixed 本该相对视口定位，但父元素使用 transform 或 filter 后，fixed 可能看起来像失效了一样",
+    "category": "开发/前端/基础问题",
+    "tags": [
+      "CSS",
+      "定位",
+      "fixed",
+      "布局"
     ],
     "sticky": 0
   },
@@ -235,6 +265,21 @@
       "Browser API",
       "window.open",
       "页面跳转"
+    ],
+    "sticky": 0
+  },
+  {
+    "id": "gwsjdmeo",
+    "slug": "开发/前端/基础问题/轻松上传文件：通过拖拽和粘贴实现",
+    "title": "轻松上传文件：通过拖拽和粘贴实现",
+    "date": "2024-12-02",
+    "excerpt": "除了 input[type=file]，还可以通过 drop 和 paste 事件获取文件，适合做更顺手的上传体验",
+    "category": "开发/前端/基础问题",
+    "tags": [
+      "JavaScript",
+      "HTML",
+      "文件上传",
+      "拖拽上传"
     ],
     "sticky": 0
   },
