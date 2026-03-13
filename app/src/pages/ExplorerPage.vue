@@ -9,14 +9,20 @@
                     <button class="activity-btn" title="搜索文章" aria-label="搜索文章" @click="openSearch">
                         <SearchIcon />
                     </button>
-                    <button class="activity-btn" title="折叠所有文件树" aria-label="折叠所有文件树" @click="collapseAllDirectories">
+                    <button
+                        class="activity-btn"
+                        title="折叠所有文件树"
+                        aria-label="折叠所有文件树"
+                        :disabled="explorerPanelView !== 'tree'"
+                        @click="collapseAllDirectories"
+                    >
                         <CollapseAllIcon />
                     </button>
                     <button
                         class="activity-btn"
                         title="只展开当前文章所在文件树"
                         aria-label="只展开当前文章所在文件树"
-                        :disabled="!activeArticleId"
+                        :disabled="explorerPanelView !== 'tree' || !activeArticleId"
                         @click="focusActiveArticleTree"
                     >
                         <FocusTreeIcon />
@@ -39,19 +45,66 @@
         <aside class="tree-panel">
             <header class="panel-header">
                 <p class="panel-title">资源管理器</p>
+                <button
+                    class="panel-toggle-btn"
+                    type="button"
+                    :title="explorerPanelView === 'tree' ? '切换到时间列表' : '切换到文档树'"
+                    :aria-label="explorerPanelView === 'tree' ? '切换到时间列表' : '切换到文档树'"
+                    :aria-pressed="explorerPanelView === 'latest'"
+                    @click="toggleExplorerPanelView"
+                >
+                    <component :is="explorerPanelView === 'tree' ? ListIcon : DocumentTreeIcon" />
+                </button>
             </header>
 
             <div class="tree-list">
-                <ExplorerTreeNode
-                    v-for="node in treeNodes"
-                    :key="node.path"
-                    :node="node"
-                    :level="0"
-                    :expanded-paths="expandedPaths"
-                    :active-article-id="activeArticleId"
-                    @toggle-directory="toggleDirectory"
-                    @select-article="selectArticle"
-                />
+                <template v-if="explorerPanelView === 'tree'">
+                    <ExplorerTreeNode
+                        v-for="node in treeNodes"
+                        :key="node.path"
+                        :node="node"
+                        :level="0"
+                        :expanded-paths="expandedPaths"
+                        :active-article-id="activeArticleId"
+                        @toggle-directory="toggleDirectory"
+                        @select-article="selectArticle"
+                    />
+                </template>
+                <div v-else class="latest-panel">
+                    <div class="latest-list" aria-label="最新文章列表">
+                        <button
+                            v-for="article in pagedLatestArticles"
+                            :key="article.id"
+                            class="latest-item"
+                            :class="{ 'is-active': article.id === activeArticleId }"
+                            :title="article.title"
+                            @click="selectArticle(article.id)"
+                        >
+                            <div class="latest-item-top">
+                                <time class="latest-item-date" :datetime="article.date">
+                                    {{ formatDate(article.date, 'short') }}
+                                </time>
+                                <span v-if="article.category" class="latest-item-category">
+                                    {{ article.category }}
+                                </span>
+                            </div>
+                            <div class="latest-item-main">
+                                <span class="latest-item-title">{{ article.title }}</span>
+                                <span class="latest-item-excerpt">
+                                    {{ article.excerpt }}
+                                </span>
+                            </div>
+                        </button>
+                    </div>
+
+                    <Pagination
+                        v-if="latestTotalPages > 1"
+                        class="latest-pagination"
+                        :current-page="latestCurrentPage"
+                        :total-pages="latestTotalPages"
+                        @page-change="handleLatestPageChange"
+                    />
+                </div>
             </div>
         </aside>
 
@@ -213,13 +266,16 @@ import { useRouter } from 'vue-router'
 import ExplorerTreeNode from '@/components/explorer/ExplorerTreeNode.vue'
 import CollapseAllIcon from '@/components/icons/CollapseAllIcon.vue'
 import CloseIcon from '@/components/icons/CloseIcon.vue'
+import DocumentTreeIcon from '@/components/icons/DocumentTreeIcon.vue'
 import ExplorerDocumentIcon from '@/components/icons/ExplorerDocumentIcon.vue'
 import FocusTreeIcon from '@/components/icons/FocusTreeIcon.vue'
 import GitHubIcon from '@/components/icons/GitHubIcon.vue'
 import HomeIcon from '@/components/icons/HomeIcon.vue'
+import ListIcon from '@/components/icons/ListIcon.vue'
 import MoreHorizontalIcon from '@/components/icons/MoreHorizontalIcon.vue'
 import SearchIcon from '@/components/icons/SearchIcon.vue'
 import GiscusComments from '@/components/comments/GiscusComments.vue'
+import Pagination from '@/components/ui/Pagination.vue'
 import SearchModal from '@/components/ui/SearchModal.vue'
 import { GISCUS_CONFIG, isGiscusConfigured } from '@/constants/giscus'
 import { useKeyboardShortcut } from '@/composables/useKeyboardShortcut'
@@ -240,6 +296,8 @@ const loadingArticle = ref(false)
 const activeArticle = ref<Article | null>(null)
 const activeArticleId = ref('')
 const expandedPaths = ref<Set<string>>(new Set())
+const explorerPanelView = ref<'tree' | 'latest'>('tree')
+const latestCurrentPage = ref(1)
 
 interface OpenTab {
     id: string
@@ -271,6 +329,19 @@ const indexItems = getArticleIndex()
 const articleIndexById = new Map(indexItems.map(item => [item.id, item]))
 const treeNodes = sortExplorerNodes(buildExplorerTree(indexItems))
 expandedPaths.value = createInitialExpandedPaths(treeNodes)
+const latestArticles = [...indexItems].sort((a, b) => {
+    const timeDiff = new Date(b.date).getTime() - new Date(a.date).getTime()
+    if (timeDiff !== 0) {
+        return timeDiff
+    }
+    return a.title.localeCompare(b.title, 'zh-CN')
+})
+const LATEST_PAGE_SIZE = 20
+const latestTotalPages = computed(() => Math.max(1, Math.ceil(latestArticles.length / LATEST_PAGE_SIZE)))
+const pagedLatestArticles = computed(() => {
+    const start = (latestCurrentPage.value - 1) * LATEST_PAGE_SIZE
+    return latestArticles.slice(start, start + LATEST_PAGE_SIZE)
+})
 
 const sanitizedContent = computed(() => {
     if (!activeArticle.value) {
@@ -531,6 +602,14 @@ function goHome(): void {
     void router.push('/')
 }
 
+function toggleExplorerPanelView(): void {
+    explorerPanelView.value = explorerPanelView.value === 'tree' ? 'latest' : 'tree'
+}
+
+function handleLatestPageChange(page: number): void {
+    latestCurrentPage.value = page
+}
+
 function toggleDirectory(path: string): void {
     const next = new Set(expandedPaths.value)
     if (next.has(path)) {
@@ -739,6 +818,8 @@ onUnmounted(() => {
     padding: 0 1rem;
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
     background: rgba(0, 0, 0, 0.02);
 }
 
@@ -750,10 +831,208 @@ onUnmounted(() => {
     margin: 0;
 }
 
+.panel-toggle-btn {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-light);
+    transition:
+        background 0.18s ease,
+        color 0.18s ease;
+}
+
+.panel-toggle-btn:hover {
+    background: rgba(0, 0, 0, 0.06);
+    color: var(--color-text);
+}
+
+.panel-toggle-btn:focus-visible {
+    outline: 1px solid rgba(26, 26, 26, 0.3);
+    outline-offset: 1px;
+}
+
+.panel-toggle-btn[aria-pressed='true'] {
+    background: rgba(0, 0, 0, 0.08);
+    color: var(--color-text);
+}
+
+.panel-toggle-btn :deep(svg) {
+    width: 15px;
+    height: 15px;
+}
+
 .tree-list {
     flex: 1;
     overflow: auto;
     padding: 0.5rem 0.4rem 0.8rem;
+}
+
+.latest-panel {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 0 0.35rem;
+}
+
+.latest-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+}
+
+.latest-item {
+    width: 100%;
+    padding: 0.78rem 0.82rem 0.8rem;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.55rem;
+    text-align: left;
+    color: var(--color-text);
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.12)),
+        rgba(0, 0, 0, 0.015);
+    box-shadow:
+        0 1px 4px rgba(0, 0, 0, 0.03),
+        0 6px 16px rgba(0, 0, 0, 0.025);
+    transition:
+        background 0.18s ease,
+        color 0.18s ease,
+        border-color 0.18s ease,
+        box-shadow 0.18s ease,
+        transform 0.18s ease;
+}
+
+.latest-item:hover {
+    background:
+        linear-gradient(
+            90deg,
+            rgba(26, 26, 26, 0.07) 0%,
+            rgba(26, 26, 26, 0.03) 45%,
+            rgba(255, 255, 255, 0.12) 100%
+        ),
+        rgba(0, 0, 0, 0.035);
+    border-color: rgba(26, 26, 26, 0.16);
+    box-shadow:
+        0 2px 6px rgba(0, 0, 0, 0.05),
+        0 10px 20px rgba(0, 0, 0, 0.04);
+}
+
+.latest-item.is-active {
+    background:
+        linear-gradient(
+            90deg,
+            rgba(26, 26, 26, 0.07) 0%,
+            rgba(26, 26, 26, 0.03) 45%,
+            rgba(255, 255, 255, 0.12) 100%
+        ),
+        rgba(0, 0, 0, 0.035);
+    border-color: rgba(26, 26, 26, 0.16);
+    color: var(--color-text);
+    box-shadow:
+        0 2px 6px rgba(0, 0, 0, 0.05),
+        0 10px 20px rgba(0, 0, 0, 0.04);
+}
+
+.latest-item:focus-visible {
+    outline: 1px solid rgba(26, 26, 26, 0.28);
+    outline-offset: 1px;
+}
+
+.latest-item-top {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.latest-item-main {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.32rem;
+}
+
+.latest-item-title {
+    width: 100%;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.55;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.latest-item-excerpt {
+    width: 100%;
+    font-size: 11px;
+    line-height: 1.65;
+    color: var(--color-text-light);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.latest-item-category,
+.latest-item-date {
+    font-size: 11px;
+    color: var(--color-text-lighter);
+    line-height: 1.4;
+}
+
+.latest-item-category {
+    max-width: 58%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 0.12rem 0.45rem;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.latest-pagination {
+    margin-top: auto;
+    padding: 0.15rem 0 0.05rem;
+}
+
+.latest-pagination :deep(.pagination) {
+    gap: 0.35rem;
+    margin-top: 0;
+}
+
+.latest-pagination :deep(.pagination-pages) {
+    gap: 0.35rem;
+}
+
+.latest-pagination :deep(.pagination-btn),
+.latest-pagination :deep(.pagination-page),
+.latest-pagination :deep(.pagination-ellipsis) {
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+    font-size: 11px;
+}
+
+.latest-pagination :deep(.pagination-page) {
+    padding: 0 0.35rem;
+}
+
+.latest-pagination :deep(.pagination-btn:hover:not(:disabled)),
+.latest-pagination :deep(.pagination-page:hover) {
+    transform: none;
 }
 
 .preview-panel {
@@ -1412,6 +1691,20 @@ onUnmounted(() => {
     .panel-header {
         height: 40px;
         padding: 0 0.8rem;
+    }
+
+    .latest-item {
+        padding: 0.7rem 0.72rem 0.74rem;
+    }
+
+    .latest-item-top {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 0.32rem;
+    }
+
+    .latest-item-category {
+        max-width: 100%;
     }
 
     .preview-content {
