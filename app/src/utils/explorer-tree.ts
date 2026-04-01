@@ -70,7 +70,8 @@ export function sortExplorerNodes(nodes: ExplorerNode[]): ExplorerNode[] {
 export function createInitialExpandedPaths(nodes: ExplorerNode[]): Set<string> {
     const expanded = new Set<string>()
     for (const node of nodes) {
-        if (node.type === 'directory') {
+        // 只展开"耶温"文件夹，其他第一级文件夹保持折叠
+        if (node.type === 'directory' && node.name === '耶温') {
             expanded.add(node.path)
         }
     }
