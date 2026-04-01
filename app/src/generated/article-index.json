@@ -35,21 +35,6 @@
     "sticky": 0
   },
   {
-    "id": "x4k7q2mz",
-    "slug": "开发/AI工具/编程助手/CodexAPP",
-    "title": "Codex APP：在 Mac 上体验 GPT-5.2-Codex",
-    "date": "2026-02-03",
-    "excerpt": "Codex APP 是 openAI 提供的桌面端应用，当前可以免费使用 GPT-5.2-Codex。",
-    "category": "开发/AI工具/编程助手",
-    "tags": [
-      "Codex",
-      "GPT-5.2-Codex",
-      "macOS",
-      "AI"
-    ],
-    "sticky": 0
-  },
-  {
     "id": "opencode-setup-guide",
     "slug": "开发/AI工具/编程助手/OpenCode安装与配置指南",
     "title": "OpenCode 安装与配置笔记",
