@@ -428,6 +428,21 @@
     "sticky": 0
   },
   {
+    "id": "ai-fitness-plan",
+    "slug": "生活/AI制定健身计划",
+    "title": "AI制定健身计划",
+    "date": "2026-04-01",
+    "excerpt": "如何利用 AI 工具根据个人情况制定科学的减肥和锻炼计划。",
+    "category": "生活",
+    "tags": [
+      "AI",
+      "健身",
+      "减肥",
+      "锻炼"
+    ],
+    "sticky": 0
+  },
+  {
     "id": "d7t2tpc7",
     "slug": "生活/饮料食谱",
     "title": "饮料食谱",
