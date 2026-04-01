@@ -50,6 +50,20 @@
     "sticky": 0
   },
   {
+    "id": "opencode-setup-guide",
+    "slug": "开发/AI工具/编程助手/OpenCode安装与配置指南",
+    "title": "OpenCode 安装与配置笔记",
+    "date": "2026-04-01",
+    "excerpt": "OpenCode 多 Agent 协作配置笔记，基于 JD Cloud Code Plan 套餐。",
+    "category": "开发/AI工具/编程助手",
+    "tags": [
+      "OpenCode",
+      "AI编程",
+      "笔记"
+    ],
+    "sticky": 0
+  },
+  {
     "id": "n53c0vm2",
     "slug": "开发/Git协作/GitHub/GitHub中文汉化",
     "title": "GitHub 中文汉化",

@@ -37,7 +37,7 @@ const config = defineConfig({
         },
     },
     server: {
-        port: 3000,
+        port: 5175,
         open: true,
         fs: {
             allow: [appRoot, docsDir, imagesDir, siteConfigDir],
