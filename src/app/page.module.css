@@ -1,0 +1,261 @@
+/*== 页面容器 ==*/
+.page {
+    background: var(--background);
+}
+
+/*== 通用图标尺寸（替代 Tailwind 的 h-4 w-4） ==*/
+.iconSmall {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+}
+
+/*== 首屏 Hero ==*/
+.hero {
+    position: relative;
+    display: flex;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-bottom: 1px solid var(--primary);
+    padding: 7rem 1.5rem 4rem;
+}
+
+.heroBackground {
+    object-fit: cover;
+    object-position: center;
+}
+
+.heroOverlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, color-mix(in srgb, var(--background) 16%, transparent) 0%, color-mix(in srgb, var(--background) 8%, transparent) 38%, color-mix(in srgb, var(--background) 72%, transparent) 100%);
+}
+
+.heroContent {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    max-width: 52rem;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.heroTitle {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: clamp(2.75rem, 6vw, 4.75rem);
+    line-height: 1.2;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--foreground);
+}
+
+.heroSub {
+    margin: 0.75rem 0 0;
+    font-size: 0.875rem;
+    letter-spacing: 0.2em;
+    color: var(--primary);
+}
+
+.heroCopy {
+    max-width: 36rem;
+    margin: 1.5rem 0 0;
+    font-size: 0.875rem;
+    line-height: 1.85;
+    color: var(--muted-foreground);
+}
+
+.heroButton {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 2.25rem;
+    border: 1px solid var(--primary);
+    background: color-mix(in srgb, var(--background) 72%, transparent);
+    padding: 0.875rem 2rem;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    font-weight: 500;
+    color: var(--primary);
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.heroButton:hover {
+    background: var(--primary);
+    color: var(--primary-foreground);
+}
+
+.heroButton:active {
+    transform: scale(0.98);
+}
+
+/*== 内容区 ==*/
+.content {
+    max-width: 80rem;
+    margin: 0 auto;
+    padding: 4rem 1.5rem 5rem;
+}
+
+.section {
+    margin-top: 3rem;
+}
+
+.section:first-child {
+    margin-top: 0;
+}
+
+.sectionHeading {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.75rem;
+}
+
+.sectionTitle {
+    margin: 0;
+    flex-shrink: 0;
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    line-height: 1.3;
+    font-weight: 600;
+    color: var(--foreground);
+}
+
+.sectionLine {
+    height: 1px;
+    flex: 1;
+    background: var(--primary);
+    opacity: 0.3;
+}
+
+/*== 个人信息卡片 ==*/
+.profileCard {
+    display: flex;
+    gap: 2rem;
+    border: 1px solid var(--primary);
+    background: var(--muted);
+    padding: 1.5rem;
+}
+
+.avatarWrap {
+    flex-shrink: 0;
+}
+
+.avatarFrame {
+    position: relative;
+    width: 7.5rem;
+    height: 7.5rem;
+    overflow: hidden;
+    border: 4px solid var(--background);
+    box-shadow: 0 8px 20px rgba(27, 28, 28, 0.08);
+}
+
+.avatar {
+    object-fit: cover;
+}
+
+.profileBody {
+    min-width: 0;
+}
+
+.profileName {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    line-height: 1.2;
+    font-weight: 600;
+    color: var(--foreground);
+}
+
+.profileMeta {
+    margin: 0.5rem 0 0;
+    font-size: 0.875rem;
+    letter-spacing: 0.2em;
+    line-height: 1.5;
+    color: var(--primary);
+}
+
+.profileCopy {
+    max-width: 48rem;
+    margin: 1rem 0 0;
+    font-size: 0.875rem;
+    line-height: 1.85;
+    color: var(--muted-foreground);
+}
+
+.profileLinks {
+    display: flex;
+    gap: 1.25rem;
+    margin-top: 1rem;
+}
+
+/*== 文章卡片网格 ==*/
+.postsGrid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+/*== 文章视觉渐变（由 PostCard visual slot 引用） ==*/
+.postVisualTea {
+    width: 100%;
+    height: 100%;
+    background:
+        radial-gradient(circle at 72% 28%, rgba(214, 85, 72, 0.72), transparent 20%),
+        linear-gradient(135deg, #2f231d 0%, #9c6a45 46%, #ddc0a8 100%);
+}
+
+.postVisualArchitecture {
+    width: 100%;
+    height: 100%;
+    background:
+        linear-gradient(90deg, transparent 48%, color-mix(in srgb, var(--primary) 95%, transparent) 49%, color-mix(in srgb, var(--primary) 95%, transparent) 51%, transparent 52%),
+        linear-gradient(135deg, #23323a 0%, #0e1317 48%, #27363d 100%);
+}
+
+/*== 开源项目网格 ==*/
+.projectsGrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+/*== 响应式 ==*/
+@media (max-width: 1024px) {
+    .postsGrid,
+    .projectsGrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero {
+        padding-top: 6rem;
+    }
+
+    .content {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .sectionHeading {
+        flex-wrap: wrap;
+    }
+
+    .profileCard {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .profileLinks {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+}

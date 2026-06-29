@@ -1,0 +1,66 @@
+/*== IconButton 图标按钮 — 正方形纯图标，hover 背景 ==*/
+
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.375rem;
+    height: 2.375rem;
+    border: 0;
+    background: var(--muted);
+    cursor: pointer;
+    color: var(--muted-foreground);
+    transition: color 0.15s, background-color 0.15s;
+}
+
+.button > svg {
+    flex-shrink: 0;
+    width: 1.125rem;
+    height: 1.125rem;
+}
+
+.button:hover {
+    color: var(--primary);
+    background: var(--primary-subtle);
+}
+
+.button:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.button:disabled:hover {
+    color: var(--muted-foreground);
+    background: var(--muted);
+}
+
+/* 尺寸变体（仅 non-default，default 已在 .button 基础样式中） */
+.small {
+    width: 1.75rem;
+    height: 1.75rem;
+}
+
+.small > svg {
+    width: 0.875rem;
+    height: 0.875rem;
+}
+
+.medium {
+    width: 2rem;
+    height: 2rem;
+}
+
+.medium > svg {
+    width: 1rem;
+    height: 1rem;
+}
+
+/* 颜色变体 */
+.danger {
+    color: var(--muted-foreground);
+}
+
+.danger:hover {
+    color: var(--destructive);
+    background: var(--destructive-subtle);
+}

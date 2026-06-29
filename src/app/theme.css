@@ -1,0 +1,49 @@
+/* 知简 · 全站主题变量 — 文人书斋 · 水墨宣纸 · 温润雅致 */
+
+:root {
+    /* 主色 · 朱砂 */
+    --primary: #9f000f;
+    --primary-foreground: #ffffff;
+    --primary-hover: #c41e3a;
+    --primary-subtle: color-mix(in srgb, var(--primary) 8%, transparent);
+    --primary-subtle-soft: color-mix(in srgb, var(--primary) 4%, transparent);
+    --primary-subtle-medium: color-mix(in srgb, var(--primary) 6%, transparent);
+    --ring-subtle: color-mix(in srgb, var(--primary) 10%, transparent);
+
+    /* 危险色 */
+    --destructive: #ba1a1a;
+    --destructive-subtle: color-mix(in srgb, var(--destructive) 8%, transparent);
+    --destructive-subtle-medium: color-mix(in srgb, var(--destructive) 16%, transparent);
+
+    /* 文字（两级，不引入第三级） */
+    --foreground: #1d1b20;
+    --muted-foreground: #6f655c;
+
+    /* 背景（浅→深） */
+    --background: #fbf9f9;
+    --highlight: #faf7f4;
+    --muted: #f6efe7;
+    --secondary: #f3ece4;
+
+    /* 点缀 */
+    --accent: #e6efe5;
+    --accent-foreground: #31483f;
+    --accent-warm: #f5e6e6;
+    --border: #e7ddd1;
+    --input: #d9cbbc;
+
+    /* 卡片与弹窗 */
+    --card: rgba(255, 255, 255, 0.8);
+    --popover: #ffffff;
+
+    /* 圆角（全站零圆角，矩形是品牌语言） */
+    --radius: 0;
+
+    /* 字体 */
+    --font-serif: 'Noto Serif SC', 'Songti SC', 'STSong', Georgia, serif;
+    --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif;
+    --font-mono: 'SF Mono', 'Fira Code', 'Menlo', 'Monaco', 'Consolas', monospace;
+
+    /* 选中色（赭色，不用默认蓝） */
+    --selection: rgba(182, 72, 43, 0.18);
+}

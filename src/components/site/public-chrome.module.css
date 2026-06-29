@@ -1,0 +1,262 @@
+/*== 根容器 ==*/
+.root {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    background: var(--background);
+    color: var(--foreground);
+}
+
+/*== 根容器：首页 / 博客页透明，背景由子页面 fixed 层提供 ==*/
+.rootTransparent {
+    background: transparent;
+}
+
+/*== 导航栏：首页 / 博客页透明浮顶 ==*/
+.headerHome {
+    z-index: 40;
+    width: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background: transparent;
+    transition: background 0.3s, backdrop-filter 0.3s, -webkit-backdrop-filter 0.3s;
+}
+
+/*== 导航栏：滚动后渐变毛玻璃 ==*/
+.headerScrolled {
+    background: linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--background) 80%, transparent) 0%,
+        transparent
+    );
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+/*== 导航栏：内页吸附 ==*/
+.headerInner {
+    z-index: 40;
+    width: 100%;
+    position: sticky;
+    top: 0;
+    backdrop-filter: blur(16px);
+    transition: background-color 0.2s;
+}
+
+.headerContainer {
+    margin: 0 auto;
+    display: flex;
+    height: 4rem;
+    width: 100%;
+    max-width: 80rem;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.25rem;
+}
+
+@media (min-width: 768px) {
+    .headerContainer {
+        padding: 0 3rem;
+    }
+}
+
+/*== 左侧品牌 ==*/
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    letter-spacing: -0.025em;
+    color: var(--primary);
+    transition: opacity 0.2s;
+}
+
+.brand:hover {
+    opacity: 0.85;
+}
+
+.brandText {
+    display: none;
+}
+
+@media (min-width: 640px) {
+    .brandText {
+        display: inline;
+    }
+}
+
+/*== 右侧区域 ==*/
+.navArea {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/*== 桌面导航 ==*/
+.nav {
+    display: none;
+    align-items: center;
+    gap: 1rem;
+}
+
+@media (min-width: 768px) {
+    .nav {
+        display: flex;
+    }
+}
+
+.navLink {
+    position: relative;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition:
+        color 0.2s,
+        background-color 0.2s;
+}
+
+.navLinkActive {
+    color: var(--primary);
+}
+
+.navLinkInactive {
+    color: var(--muted-foreground);
+}
+
+.navLinkInactive:hover {
+    color: var(--foreground);
+    background: color-mix(in srgb, var(--secondary) 60%, transparent);
+}
+
+.navUnderline {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: var(--primary);
+}
+
+/*== 移动端导航 ==*/
+.mobileNavWrapper {
+    position: relative;
+}
+
+.mobileMenu,
+.mobileClose {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border: 0;
+    background: var(--muted);
+    color: var(--muted-foreground);
+    cursor: pointer;
+    transition:
+        color 0.15s,
+        background-color 0.15s;
+}
+
+.mobileMenu:hover,
+.mobileClose:hover {
+    color: var(--primary);
+    background: var(--primary-subtle);
+}
+
+.mobileMenuOpen {
+    color: var(--primary);
+    background: var(--primary-subtle);
+}
+
+.mobileMenuIcon,
+.mobileCloseIcon {
+    flex-shrink: 0;
+    width: 1rem;
+    height: 1rem;
+}
+
+@media (min-width: 768px) {
+    .mobileNavWrapper {
+        display: none;
+    }
+}
+
+.mobilePanel {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    z-index: 50;
+    width: 10rem;
+    border: 1px solid var(--border);
+    background: var(--popover);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.mobilePanelHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0.5rem 0.375rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.mobilePanelTitle {
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    font-weight: 400;
+    color: var(--foreground);
+}
+
+.mobileNav {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem 0.5rem;
+}
+
+.mobileNavLink {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.5rem 0.625rem;
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    color: var(--foreground);
+    border-left: 2px solid transparent;
+    transition:
+        background-color 0.1s,
+        color 0.1s,
+        border-color 0.1s;
+}
+
+.mobileNavLink:hover {
+    background: var(--highlight);
+}
+
+.mobileNavLinkActive {
+    background: var(--primary-subtle);
+    color: var(--primary);
+    border-left-color: var(--primary);
+}
+
+/*== 主内容区 ==*/
+.main {
+    flex: 1;
+}
+
+/*== 页脚 ==*/
+.footer {
+    background: var(--background);
+    padding: 1.5rem 0;
+    text-align: center;
+}
+
+.footerCopy {
+    font-size: 0.75rem;
+    color: var(--muted-foreground);
+    opacity: 0.7;
+}

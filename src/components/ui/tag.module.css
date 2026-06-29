@@ -1,0 +1,40 @@
+/*== Tag 标签 — 最小可复用单元 ==*/
+.tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.625rem 0.875rem;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    border-radius: var(--radius);
+    border: 1px solid transparent;
+    background: var(--muted);
+    color: var(--muted-foreground);
+}
+
+/* 尺寸变体（仅 non-default，default 已在 .tag 基础样式中） */
+.medium {
+    padding: 0.5rem 0.8125rem;
+    font-size: 0.84375rem;
+}
+
+.small {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.8125rem;
+}
+
+.mini {
+    padding: 0.275rem 0.7rem;
+    font-size: 0.75rem;
+}
+
+/* 颜色变体 */
+.primary {
+    background: var(--primary-subtle-medium);
+    color: var(--primary);
+}
+
+.outlined {
+    border-color: var(--border);
+    color: var(--muted-foreground);
+}

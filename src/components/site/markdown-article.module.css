@@ -1,0 +1,250 @@
+/* =====================================================================
+   MarkdownArticle 排版样式
+   ─────────────────────────────────────────────────────────────────────
+   使用 :global() 选择器覆盖 react-markdown 渲染出的原生 HTML 标签。
+   所有样式限定在 .body 容器内，不影响全局。
+   设计：文人书斋 · 水墨宣纸 · 温润雅致
+   ===================================================================== */
+
+.body {
+    max-width: 42rem;
+    margin: 0 auto;
+    font-size: 1rem;
+    line-height: 1.85;
+    color: var(--foreground);
+}
+
+/*== 标题 ==*/
+.body :global(h1) {
+    margin: 3rem 0 1.5rem;
+    padding-left: 1.5rem;
+    border-left: 4px solid var(--primary);
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--foreground);
+}
+
+.body :global(h2) {
+    margin: 3rem 0 1.5rem;
+    padding-left: 1.5rem;
+    border-left: 4px solid var(--primary);
+    font-family: var(--font-serif);
+    font-size: 1.75rem;
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--foreground);
+}
+
+.body :global(h3) {
+    margin: 2.5rem 0 1rem;
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--foreground);
+}
+
+.body :global(h4) {
+    margin: 2rem 0 0.75rem;
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--foreground);
+}
+
+.body :global(h5),
+.body :global(h6) {
+    margin: 1.5rem 0 0.5rem;
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.6;
+    color: var(--foreground);
+}
+
+/*== 段落 ==*/
+.body :global(p) {
+    margin: 1rem 0;
+    font-size: 1rem;
+    line-height: 1.85;
+    color: var(--foreground);
+}
+
+.body :global(p:first-child) {
+    margin-top: 0;
+}
+
+/*== 引用 ==*/
+.body :global(blockquote) {
+    margin: 1.5rem 0;
+    padding: 1rem 1.25rem;
+    border-left: 2px solid var(--primary);
+    background: var(--muted);
+    font-family: var(--font-serif);
+    font-size: 1.125rem;
+    font-style: italic;
+    line-height: 1.85;
+    color: var(--muted-foreground);
+}
+
+.body :global(blockquote p) {
+    margin: 0.5rem 0;
+    font-size: inherit;
+    color: inherit;
+}
+
+/*== 列表 ==*/
+.body :global(ul),
+.body :global(ol) {
+    margin: 1.5rem 0;
+    padding-left: 1.5rem;
+}
+
+.body :global(ul) {
+    list-style: none;
+}
+
+.body :global(ul > li) {
+    position: relative;
+    padding-left: 1rem;
+}
+
+.body :global(ul > li)::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.7em;
+    width: 5px;
+    height: 5px;
+    background: var(--primary);
+}
+
+.body :global(ol) {
+    list-style: none;
+    counter-reset: md-counter;
+}
+
+.body :global(ol > li) {
+    position: relative;
+    padding-left: 1.5rem;
+    counter-increment: md-counter;
+}
+
+.body :global(ol > li)::before {
+    content: counter(md-counter);
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-family: var(--font-serif);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.body :global(li) {
+    margin: 0.5rem 0;
+    line-height: 1.85;
+}
+
+.body :global(li > ul),
+.body :global(li > ol) {
+    margin: 0.25rem 0;
+}
+
+/*== 代码块 — 由 CodeBlock 组件渲染，此处仅覆盖行内 code 样式 ==*/
+.body :global(code) {
+    padding: 0.125rem 0.375rem;
+    border: 1px solid var(--border);
+    background: var(--muted);
+    font-size: 0.875em;
+    font-family: 'Menlo', 'Consolas', 'Monaco', monospace;
+    color: var(--foreground);
+}
+
+/* 代码块内的 code 不需要行内样式覆盖 */
+.body :global(pre code) {
+    padding: 0;
+    border: none;
+    background: transparent;
+    font-size: inherit;
+    color: inherit;
+}
+
+/*== 链接 ==*/
+.body :global(a) {
+    color: var(--primary);
+    text-decoration: none;
+    border-bottom: 1px solid color-mix(in srgb, var(--primary) 40%, transparent);
+    transition: opacity 0.2s ease;
+}
+
+.body :global(a:hover) {
+    opacity: 0.7;
+}
+
+/*== 图片 ==*/
+.body :global(img) {
+    display: block;
+    max-width: 100%;
+    margin: 2rem 0;
+    border: 1px solid var(--border);
+}
+
+/*== 分隔线 ==*/
+.body :global(hr) {
+    margin: 3rem 0;
+    border: none;
+    border-top: 1px solid var(--border);
+}
+
+/*== 表格 ==*/
+.body :global(table) {
+    width: 100%;
+    margin: 2rem 0;
+    border-collapse: collapse;
+    border: 1px solid var(--border);
+    font-size: 0.9375rem;
+}
+
+.body :global(th) {
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border);
+    background: var(--muted);
+    font-weight: 600;
+    text-align: left;
+    color: var(--foreground);
+}
+
+.body :global(td) {
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border);
+    color: var(--foreground);
+}
+
+.body :global(tr:nth-child(even) td) {
+    background: var(--highlight);
+}
+
+/*== 任务列表（GFM） ==*/
+.body :global(input[type="checkbox"]) {
+    margin-right: 0.5rem;
+    accent-color: var(--primary);
+}
+
+/*== 删除线（GFM） ==*/
+.body :global(del) {
+    color: var(--muted-foreground);
+}
+
+/*== 强调 ==*/
+.body :global(strong) {
+    font-weight: 600;
+    color: var(--foreground);
+}
+
+.body :global(em) {
+    font-style: italic;
+}

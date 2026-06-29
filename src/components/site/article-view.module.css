@@ -1,0 +1,76 @@
+.article {
+    max-width: 56rem;
+    margin: 0 auto;
+}
+
+/* 文章头部 — 封面图+标题+摘要+元信息 */
+.header {
+    margin: 0 auto 2.5rem;
+    padding: 1.5rem 1.25rem;
+}
+
+.headerTitle {
+    font-family: var(--font-serif);
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: var(--foreground);
+    margin: 0 0 0.75rem;
+    line-height: 1.35;
+}
+
+.headerSummary {
+    font-family: var(--font-serif);
+    font-size: 0.9375rem;
+    font-style: italic;
+    line-height: 1.75;
+    color: var(--muted-foreground);
+    margin: 0 0 1rem;
+}
+
+.headerMeta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+    margin-bottom: 0;
+}
+
+.category {
+    display: inline-block;
+    padding: 0.125rem 0.5rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.025em;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    background: var(--primary-subtle-soft);
+}
+
+.tag {
+    display: inline-block;
+    padding: 0.125rem 0.5rem;
+    font-size: 0.75rem;
+    color: var(--muted-foreground);
+    background: var(--secondary);
+}
+
+.date {
+    font-size: 0.75rem;
+    color: var(--muted-foreground);
+    margin-left: auto;
+}
+
+.updatedDate {
+    margin: 5rem auto 0;
+    max-width: 42rem;
+    text-align: right;
+    font-size: 0.75rem;
+    color: var(--muted-foreground);
+}
+
+/* 封面图：头部最顶部，与标题之间留间距 */
+.coverImage {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-bottom: 1rem;
+}

@@ -1,0 +1,21 @@
+{
+    "name": "知简",
+    "short_name": "知简",
+    "description": "简静造物，以代码与文字记录所思所学。",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#fbf9f9",
+    "theme_color": "#fbf9f9",
+    "icons": [
+        {
+            "src": "/images/favicon-32x32.png",
+            "sizes": "32x32",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/apple-touch-icon.png",
+            "sizes": "180x180",
+            "type": "image/png"
+        }
+    ]
+}

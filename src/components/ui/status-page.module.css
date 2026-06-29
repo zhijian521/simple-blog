@@ -1,0 +1,99 @@
+.page {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    z-index: 9999;
+}
+
+/*== 水墨山水背景图 ==*/
+.bg {
+    position: absolute;
+    inset: 0;
+    background-image: url('/images/bg-landscape.webp');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/*== 半透明遮罩层：surface 30% + 微模糊，提升文字可读性 ==*/
+.overlay {
+    position: absolute;
+    inset: 0;
+    background: color-mix(in srgb, var(--background) 30%, transparent);
+    backdrop-filter: blur(2px);
+    pointer-events: none;
+}
+
+/*== 大号水印状态码：超大字号、极低透明度、灰色铺底 ==*/
+.watermark {
+    position: absolute;
+    font-family: var(--font-serif);
+    font-size: clamp(12.5rem, 30vw, 22rem);
+    line-height: 1;
+    font-weight: 700;
+    color: var(--muted-foreground);
+    opacity: 0.1;
+    letter-spacing: -0.04em;
+    pointer-events: none;
+    user-select: none;
+}
+
+/*== 毛玻璃卡片 ==*/
+.card {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2.5rem;
+    max-width: 30rem;
+    width: 100%;
+    padding: 3rem 2.5rem;
+    text-align: center;
+    background: color-mix(in srgb, var(--background) 40%, transparent);
+    backdrop-filter: blur(4px);
+    border: 1px solid color-mix(in srgb, var(--border) 30%, transparent);
+}
+
+.cardBody {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+/*== Logo 图标 ==*/
+.logo {
+    width: 5rem;
+    height: 5rem;
+    object-fit: contain;
+    opacity: 0.8;
+}
+
+/*== 主标题 — 衬线体，诗意长句，朱砂红 ==*/
+.title {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: 1.75rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--primary);
+}
+
+@media (min-width: 768px) {
+    .title {
+        font-size: 2rem;
+    }
+}
+
+/*== 副文 ==*/
+.subtitle {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--muted-foreground);
+}

@@ -1,0 +1,133 @@
+/*== PostCard 文章卡片 ==*/
+.card {
+    display: flex;
+    min-height: 100%;
+    flex-direction: column;
+    border: 1px solid var(--primary);
+    border-radius: var(--radius);
+    background: var(--background);
+    box-shadow: 0 1px 3px rgba(27, 28, 28, 0.04);
+    transition:
+        background-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.card:hover {
+    background: var(--highlight);
+    box-shadow: 0 2px 8px rgba(27, 28, 28, 0.06);
+}
+
+/*== 封面图 + 渐变叠层卡片 ==*/
+.visualCard {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.visualImage {
+    position: relative;
+    height: 14rem;
+    overflow: hidden;
+}
+
+.visualImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 图片底部渐变过渡到背景色 */
+.visualGradient {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40%;
+    background: linear-gradient(
+        to top,
+        var(--background) 0%,
+        transparent 100%
+    );
+    pointer-events: none;
+}
+
+/* 内容区：主体在图片下方，微微上移盖住图片底部 */
+.visualBody {
+    position: relative;
+    z-index: 1;
+    margin-top: -2rem;
+    padding: 2rem 1rem 1.25rem;
+    background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        var(--background) 2rem
+    );
+    transition: background 0.2s ease;
+}
+
+.card:hover .visualBody {
+    background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        var(--highlight) 2rem
+    );
+}
+
+/*== 纯文字卡片内容区 ==*/
+.body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 2rem 1rem;
+}
+
+/*== 通用元素 ==*/
+.metaRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.date {
+    font-size: 0.75rem;
+    line-height: 1.4;
+    color: var(--muted-foreground);
+}
+
+/* 标题最多两行 */
+.title {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    line-height: 1.35;
+    font-weight: 600;
+    color: var(--foreground);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* 摘要最多三行 */
+.summary {
+    flex: 1;
+    margin: 0.75rem 0 1rem;
+    font-size: 1rem;
+    line-height: 1.85;
+    color: var(--muted-foreground);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* 纯文字卡片底部分割线 */
+.divider {
+    border-top: 1px solid var(--primary);
+    opacity: 0.3;
+    margin-top: auto;
+    padding-top: 1rem;
+}

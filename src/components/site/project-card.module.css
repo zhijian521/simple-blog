@@ -1,0 +1,65 @@
+/*== ProjectCard 项目卡片 ==*/
+.card {
+    display: block;
+    border: 1px solid var(--primary);
+    border-radius: var(--radius);
+    background: var(--background);
+    box-shadow: 0 1px 3px rgba(27, 28, 28, 0.04);
+    padding: 1rem;
+    transition:
+        background-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.card:hover {
+    background: var(--highlight);
+    box-shadow: 0 2px 8px rgba(27, 28, 28, 0.06);
+}
+
+.header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.titleRow {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    color: var(--primary);
+}
+
+.title {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    line-height: 1.3;
+    font-weight: 600;
+    color: var(--foreground);
+}
+
+.copy {
+    margin: 0 0 1rem;
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--muted-foreground);
+}
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}

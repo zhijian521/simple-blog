@@ -1,0 +1,65 @@
+.codeBlock {
+    position: relative;
+    margin: 2rem 0;
+    border: 1px solid var(--border);
+    background: var(--muted);
+}
+
+/* 右上角浮动复制按钮 */
+.copyBtn {
+    position: absolute;
+    top: 0.375rem;
+    right: 0.375rem;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    padding: 0;
+    background: var(--background);
+    border: 1px solid var(--border);
+    color: var(--muted-foreground);
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.codeBlock:hover .copyBtn {
+    opacity: 1;
+}
+
+.copyBtn:hover {
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+.copyBtn:focus-visible {
+    opacity: 1;
+    box-shadow: 0 0 0 3px var(--ring-subtle);
+    outline: none;
+}
+
+.copyIcon {
+    width: 0.75rem;
+    height: 0.75rem;
+}
+
+.checkIcon {
+    width: 0.75rem;
+    height: 0.75rem;
+    color: var(--primary);
+}
+
+/* 代码区 */
+.codeArea {
+    display: block;
+    padding: 1rem 1.25rem;
+    overflow-x: auto;
+    line-height: 1.6;
+    font-size: 0.875rem;
+    font-family: 'SF Mono', 'Fira Code', 'Menlo', 'Monaco', 'Consolas', monospace;
+    background: transparent;
+    color: var(--foreground);
+    margin: 0;
+}
