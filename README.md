@@ -22,7 +22,7 @@ npm run build    # 静态导出到 out/
 
 `out/` 目录即可直接部署到任意静态托管（Vercel / GitHub Pages / 对象存储）。
 
-> Node 25 的 dev 模式有 `localStorage` 兼容问题，`npm run dev` 已通过预加载脚本 `scripts/localstorage-guard.js` 处理，无需额外操作。
+> 建议使用 Node 20 LTS 运行。Node 25 的 dev 模式有 `localStorage` 兼容问题，可切换到 Node 20 规避。
 
 ## 写作
 
@@ -65,8 +65,6 @@ simple-blog/
 ├── docs/                # Markdown 文章
 ├── public/              # 静态资源（图片、favicon、manifest）
 │   └── images/
-├── scripts/
-│   └── localstorage-guard.js   # Node 25 dev 兼容补丁
 └── src/
     ├── app/             # 路由页面（首页 / 文章列表 / 文章详情 / 404）
     ├── components/
