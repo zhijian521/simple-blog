@@ -1,0 +1,45 @@
+/*== Dialog 通用弹窗 — 遮罩 + 居中面板，直角边框 ==*/
+
+.overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.panel {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 28rem;
+    margin: 0 1rem;
+    border: 1px solid var(--primary);
+    background: var(--background);
+    padding: 1.5rem;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+}
+
+.title {
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--foreground);
+    margin: 0;
+}
+
+.body {
+    min-width: 0;
+}

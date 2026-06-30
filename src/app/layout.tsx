@@ -10,6 +10,19 @@ export const metadata: Metadata = {
         template: `%s - ${SITE_METADATA.brandTitle}`,
     },
     description: SITE_METADATA.description,
+    keywords: [...SITE_METADATA.keywords],
+    authors: [{ name: SITE_METADATA.author }],
+    creator: SITE_METADATA.author,
+    publisher: SITE_METADATA.author,
+    icons: {
+        icon: [
+            { url: '/favicon.ico', sizes: '32x32' },
+            { url: '/images/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+            { url: '/images/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+        ],
+        apple: [{ url: '/images/apple-touch-icon.png', sizes: '180x180' }],
+    },
+    manifest: '/manifest.json',
     openGraph: {
         type: 'website',
         locale: SITE_METADATA.locale,
@@ -18,6 +31,9 @@ export const metadata: Metadata = {
     },
     twitter: {
         card: 'summary_large_image',
+    },
+    alternates: {
+        canonical: '/',
     },
     robots: { index: true, follow: true },
 };
