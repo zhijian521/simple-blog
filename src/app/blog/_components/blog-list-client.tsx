@@ -211,6 +211,14 @@ export default function BlogListClient({
                                             <span className={styles.itemDate}>{formatPostDate(post.publishedAt)}</span>
                                         </div>
                                     </div>
+                                    {post.coverImage ? (
+                                        <div className={styles.itemCover}>
+                                            <img
+                                                alt={post.altText || post.title}
+                                                src={post.coverImage}
+                                            />
+                                        </div>
+                                    ) : null}
                                 </Link>
                             )) : (
                                 <p style={{ color: 'var(--muted-foreground)', padding: '2rem 0', fontSize: '0.9375rem' }}>

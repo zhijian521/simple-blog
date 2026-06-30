@@ -131,6 +131,13 @@ export default function HomePage() {
                                 title={post.title}
                                 summary={post.summary}
                                 href={`/blog/${post.slug}`}
+                                visual={post.coverImage ? (
+                                    <img
+                                        alt={post.altText || post.title}
+                                        src={post.coverImage}
+                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                    />
+                                ) : undefined}
                             />
                         )) : (
                             <p style={{ color: 'var(--muted-foreground)', fontSize: '0.9375rem' }}>
