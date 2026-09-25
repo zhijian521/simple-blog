@@ -1,33 +1,35 @@
 ---
 import Base from '../../layouts/Base.astro';
 import PostList from '../../components/PostList.astro';
+import Pagination from '../../components/Pagination.astro';
 import { getNotes } from '../../lib/notes.js';
 
 export function getStaticPaths() {
+    const perPage = 10;
     const notes = getNotes();
-    const pages = Math.ceil(notes.length / 6);
-    return Array.from({ length: Math.max(0, pages - 1) }, (_, index) => {
-        const page = index + 2;
+    const pages = Math.max(1, Math.ceil(notes.length / perPage));
+    return Array.from({ length: pages }, (_, index) => {
+        const page = index + 1;
         return {
             params: { page: String(page) },
-            props: { page, pages, posts: notes.slice((page - 1) * 6, page * 6) },
+            props: {
+                page,
+                pages,
+                posts: notes.slice((page - 1) * perPage, page * perPage),
+            },
         };
     });
 }
 
 const { page, pages, posts } = Astro.props;
 ---
-<Base title="归档" path={`/page/${page}/`}>
+<Base title={`归档 · 第 ${page} 页`} path={`/page/${page}/`}>
     <section class="archive">
         <header class="archive__header">
             <h1 class="archive__title">归档</h1>
-            <p class="archive__meta">第 {page} 页，共 {pages} 页</p>
+            {pages > 1 && <p class="archive__meta">第 {page} 页，共 {pages} 页</p>}
         </header>
-        <PostList posts={posts} />
-        <nav class="pagination" aria-label="文章分页">
-            {page > 2 && <a href={`/page/${page - 1}/`}>上一页</a>}
-            <a href="/">返回首页</a>
-            {page < pages && <a href={`/page/${page + 1}/`}>下一页</a>}
-        </nav>
+        <PostList posts={posts} showMeta />
+        {pages > 1 && <Pagination page={page} pages={pages} />}
     </section>
 </Base>

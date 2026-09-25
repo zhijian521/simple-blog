@@ -3,18 +3,18 @@ import Base from '../layouts/Base.astro';
 import PostList from '../components/PostList.astro';
 import { getNotes } from '../lib/notes.js';
 
-const POSTS_ON_HOME = 6;
+const POSTS_ON_HOME = 10;
 
 const projects = [
     {
         title: 'simple-blog',
         description: '一个用来记录笔记、项目和日常思考的个人站点。',
-        href: undefined,
+        href: 'https://github.com/zhijian521/simple-blog',
     },
     {
-        title: '在建项目',
-        description: '在这里补充项目简介和项目地址。',
-        href: undefined,
+        title: 'cesium-example',
+        description: '一个基于 CesiumJS 的三维地球可视化示例集，零依赖、零构建。',
+        href: 'https://github.com/zhijian521/cesium-example',
     },
 ];
 
@@ -32,7 +32,7 @@ const schema = {
 <Base schema={schema}>
     <section class="intro" aria-labelledby="intro-title">
         <h1 class="intro__title" id="intro-title">语无边</h1>
-        <p class="intro__role">开发工程师</p>
+        <p class="intro__role"><span class="intro__sep" aria-hidden="true">·</span>开发工程师</p>
     </section>
 
     <section class="section" aria-labelledby="projects-title">
@@ -58,6 +58,6 @@ const schema = {
     <section class="section" id="notes" aria-labelledby="notes-title">
         <h2 class="section__title" id="notes-title">文章</h2>
         {visibleNotes.length ? <PostList posts={visibleNotes} /> : <p class="empty">还没有文章。</p>}
-        {notes.length > visibleNotes.length && <a class="more-link" href="/page/2/">更多文章</a>}
+        {notes.length > visibleNotes.length && <a class="archive-link" href="/page/1/">归档</a>}
     </section>
 </Base>

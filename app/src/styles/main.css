@@ -12,7 +12,6 @@
     font-size: 15px;
     line-height: 1.75;
     -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
 }
 
 * {
@@ -47,23 +46,33 @@ a:focus-visible {
     width: 100%;
     max-width: var(--width);
     margin: 0 auto;
-    padding: clamp(52px, 11vh, 96px) 24px clamp(60px, 12vh, 112px);
+    padding: clamp(52px, 6rem, 96px) 24px clamp(60px, 7rem, 112px);
     text-align: left;
 }
 
-/* 介绍 */
+/* 介绍：一行显示 语无边 · 开发工程师 */
+.intro {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5em;
+}
+
 .intro__title {
     margin: 0;
-    font-size: clamp(1.5rem, 3.4vw, 1.95rem);
+    font-size: clamp(1.05rem, 2.2vw, 1.28rem);
     font-weight: 400;
-    line-height: 1.35;
+    line-height: 1.4;
     letter-spacing: 0.02em;
 }
 
 .intro__role {
-    margin: 0.6rem 0 0;
+    margin: 0;
     color: var(--color-muted);
-    font-size: 0.88rem;
+    font-size: 0.9rem;
+}
+
+.intro__sep {
+    margin-right: 0.5em;
 }
 
 /* 区块 */
@@ -90,28 +99,45 @@ a:focus-visible {
     padding: 0.65rem 0;
 }
 
+.plain-list__name,
+.entry__title {
+    margin: 0;
+    color: var(--color-text);
+    font-size: 1.04rem;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
 .plain-list__name {
     display: block;
-    font-size: 0.98rem;
-    font-weight: 400;
     text-decoration: none;
+}
+
+a.plain-list__name:hover {
+    text-decoration: underline;
 }
 
 .plain-list__description {
     display: block;
     margin-top: 0.15rem;
     color: var(--color-muted);
-    font-size: 0.85rem;
+    font-size: 0.9rem;
 }
 
-/* 文章列表 */
+/* 文章列表：标题与日期同行，摘要占一行；首页只显示标题 */
 .entry {
-    padding: 0.7rem 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.3rem 1.5rem;
+    align-items: baseline;
+    padding: 0.65rem 0;
 }
 
 .entry__title {
+    grid-column: 1;
     margin: 0;
-    font-size: 0.98rem;
+    color: var(--color-text);
+    font-size: 1.04rem;
     font-weight: 400;
     line-height: 1.5;
 }
@@ -125,25 +151,46 @@ a:focus-visible {
 }
 
 .entry__date {
-    display: block;
-    margin-top: 0.2rem;
+    grid-column: 2;
     color: var(--color-muted);
-    font-size: 0.78rem;
+    font-size: 0.82rem;
     font-variant-numeric: tabular-nums;
+    white-space: nowrap;
 }
 
 .entry__description {
-    margin: 0.3rem 0 0;
+    grid-column: 1 / -1;
+    overflow: hidden;
+    margin: 0;
     color: var(--color-muted);
-    font-size: 0.85rem;
+    font-size: 0.92rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-.more-link {
+/* 保留在 DOM 中但不出现在版面上 */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+.archive-link {
     display: inline-block;
     margin-top: 1.1rem;
     color: var(--color-muted);
     font-size: 0.85rem;
     text-decoration: none;
+}
+
+.archive-link:hover {
+    color: var(--color-accent);
+    text-decoration: underline;
 }
 
 .empty {
@@ -220,11 +267,19 @@ a:focus-visible {
     margin: 1.4rem 0;
 }
 
+/* 正文里的 --- 只作留白，不画线 */
+.prose hr {
+    height: 0;
+    margin: 1.9rem 0;
+    border: 0;
+}
+
 .prose code {
     padding: 2px 5px;
     border-radius: 2px;
     background: #ecece6;
-    font-size: 0.9em;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.88em;
 }
 
 .prose pre {
@@ -232,7 +287,9 @@ a:focus-visible {
     padding: 0.9rem;
     background: #242622;
     color: #f4f4ee;
-    font-size: 0.88rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.84rem;
+    line-height: 1.6;
 }
 
 .prose pre code {
@@ -244,6 +301,43 @@ a:focus-visible {
     margin-left: 0;
     padding-left: 0.9rem;
     color: var(--color-muted);
+}
+
+/* 表格：无边框，靠间距和浅色表头区分 */
+.prose table {
+    width: 100%;
+    margin: 0 0 1rem;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+}
+
+.prose th,
+.prose td {
+    padding: 0.4rem 0.7rem 0.4rem 0;
+    text-align: left;
+    vertical-align: top;
+}
+
+.prose th {
+    color: var(--color-muted);
+    font-weight: 400;
+}
+
+/* 任务清单 */
+.prose li.task {
+    position: relative;
+    list-style: none;
+}
+
+.prose li.task::before {
+    position: absolute;
+    left: -1.35em;
+    color: var(--color-muted);
+    content: "☐";
+}
+
+.prose li.task--done::before {
+    content: "☑";
 }
 
 /* 归档页 */
@@ -267,9 +361,40 @@ a:focus-visible {
 .pagination {
     display: flex;
     flex-wrap: wrap;
-    gap: 1.25rem;
+    align-items: baseline;
+    gap: 1.5rem;
     margin-top: 26px;
     font-size: 0.85rem;
+}
+
+.pagination__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.9rem;
+}
+
+.pagination a {
+    color: var(--color-muted);
+    text-decoration: none;
+}
+
+.pagination a:hover {
+    color: var(--color-accent);
+    text-decoration: underline;
+}
+
+.pagination__current {
+    color: var(--color-text);
+}
+
+@media (max-width: 560px) {
+    .entry {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .entry__date {
+        grid-column: 1;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,6 +1,7 @@
 ---
 import { formatDate } from '../lib/notes.js';
-const { posts } = Astro.props;
+const { posts, showMeta = false } = Astro.props;
+const metaClass = showMeta ? null : 'visually-hidden';
 ---
 <div class="entries">
     {
@@ -9,10 +10,10 @@ const { posts } = Astro.props;
                 <h3 class="entry__title">
                     <a href={post.url}>{post.title}</a>
                 </h3>
-                <time class="entry__date" datetime={post.date}>
+                <time class:list={['entry__date', metaClass]} datetime={post.date}>
                     {formatDate(post.date)}
                 </time>
-                {post.description && <p class="entry__description">{post.description}</p>}
+                {post.description && <p class:list={['entry__description', metaClass]}>{post.description}</p>}
             </article>
         ))
     }

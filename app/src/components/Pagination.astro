@@ -1,0 +1,22 @@
+---
+const { page, pages } = Astro.props;
+const pageUrl = (number) => `/page/${number}/`;
+const numbers = Array.from({ length: pages }, (_, index) => index + 1);
+---
+<nav class="pagination" aria-label="文章分页">
+    {page > 1 && <a class="pagination__step" href={pageUrl(page - 1)}>上一页</a>}
+    <span class="pagination__list">
+        {
+            numbers.map((number) =>
+                number === page ? (
+                    <span class="pagination__current" aria-current="page">
+                        {number}
+                    </span>
+                ) : (
+                    <a href={pageUrl(number)}>{number}</a>
+                ),
+            )
+        }
+    </span>
+    {page < pages && <a class="pagination__step" href={pageUrl(page + 1)}>下一页</a>}
+</nav>
