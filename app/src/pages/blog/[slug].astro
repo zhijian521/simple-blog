@@ -42,7 +42,6 @@ const schema = {
 >
     <article class="article">
         <header class="article__header">
-            <a class="article__back" href="/">返回首页</a>
             <h1 class="article__title">{note.title}</h1>
             <time class="article__date" datetime={note.date}>{formatDate(note.date)}</time>
             {note.description && <p class="article__description">{note.description}</p>}

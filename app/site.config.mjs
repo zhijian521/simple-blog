@@ -10,7 +10,7 @@ import path from "node:path";
 const config = {
     // 部署后的正式域名。用于 canonical、sitemap、RSS 和分享卡片。
     // 末尾不要带斜杠。也可以用环境变量 SITE_URL 覆盖（shell 变量或 app/.env 都可以）。
-    url: "https://example.com",
+    url: "https://yuwb.dev",
 
     // 站点名。会出现在浏览器标题后缀、结构化数据和 RSS 里。
     name: "语无边",
@@ -37,6 +37,12 @@ const config = {
 
     // 内容目录，相对 app/ 定位。
     contentDir: "../docs",
+
+    // 文章所在的子目录（相对 contentDir）
+    postsDir: "blog",
+
+    // 文章地址前缀。文章会生成在 /blog/<slug>/，归档仍在 /page/N/。
+    postsBase: "/blog",
 
     // 首页最多展示多少篇文章（不足则全部展示，并且不显示「归档」入口）
     postsOnHome: 10,

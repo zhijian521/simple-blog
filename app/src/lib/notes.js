@@ -4,8 +4,9 @@ import matter from "gray-matter";
 import MarkdownIt from "markdown-it";
 import config from "../../site.config.mjs";
 
-const notesDir = path.join(config.docsDir, "notes");
+const notesDir = path.join(config.docsDir, config.postsDir);
 const imagesDir = path.join(config.docsDir, "images");
+const postsBase = config.postsBase.replace(/\/+$/, "");
 
 const markdown = new MarkdownIt({ html: true, linkify: true });
 
@@ -191,7 +192,7 @@ export function getNotes() {
             return {
                 file: filename,
                 slug,
-                url: `/notes/${slug}/`,
+                url: `${postsBase}/${slug}/`,
                 title: String(data.title || slug),
                 description: data.description || data.summary,
                 date: readDate(filename, data),

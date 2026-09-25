@@ -2,6 +2,7 @@
     --color-background: #f8f8f5;
     --color-text: #1c1d1b;
     --color-muted: #6b6d66;
+    --color-code: #eeeee7;
     --color-accent: #1f615f;
     --width: 620px;
     --section-gap: 64px;
@@ -202,14 +203,6 @@ a.plain-list__name:hover {
     padding-bottom: 20px;
 }
 
-.article__back {
-    display: inline-block;
-    margin-bottom: 26px;
-    color: var(--color-muted);
-    font-size: 0.82rem;
-    text-decoration: none;
-}
-
 .article__title {
     margin: 0;
     font-size: clamp(1.25rem, 3vw, 1.6rem);
@@ -276,24 +269,26 @@ a.plain-list__name:hover {
 .prose code {
     padding: 2px 5px;
     border-radius: 2px;
-    background: #ecece6;
+    background: var(--color-code);
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     font-size: 0.88em;
 }
 
 .prose pre {
     overflow-x: auto;
-    padding: 0.9rem;
-    background: #242622;
-    color: #f4f4ee;
+    padding: 0.9rem 1rem;
+    background: var(--color-code);
+    color: var(--color-text);
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     font-size: 0.84rem;
-    line-height: 1.6;
+    line-height: 1.7;
 }
 
 .prose pre code {
     padding: 0;
     background: transparent;
+    color: inherit;
+    font-size: inherit;
 }
 
 .prose blockquote {

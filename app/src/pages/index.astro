@@ -42,8 +42,8 @@ const schema = {
         </ul>
     </section>
 
-    <section class="section" id="notes" aria-labelledby="notes-title">
-        <h2 class="section__title" id="notes-title">文章</h2>
+    <section class="section" id="blog" aria-labelledby="blog-title">
+        <h2 class="section__title" id="blog-title">文章</h2>
         {visibleNotes.length ? <PostList posts={visibleNotes} /> : <p class="empty">还没有文章。</p>}
         {notes.length > visibleNotes.length && <a class="archive-link" href="/page/1/">归档</a>}
     </section>

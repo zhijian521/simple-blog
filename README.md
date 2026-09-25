@@ -49,6 +49,8 @@ nvm use
 | `ogImage`                    | 社交分享默认图，放在 `app/public/`，建议 1200×630                              |
 | `favicon` / `appleTouchIcon` | 站点图标，放在 `app/public/`                                                   |
 | `contentDir`                 | 内容目录，相对 `app/`，默认 `../docs`                                          |
+| `postsDir`                   | 文章所在的子目录，相对 `contentDir`，默认 `blog`                               |
+| `postsBase`                  | 文章地址前缀，默认 `/blog`，即文章生成在 `/blog/<slug>/`                       |
 | `postsOnHome`                | 首页最多展示多少篇。文章不超过此数时，首页不显示「归档」入口，也不会生成归档页 |
 | `postsPerArchivePage`        | 归档每页条数                                                                   |
 | `projects`                   | 首页项目列表，每项为 `{ title, description, href }`，`href` 留空则只显示文字   |
@@ -69,7 +71,7 @@ SITE_URL=https://your-domain.com
 
 ## 写文章
 
-文章放在 `docs/notes/`，一篇文章一个 Markdown 文件。文件名或 front matter 里的 `slug` 决定文章地址。
+文章放在 `docs/blog/`，一篇文章一个 Markdown 文件。文件名或 front matter 里的 `slug` 决定文章地址，最终生成在 `/blog/<slug>/`。
 
 ```markdown
 ---
@@ -130,16 +132,18 @@ simple-blog/
 │  ├─ astro.config.mjs      Astro 配置（站点地址、sitemap）
 │  ├─ scripts/sync-media.js 构建前同步 docs 里的图片和视频
 │  ├─ src/
-│  │  ├─ lib/notes.js       读取 docs/notes 并渲染 Markdown
+│  │  ├─ lib/notes.js       读取 docs/blog 并渲染 Markdown
 │  │  ├─ layouts/Base.astro 全站布局与 SEO meta
 │  │  ├─ components/        PostList、Pagination
 │  │  ├─ pages/             首页、文章页、归档页、robots.txt、rss.xml
 │  │  └─ styles/main.css    全站样式
-│  └─ public/               图标与分享图（logo 等）
+│  ├─ assets/logo.png       图标与分享图的源文件（不参与部署）
+│  └─ public/               图标与分享图（会被部署）
 ├─ docs/                    ★ 你的内容
-│  ├─ notes/                Markdown 文章
+│  ├─ blog/                 Markdown 文章
 │  ├─ images/               图片
 │  └─ videos/               视频
+├─ .nvmrc
 └─ .prettierrc.json
 ```
 
