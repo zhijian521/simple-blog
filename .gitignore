@@ -1,11 +1,10 @@
 node_modules/
-.nuxt/
-.output/
-.data/
 .astro/
 dist/
 app/public/*
-!app/public/logo.png
+!app/public/favicon-32.png
+!app/public/apple-touch-icon.png
+!app/public/og.png
 .env
 .env.*
 !.env.example

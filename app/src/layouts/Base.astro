@@ -1,26 +1,57 @@
 ---
-import '../styles/main.css';
+import "../styles/main.css";
+import config, { absoluteUrl } from "../../site.config.mjs";
 
-const SITE_NAME = '语无边';
-const { title = SITE_NAME, description = '语无边的个人站点，记录项目与技术笔记。', path = '/', schema } = Astro.props;
-const siteUrl = (import.meta.env.SITE_URL || 'http://localhost:4321').replace(/\/$/, '');
-const canonical = `${siteUrl}${path}`;
+const {
+    title = config.name,
+    description = config.description,
+    path = "/",
+    schema,
+    image = config.ogImage,
+    type = schema?.["@type"] === "BlogPosting" ? "article" : "website",
+    publishedTime,
+    tags = [],
+} = Astro.props;
+
+const canonical = absoluteUrl(path);
+const ogImage = absoluteUrl(image);
+const isDefaultImage = image === config.ogImage;
+const pageTitle = title === config.name ? title : `${title} · ${config.name}`;
 ---
 <!doctype html>
-<html lang="zh-CN">
+<html lang={config.locale}>
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#f8f8f5" />
-        <link rel="icon" type="image/png" href="/logo.png" />
-        <title>{title === SITE_NAME ? title : `${title} · ${SITE_NAME}`}</title>
+        <meta name="theme-color" content={config.themeColor} />
+        <title>{pageTitle}</title>
         <meta name="description" content={description} />
+        <meta name="robots" content="index, follow, max-image-preview:large" />
         <link rel="canonical" href={canonical} />
-        <meta property="og:type" content={schema?.['@type'] === 'BlogPosting' ? 'article' : 'website'} />
+
+        <link rel="icon" type="image/png" href={config.favicon} />
+        <link rel="apple-touch-icon" href={config.appleTouchIcon} />
+        <link rel="alternate" type="application/rss+xml" title={config.name} href="/rss.xml" />
+
+        <meta property="og:type" content={type} />
+        <meta property="og:site_name" content={config.name} />
+        <meta property="og:locale" content={config.locale.replace("-", "_")} />
         <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />
         <meta property="og:url" content={canonical} />
-        {schema && <script type="application/ld+json" set:html={JSON.stringify(schema).replace(/</g, '\\u003c')} />}
+        <meta property="og:image" content={ogImage} />
+        <meta property="og:image:alt" content={title} />
+        {isDefaultImage && <meta property="og:image:width" content="1200" />}
+        {isDefaultImage && <meta property="og:image:height" content="630" />}
+        {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+        {tags.map((tag) => <meta property="article:tag" content={tag} />)}
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={ogImage} />
+
+        {schema && <script type="application/ld+json" set:html={JSON.stringify(schema).replace(/</g, "\\u003c")} />}
     </head>
     <body>
         <main class="page"><slot /></main>

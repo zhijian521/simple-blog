@@ -1,0 +1,13 @@
+---
+import Base from '../layouts/Base.astro';
+import config from '../../site.config.mjs';
+---
+<Base title="页面未找到" description={`没有找到这个页面。返回 ${config.name} 首页继续浏览。`}>
+    <section class="archive">
+        <header class="archive__header">
+            <h1 class="archive__title">页面未找到</h1>
+            <p class="archive__meta">你访问的页面不存在，或者已经被移动。</p>
+        </header>
+        <a class="archive-link" href="/">返回首页</a>
+    </section>
+</Base>

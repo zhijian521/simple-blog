@@ -3,11 +3,19 @@ import Base from '../../layouts/Base.astro';
 import PostList from '../../components/PostList.astro';
 import Pagination from '../../components/Pagination.astro';
 import { getNotes } from '../../lib/notes.js';
+import config from '../../../site.config.mjs';
 
 export function getStaticPaths() {
-    const perPage = 10;
+    const perPage = config.postsPerArchivePage;
     const notes = getNotes();
-    const pages = Math.max(1, Math.ceil(notes.length / perPage));
+
+    // 首页已经能展示全部文章时，不生成归档页，避免出现没人链接、内容重复的孤岛页面
+    if (notes.length <= config.postsOnHome) {
+        return [];
+    }
+
+    const pages = Math.ceil(notes.length / perPage);
+
     return Array.from({ length: pages }, (_, index) => {
         const page = index + 1;
         return {
@@ -22,14 +30,17 @@ export function getStaticPaths() {
 }
 
 const { page, pages, posts } = Astro.props;
+const title = pages > 1 ? `归档 · 第 ${page} 页` : '归档';
+const description =
+    pages > 1 ? `${config.name}的文章归档，第 ${page} 页，共 ${pages} 页。` : `${config.name}的文章归档。`;
 ---
-<Base title={`归档 · 第 ${page} 页`} path={`/page/${page}/`}>
+<Base title={title} description={description} path={`/page/${page}/`}>
     <section class="archive">
         <header class="archive__header">
             <h1 class="archive__title">归档</h1>
             {pages > 1 && <p class="archive__meta">第 {page} 页，共 {pages} 页</p>}
         </header>
-        <PostList posts={posts} showMeta />
+        <PostList posts={posts} showMeta heading="h2" />
         {pages > 1 && <Pagination page={page} pages={pages} />}
     </section>
 </Base>

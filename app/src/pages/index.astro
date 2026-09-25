@@ -2,44 +2,31 @@
 import Base from '../layouts/Base.astro';
 import PostList from '../components/PostList.astro';
 import { getNotes } from '../lib/notes.js';
-
-const POSTS_ON_HOME = 10;
-
-const projects = [
-    {
-        title: 'simple-blog',
-        description: '一个用来记录笔记、项目和日常思考的个人站点。',
-        href: 'https://github.com/zhijian521/simple-blog',
-    },
-    {
-        title: 'cesium-example',
-        description: '一个基于 CesiumJS 的三维地球可视化示例集，零依赖、零构建。',
-        href: 'https://github.com/zhijian521/cesium-example',
-    },
-];
+import config from '../../site.config.mjs';
 
 const notes = getNotes();
-const visibleNotes = notes.slice(0, POSTS_ON_HOME);
-const siteUrl = (import.meta.env.SITE_URL || 'http://localhost:4321').replace(/\/$/, '');
+const visibleNotes = notes.slice(0, config.postsOnHome);
 const schema = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: '语无边',
-    url: `${siteUrl}/`,
-    description: '语无边的个人站点，记录项目与技术笔记。',
+    name: config.name,
+    url: `${config.url}/`,
+    description: config.description,
+    inLanguage: config.locale,
+    author: { '@type': 'Person', name: config.author },
 };
 ---
 <Base schema={schema}>
     <section class="intro" aria-labelledby="intro-title">
-        <h1 class="intro__title" id="intro-title">语无边</h1>
-        <p class="intro__role"><span class="intro__sep" aria-hidden="true">·</span>开发工程师</p>
+        <h1 class="intro__title" id="intro-title">{config.name}</h1>
+        <p class="intro__role"><span class="intro__sep" aria-hidden="true">·</span>{config.role}</p>
     </section>
 
     <section class="section" aria-labelledby="projects-title">
         <h2 class="section__title" id="projects-title">项目</h2>
         <ul class="plain-list">
             {
-                projects.map((project) => (
+                config.projects.map((project) => (
                     <li class="plain-list__item">
                         {project.href ? (
                             <a class="plain-list__name" href={project.href} target="_blank" rel="noopener noreferrer">

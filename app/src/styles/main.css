@@ -1,8 +1,7 @@
 :root {
     --color-background: #f8f8f5;
     --color-text: #1c1d1b;
-    --color-muted: #7c7e77;
-    --color-line: #e3e4de;
+    --color-muted: #6b6d66;
     --color-accent: #1f615f;
     --width: 620px;
     --section-gap: 64px;
@@ -50,7 +49,7 @@ a:focus-visible {
     text-align: left;
 }
 
-/* 介绍：一行显示 语无边 · 开发工程师 */
+/* 介绍：站点名与身份排在同一行 */
 .intro {
     display: flex;
     align-items: baseline;

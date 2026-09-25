@@ -2,6 +2,9 @@
     "name": "simple-blog",
     "private": true,
     "type": "module",
+    "engines": {
+        "node": ">=22.12.0"
+    },
     "scripts": {
         "predev": "node scripts/sync-media.js",
         "dev": "astro dev",
@@ -10,6 +13,7 @@
         "preview": "astro preview"
     },
     "dependencies": {
+        "@astrojs/sitemap": "^3.6.0",
         "astro": "^7.3.5",
         "gray-matter": "^4.0.3",
         "markdown-it": "^14.1.0"

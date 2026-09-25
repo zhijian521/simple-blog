@@ -1,25 +1,45 @@
 ---
 import Base from '../../layouts/Base.astro';
 import { formatDate, getNotes } from '../../lib/notes.js';
+import config, { absoluteUrl } from '../../../site.config.mjs';
 
 export function getStaticPaths() {
     return getNotes().map((note) => ({ params: { slug: note.slug }, props: { note } }));
 }
 
 const { note } = Astro.props;
-const siteUrl = (import.meta.env.SITE_URL || 'http://localhost:4321').replace(/\/$/, '');
-const description = note.description || `${note.title}，语无边的技术笔记。`;
+const url = absoluteUrl(note.url);
+const description = note.description || `${note.title}，${config.name}的技术笔记。`;
+const cover = note.cover || config.ogImage;
 const schema = {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
     headline: note.title,
     description,
     datePublished: note.date,
-    mainEntityOfPage: `${siteUrl}${note.url}`,
-    author: { '@type': 'Person', name: '语无边' },
+    url,
+    mainEntityOfPage: url,
+    inLanguage: config.locale,
+    author: { '@type': 'Person', name: config.author },
+    publisher: {
+        '@type': 'Organization',
+        name: config.name,
+        logo: { '@type': 'ImageObject', url: absoluteUrl(config.appleTouchIcon) },
+    },
+    image: absoluteUrl(cover),
+    ...(note.tags.length > 0 && { keywords: note.tags.join(', ') }),
+    ...(note.category && { articleSection: note.category }),
 };
 ---
-<Base title={note.title} description={description} path={note.url} schema={schema}>
+<Base
+    title={note.title}
+    description={description}
+    path={note.url}
+    image={cover}
+    schema={schema}
+    publishedTime={note.date}
+    tags={note.tags}
+>
     <article class="article">
         <header class="article__header">
             <a class="article__back" href="/">返回首页</a>

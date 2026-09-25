@@ -1,15 +1,18 @@
 ---
 import { formatDate } from '../lib/notes.js';
-const { posts, showMeta = false } = Astro.props;
+
+// heading 用来匹配所在页面的标题层级：首页是 h2 区块下用 h3，归档页 h1 下用 h2
+const { posts, showMeta = false, heading = 'h3' } = Astro.props;
+const Heading = heading;
 const metaClass = showMeta ? null : 'visually-hidden';
 ---
 <div class="entries">
     {
         posts.map((post) => (
             <article class="entry">
-                <h3 class="entry__title">
+                <Heading class="entry__title">
                     <a href={post.url}>{post.title}</a>
-                </h3>
+                </Heading>
                 <time class:list={['entry__date', metaClass]} datetime={post.date}>
                     {formatDate(post.date)}
                 </time>
