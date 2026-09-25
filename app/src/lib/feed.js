@@ -2,12 +2,7 @@ import config, { absoluteUrl } from "../../site.config.mjs";
 import { getPosts } from "./posts.js";
 
 const escapeXml = (value) =>
-    String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&apos;");
+    String(value).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
 
 export function buildFeed() {
     const posts = getPosts();

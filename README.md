@@ -55,15 +55,15 @@ nvm use
 | `postsPerArchivePage`        | 归档每页条数                                                                   |
 | `projects`                   | 首页项目列表，每项为 `{ title, description, href }`，`href` 留空则只显示文字   |
 
-站点域名也可以用环境变量覆盖，便于同一份代码在不同环境构建。两种写法都支持：
+站点域名也可以用环境变量覆盖，便于同一份代码在不同环境构建：
 
 ```bash
-# 方式一：shell 环境变量
 SITE_URL=https://your-domain.com npm run build
 ```
 
+也可以写在 `app/.env` 里（Astro 会自动读取）：
+
 ```bash
-# 方式二：在 app/ 下建 .env（可参考 app/.env.example）
 SITE_URL=https://your-domain.com
 ```
 

@@ -9,4 +9,3 @@ app/public/*
 !app/public/og.png
 .env
 .env.*
-!.env.example

@@ -108,32 +108,9 @@ const config = {
 // 这样即使 Astro 打包改写了模块位置，路径依然稳定。
 const appDir = process.cwd();
 
-// Astro 要等配置加载完才注入 .env，这里自己读一次，保证 app/.env 里的 SITE_URL 生效。
-const readEnvFile = (file) => {
-    if (!fs.existsSync(file)) {
-        return {};
-    }
-
-    return Object.fromEntries(
-        fs
-            .readFileSync(file, "utf8")
-            .split("\n")
-            .map((line) => line.trim())
-            .filter((line) => line && !line.startsWith("#") && line.includes("="))
-            .map((line) => {
-                const index = line.indexOf("=");
-                return [
-                    line.slice(0, index).trim(),
-                    line
-                        .slice(index + 1)
-                        .trim()
-                        .replace(/^["']|["']$/g, ""),
-                ];
-            }),
-    );
-};
-
-const url = (process.env.SITE_URL || readEnvFile(path.join(appDir, ".env")).SITE_URL || config.url).replace(/\/+$/, "");
+// 域名优先取环境变量，便于同一份代码在不同环境构建。
+// shell 变量和 app/.env 都可以：Astro 会在配置求值之前把 .env 注入 process.env。
+const url = (process.env.SITE_URL || config.url).replace(/\/+$/, "");
 
 // 用字符串拼接生成绝对地址，而不是 new URL()：部署在子路径
 // （例如 https://name.github.io/blog）时前者才不会丢掉前缀。

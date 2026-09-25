@@ -1,23 +1,22 @@
 ---
-import { formatDate } from '../lib/posts.js';
+import { formatDate } from "../lib/posts.js";
 
 // heading 用来匹配所在页面的标题层级：首页是 h2 区块下用 h3，归档页 h1 下用 h2
-const { posts, showMeta = false, heading = 'h3' } = Astro.props;
+const { posts, showMeta = false, heading = "h3" } = Astro.props;
 const Heading = heading;
-const metaClass = showMeta ? null : 'visually-hidden';
+const metaClass = showMeta ? null : "visually-hidden";
 ---
+
 <div class="entries">
-    {
-        posts.map((post) => (
-            <article class="entry">
-                <Heading class="entry__title">
-                    <a href={post.url}>{post.title}</a>
-                </Heading>
-                <time class:list={['entry__date', metaClass]} datetime={post.date}>
-                    {formatDate(post.date)}
-                </time>
-                {post.description && <p class:list={['entry__description', metaClass]}>{post.description}</p>}
-            </article>
-        ))
-    }
+    {posts.map((post) => (
+        <article class="entry">
+            <Heading class="entry__title">
+                <a href={post.url}>{post.title}</a>
+            </Heading>
+            <time class:list={["entry__date", metaClass]} datetime={post.date}>
+                {formatDate(post.date)}
+            </time>
+            {post.description && <p class:list={["entry__description", metaClass]}>{post.description}</p>}
+        </article>
+    ))}
 </div>

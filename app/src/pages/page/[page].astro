@@ -1,9 +1,9 @@
 ---
-import Base from '../../layouts/Base.astro';
-import PostList from '../../components/PostList.astro';
-import Pagination from '../../components/Pagination.astro';
-import { getPosts } from '../../lib/posts.js';
-import config from '../../../site.config.mjs';
+import Base from "../../layouts/Base.astro";
+import PostList from "../../components/PostList.astro";
+import Pagination from "../../components/Pagination.astro";
+import { getPosts } from "../../lib/posts.js";
+import config from "../../../site.config.mjs";
 
 export function getStaticPaths() {
     const perPage = config.postsPerArchivePage;
@@ -30,15 +30,19 @@ export function getStaticPaths() {
 }
 
 const { page, pages, posts } = Astro.props;
-const title = pages > 1 ? `归档 · 第 ${page} 页` : '归档';
-const description =
-    pages > 1 ? `第 ${page} 页，共 ${pages} 页。${config.blogDescription}` : config.blogDescription;
+const title = pages > 1 ? `归档 · 第 ${page} 页` : "归档";
+const description = pages > 1 ? `第 ${page} 页，共 ${pages} 页。${config.blogDescription}` : config.blogDescription;
 ---
+
 <Base title={title} description={description} path={`/page/${page}/`}>
     <section class="archive">
         <header class="archive__header">
             <h1 class="archive__title">归档</h1>
-            {pages > 1 && <p class="archive__meta">第 {page} 页，共 {pages} 页</p>}
+            {pages > 1 && (
+                <p class="archive__meta">
+                    第 {page} 页，共 {pages} 页
+                </p>
+            )}
         </header>
         <PostList posts={posts} showMeta heading="h2" />
         {pages > 1 && <Pagination page={page} pages={pages} />}

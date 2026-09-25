@@ -1,27 +1,27 @@
 ---
-import Base from '../layouts/Base.astro';
-import PostList from '../components/PostList.astro';
-import { getPosts } from '../lib/posts.js';
-import config, { absoluteUrl } from '../../site.config.mjs';
+import Base from "../layouts/Base.astro";
+import PostList from "../components/PostList.astro";
+import { getPosts } from "../lib/posts.js";
+import config, { absoluteUrl } from "../../site.config.mjs";
 
 const posts = getPosts();
 const visiblePosts = posts.slice(0, config.postsOnHome);
 const siteUrl = `${config.url}/`;
 
 const schema = {
-    '@context': 'https://schema.org',
-    '@graph': [
+    "@context": "https://schema.org",
+    "@graph": [
         {
-            '@type': 'WebSite',
-            '@id': `${siteUrl}#website`,
+            "@type": "WebSite",
+            "@id": `${siteUrl}#website`,
             url: siteUrl,
             name: config.name,
             description: config.description,
             inLanguage: config.locale,
         },
         {
-            '@type': 'Person',
-            '@id': `${siteUrl}#author`,
+            "@type": "Person",
+            "@id": `${siteUrl}#author`,
             name: config.author,
             url: siteUrl,
             description: `${config.authorTagline}。${config.authorBio}`,
@@ -29,22 +29,22 @@ const schema = {
             knowsAbout: config.keywords,
         },
         {
-            '@type': 'CollectionPage',
-            '@id': `${siteUrl}#home`,
+            "@type": "CollectionPage",
+            "@id": `${siteUrl}#home`,
             url: siteUrl,
             name: config.name,
             description: config.description,
-            isPartOf: { '@id': `${siteUrl}#website` },
-            about: { '@id': `${siteUrl}#author` },
+            isPartOf: { "@id": `${siteUrl}#website` },
+            about: { "@id": `${siteUrl}#author` },
         },
         {
-            '@type': 'ItemList',
-            '@id': `${siteUrl}#latest-posts`,
+            "@type": "ItemList",
+            "@id": `${siteUrl}#latest-posts`,
             name: `${config.name}最新文章`,
-            itemListOrder: 'https://schema.org/ItemListOrderDescending',
+            itemListOrder: "https://schema.org/ItemListOrderDescending",
             numberOfItems: visiblePosts.length,
             itemListElement: visiblePosts.map((post, index) => ({
-                '@type': 'ListItem',
+                "@type": "ListItem",
                 position: index + 1,
                 url: absoluteUrl(post.url),
                 name: post.title,
@@ -54,35 +54,49 @@ const schema = {
     ],
 };
 ---
+
 <Base schema={schema}>
     <section class="intro" aria-labelledby="intro-title">
-        <h1 class="intro__title" id="intro-title">{config.name}</h1>
-        <p class="intro__role"><span class="intro__sep" aria-hidden="true">·</span>{config.role}</p>
+        <h1 class="intro__title" id="intro-title">
+            {config.name}
+        </h1>
+        <p class="intro__role">
+            <span class="intro__sep" aria-hidden="true">
+                ·
+            </span>
+            {config.role}
+        </p>
     </section>
 
     <section class="section" aria-labelledby="projects-title">
-        <h2 class="section__title" id="projects-title">项目</h2>
+        <h2 class="section__title" id="projects-title">
+            项目
+        </h2>
         <ul class="plain-list">
-            {
-                config.projects.map((project) => (
-                    <li class="plain-list__item">
-                        {project.href ? (
-                            <a class="plain-list__name" href={project.href} target="_blank" rel="noopener noreferrer">
-                                {project.title}
-                            </a>
-                        ) : (
-                            <span class="plain-list__name">{project.title}</span>
-                        )}
-                        <span class="plain-list__description">{project.description}</span>
-                    </li>
-                ))
-            }
+            {config.projects.map((project) => (
+                <li class="plain-list__item">
+                    {project.href ? (
+                        <a class="plain-list__name" href={project.href} target="_blank" rel="noopener noreferrer">
+                            {project.title}
+                        </a>
+                    ) : (
+                        <span class="plain-list__name">{project.title}</span>
+                    )}
+                    <span class="plain-list__description">{project.description}</span>
+                </li>
+            ))}
         </ul>
     </section>
 
     <section class="section" id="blog" aria-labelledby="blog-title">
-        <h2 class="section__title" id="blog-title">文章</h2>
+        <h2 class="section__title" id="blog-title">
+            文章
+        </h2>
         {visiblePosts.length ? <PostList posts={visiblePosts} /> : <p class="empty">还没有文章。</p>}
-        {posts.length > visiblePosts.length && <a class="archive-link" href="/page/1/">归档</a>}
+        {posts.length > visiblePosts.length && (
+            <a class="archive-link" href="/page/1/">
+                归档
+            </a>
+        )}
     </section>
 </Base>

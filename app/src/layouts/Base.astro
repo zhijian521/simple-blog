@@ -20,6 +20,7 @@ const isDefaultImage = image === config.ogImage;
 const pageTitle = title === config.name ? title : `${title} · ${config.name}`;
 const metaKeywords = [...new Set([...keywords, ...config.keywords])];
 ---
+
 <!doctype html>
 <html lang={config.locale}>
     <head>
@@ -51,7 +52,9 @@ const metaKeywords = [...new Set([...keywords, ...config.keywords])];
         {isDefaultImage && <meta property="og:image:width" content="1200" />}
         {isDefaultImage && <meta property="og:image:height" content="630" />}
         {publishedTime && <meta property="article:published_time" content={publishedTime} />}
-        {tags.map((tag) => <meta property="article:tag" content={tag} />)}
+        {tags.map((tag) => (
+            <meta property="article:tag" content={tag} />
+        ))}
 
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={title} />
@@ -61,6 +64,8 @@ const metaKeywords = [...new Set([...keywords, ...config.keywords])];
         {schema && <script type="application/ld+json" set:html={JSON.stringify(schema).replace(/</g, "\\u003c")} />}
     </head>
     <body>
-        <main class="page"><slot /></main>
+        <main class="page">
+            <slot />
+        </main>
     </body>
 </html>

@@ -14,9 +14,7 @@ const markdown = new MarkdownIt({ html: true, linkify: true });
 // 以正文出现的最小标题级别为基准，把它降到 h2，其余同级位移，
 // 这样用 # 开头的文章和用 ## 开头的文章都会得到 h2 → h3 的连续层级。
 markdown.core.ruler.push("normalize_heading_level", (state) => {
-    const levels = state.tokens
-        .filter((token) => token.type === "heading_open")
-        .map((token) => Number(token.tag.slice(1)));
+    const levels = state.tokens.filter((token) => token.type === "heading_open").map((token) => Number(token.tag.slice(1)));
 
     if (levels.length === 0) {
         return;

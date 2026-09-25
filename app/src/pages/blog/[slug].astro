@@ -1,7 +1,7 @@
 ---
-import Base from '../../layouts/Base.astro';
-import { formatDate, getPosts } from '../../lib/posts.js';
-import config, { absoluteUrl } from '../../../site.config.mjs';
+import Base from "../../layouts/Base.astro";
+import { formatDate, getPosts } from "../../lib/posts.js";
+import config, { absoluteUrl } from "../../../site.config.mjs";
 
 export function getStaticPaths() {
     return getPosts().map((post) => ({ params: { slug: post.slug }, props: { post } }));
@@ -19,60 +19,61 @@ const wordCount = plainText.length;
 const readingMinutes = Math.max(1, Math.ceil(wordCount / 450));
 
 const schema = {
-    '@context': 'https://schema.org',
-    '@graph': [
+    "@context": "https://schema.org",
+    "@graph": [
         {
-            '@type': 'WebSite',
-            '@id': `${siteUrl}#website`,
+            "@type": "WebSite",
+            "@id": `${siteUrl}#website`,
             url: siteUrl,
             name: config.name,
             description: config.description,
             inLanguage: config.locale,
         },
         {
-            '@type': 'Person',
-            '@id': `${siteUrl}#author`,
+            "@type": "Person",
+            "@id": `${siteUrl}#author`,
             name: config.author,
             url: siteUrl,
         },
         {
-            '@type': 'Organization',
-            '@id': `${siteUrl}#publisher`,
+            "@type": "Organization",
+            "@id": `${siteUrl}#publisher`,
             name: config.name,
             url: siteUrl,
-            logo: { '@type': 'ImageObject', url: absoluteUrl(config.appleTouchIcon) },
+            logo: { "@type": "ImageObject", url: absoluteUrl(config.appleTouchIcon) },
         },
         {
-            '@type': 'BreadcrumbList',
-            '@id': `${canonical}#breadcrumb`,
+            "@type": "BreadcrumbList",
+            "@id": `${canonical}#breadcrumb`,
             itemListElement: [
-                { '@type': 'ListItem', position: 1, name: config.name, item: siteUrl },
-                { '@type': 'ListItem', position: 2, name: post.title, item: canonical },
+                { "@type": "ListItem", position: 1, name: config.name, item: siteUrl },
+                { "@type": "ListItem", position: 2, name: post.title, item: canonical },
             ],
         },
         {
-            '@type': 'BlogPosting',
-            '@id': `${canonical}#article`,
+            "@type": "BlogPosting",
+            "@id": `${canonical}#article`,
             headline: post.title,
             description,
             image: absoluteUrl(cover),
             datePublished: post.date,
-            author: { '@id': `${siteUrl}#author` },
-            publisher: { '@id': `${siteUrl}#publisher` },
+            author: { "@id": `${siteUrl}#author` },
+            publisher: { "@id": `${siteUrl}#publisher` },
             mainEntityOfPage: {
-                '@type': 'WebPage',
-                '@id': canonical,
-                isPartOf: { '@id': `${siteUrl}#website` },
+                "@type": "WebPage",
+                "@id": canonical,
+                isPartOf: { "@id": `${siteUrl}#website` },
             },
             inLanguage: config.locale,
             timeRequired: `PT${readingMinutes}M`,
             wordCount,
-            ...(post.tags.length > 0 && { keywords: post.tags.join(', ') }),
+            ...(post.tags.length > 0 && { keywords: post.tags.join(", ") }),
             ...(post.category && { articleSection: post.category }),
         },
     ],
 };
 ---
+
 <Base
     title={post.title}
     description={description}
@@ -87,7 +88,9 @@ const schema = {
     <article class="article">
         <header class="article__header">
             <h1 class="article__title">{post.title}</h1>
-            <time class="article__date" datetime={post.date}>{formatDate(post.date)}</time>
+            <time class="article__date" datetime={post.date}>
+                {formatDate(post.date)}
+            </time>
             {post.description && <p class="article__description">{post.description}</p>}
         </header>
         <div class="prose" set:html={post.html} />
