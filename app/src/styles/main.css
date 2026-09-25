@@ -200,35 +200,38 @@ a.plain-list__name:hover {
 
 /* 文章页 */
 .article__header {
-    padding-bottom: 20px;
+    padding-bottom: 30px;
 }
 
 .article__title {
     margin: 0;
-    font-size: clamp(1.25rem, 3vw, 1.6rem);
+    font-size: clamp(1.3rem, 3.2vw, 1.7rem);
     font-weight: 400;
-    line-height: 1.4;
+    line-height: 1.45;
     letter-spacing: 0.01em;
 }
 
 .article__date {
     display: block;
-    margin-top: 0.5rem;
+    margin-top: 0.9rem;
     color: var(--color-muted);
     font-size: 0.78rem;
     font-variant-numeric: tabular-nums;
 }
 
 .article__description {
-    margin: 0.9rem 0 0;
+    margin: 1.2rem 0 0;
     color: var(--color-muted);
-    font-size: 0.88rem;
+    font-size: 0.9rem;
+    line-height: 1.8;
 }
 
+/* 正文：中文长文，行高和段间距给足，避免内容一多就显挤 */
 .prose {
-    margin-top: 26px;
+    margin-top: 40px;
     text-align: left;
-    font-size: 0.95rem;
+    font-size: 1rem;
+    line-height: 1.9;
 }
 
 .prose :first-child {
@@ -238,17 +241,48 @@ a.plain-list__name:hover {
 .prose h2,
 .prose h3,
 .prose h4 {
-    margin: 2rem 0 0.6rem;
-    font-size: 1.02rem;
     font-weight: 400;
     line-height: 1.5;
+}
+
+.prose h2 {
+    margin: 3rem 0 1.1rem;
+    font-size: 1.18rem;
+}
+
+.prose h3 {
+    margin: 2.4rem 0 1rem;
+    font-size: 1.06rem;
+}
+
+.prose h4 {
+    margin: 2rem 0 0.9rem;
+    color: var(--color-muted);
+    font-size: 1rem;
 }
 
 .prose p,
 .prose ul,
 .prose ol,
-.prose blockquote {
-    margin: 0 0 0.9rem;
+.prose blockquote,
+.prose table,
+.prose pre {
+    margin: 0 0 1.5rem;
+}
+
+.prose ul,
+.prose ol {
+    padding-left: 1.5em;
+}
+
+.prose li + li {
+    margin-top: 0.5rem;
+}
+
+.prose li > ul,
+.prose li > ol {
+    margin-top: 0.5rem;
+    margin-bottom: 0;
 }
 
 .prose img,
@@ -256,18 +290,18 @@ a.plain-list__name:hover {
     display: block;
     max-width: 100%;
     height: auto;
-    margin: 1.4rem 0;
+    margin: 2.2rem 0;
 }
 
 /* 正文里的 --- 只作留白，不画线 */
 .prose hr {
     height: 0;
-    margin: 1.9rem 0;
+    margin: 3rem 0;
     border: 0;
 }
 
 .prose code {
-    padding: 2px 5px;
+    padding: 2px 6px;
     border-radius: 2px;
     background: var(--color-code);
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
@@ -276,12 +310,12 @@ a.plain-list__name:hover {
 
 .prose pre {
     overflow-x: auto;
-    padding: 0.9rem 1rem;
+    padding: 1.1rem 1.2rem;
     background: var(--color-code);
     color: var(--color-text);
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-    font-size: 0.84rem;
-    line-height: 1.7;
+    font-size: 0.86rem;
+    line-height: 1.75;
 }
 
 .prose pre code {
@@ -292,22 +326,21 @@ a.plain-list__name:hover {
 }
 
 .prose blockquote {
-    margin-left: 0;
-    padding-left: 0.9rem;
+    padding-left: 1.1em;
     color: var(--color-muted);
 }
 
 /* 表格：无边框，靠间距和浅色表头区分 */
 .prose table {
     width: 100%;
-    margin: 0 0 1rem;
     border-collapse: collapse;
-    font-size: 0.88rem;
+    font-size: 0.9rem;
+    line-height: 1.7;
 }
 
 .prose th,
 .prose td {
-    padding: 0.4rem 0.7rem 0.4rem 0;
+    padding: 0.6rem 1rem 0.6rem 0;
     text-align: left;
     vertical-align: top;
 }
@@ -325,7 +358,7 @@ a.plain-list__name:hover {
 
 .prose li.task::before {
     position: absolute;
-    left: -1.35em;
+    left: -1.4em;
     color: var(--color-muted);
     content: "☐";
 }
