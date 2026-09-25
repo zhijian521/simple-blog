@@ -330,6 +330,14 @@ a.plain-list__name:hover {
     color: var(--color-muted);
 }
 
+.prose blockquote p {
+    margin: 0 0 0.4rem;
+}
+
+.prose blockquote p:last-child {
+    margin-bottom: 0;
+}
+
 /* 表格：无边框，靠间距和浅色表头区分 */
 .prose table {
     width: 100%;
