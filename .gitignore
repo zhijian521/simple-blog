@@ -3,6 +3,8 @@ node_modules/
 dist/
 app/public/*
 !app/public/favicon-32.png
+!app/public/favicon-16.png
+!app/public/favicon.ico
 !app/public/apple-touch-icon.png
 !app/public/og.png
 .env

@@ -32,7 +32,7 @@ export function getStaticPaths() {
 const { page, pages, posts } = Astro.props;
 const title = pages > 1 ? `归档 · 第 ${page} 页` : '归档';
 const description =
-    pages > 1 ? `${config.name}的文章归档，第 ${page} 页，共 ${pages} 页。` : `${config.name}的文章归档。`;
+    pages > 1 ? `第 ${page} 页，共 ${pages} 页。${config.blogDescription}` : config.blogDescription;
 ---
 <Base title={title} description={description} path={`/page/${page}/`}>
     <section class="archive">

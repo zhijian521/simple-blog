@@ -8,15 +8,17 @@ const {
     path = "/",
     schema,
     image = config.ogImage,
-    type = schema?.["@type"] === "BlogPosting" ? "article" : "website",
+    type = "website",
     publishedTime,
     tags = [],
+    keywords = [],
 } = Astro.props;
 
 const canonical = absoluteUrl(path);
 const ogImage = absoluteUrl(image);
 const isDefaultImage = image === config.ogImage;
 const pageTitle = title === config.name ? title : `${title} · ${config.name}`;
+const metaKeywords = [...new Set([...keywords, ...config.keywords])];
 ---
 <!doctype html>
 <html lang={config.locale}>
@@ -26,11 +28,16 @@ const pageTitle = title === config.name ? title : `${title} · ${config.name}`;
         <meta name="theme-color" content={config.themeColor} />
         <title>{pageTitle}</title>
         <meta name="description" content={description} />
+        {metaKeywords.length > 0 && <meta name="keywords" content={metaKeywords.join(", ")} />}
+        <meta name="author" content={config.author} />
         <meta name="robots" content="index, follow, max-image-preview:large" />
         <link rel="canonical" href={canonical} />
 
-        <link rel="icon" type="image/png" href={config.favicon} />
-        <link rel="apple-touch-icon" href={config.appleTouchIcon} />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" type="image/png" sizes="32x32" href={config.favicon} />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href={config.appleTouchIcon} />
+        <link rel="manifest" href="/manifest.json" />
         <link rel="alternate" type="application/rss+xml" title={config.name} href="/rss.xml" />
 
         <meta property="og:type" content={type} />

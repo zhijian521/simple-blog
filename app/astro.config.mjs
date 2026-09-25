@@ -1,7 +1,8 @@
 import path from "node:path";
 import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
-import config from "./site.config.mjs";
+import config, { absoluteUrl } from "./site.config.mjs";
+import { getPosts } from "./src/lib/posts.js";
 
 if (config.url.includes("example.com")) {
     console.warn("[site.config.mjs] 还没有填写正式域名（url）。canonical、sitemap、RSS 会使用占位域名，部署前请修改。");
@@ -27,11 +28,29 @@ const watchContent = {
     },
 };
 
+// sitemap 的 lastmod 取文章本身的时间：首页与归档页用最新文章日期。
+// changefreq 与 priority 已被 Google/Bing 忽略，这里不再输出。
+const posts = getPosts();
+const postDates = new Map(posts.map((post) => [absoluteUrl(post.url), post.date]));
+const latestDate = posts[0]?.date;
+
 export default defineConfig({
     site: config.url,
     trailingSlash: "always",
     output: "static",
-    integrations: [sitemap()],
+    integrations: [
+        sitemap({
+            serialize(item) {
+                const date = postDates.get(item.url) || latestDate;
+
+                if (date) {
+                    item.lastmod = new Date(`${date}T00:00:00Z`).toISOString();
+                }
+
+                return item;
+            },
+        }),
+    ],
     vite: {
         plugins: [watchContent],
     },

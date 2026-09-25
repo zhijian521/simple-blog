@@ -2,18 +2,56 @@
 import Base from '../layouts/Base.astro';
 import PostList from '../components/PostList.astro';
 import { getPosts } from '../lib/posts.js';
-import config from '../../site.config.mjs';
+import config, { absoluteUrl } from '../../site.config.mjs';
 
 const posts = getPosts();
 const visiblePosts = posts.slice(0, config.postsOnHome);
+const siteUrl = `${config.url}/`;
+
 const schema = {
     '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: config.name,
-    url: `${config.url}/`,
-    description: config.description,
-    inLanguage: config.locale,
-    author: { '@type': 'Person', name: config.author },
+    '@graph': [
+        {
+            '@type': 'WebSite',
+            '@id': `${siteUrl}#website`,
+            url: siteUrl,
+            name: config.name,
+            description: config.description,
+            inLanguage: config.locale,
+        },
+        {
+            '@type': 'Person',
+            '@id': `${siteUrl}#author`,
+            name: config.author,
+            url: siteUrl,
+            description: `${config.authorTagline}。${config.authorBio}`,
+            sameAs: [config.github],
+            knowsAbout: config.keywords,
+        },
+        {
+            '@type': 'CollectionPage',
+            '@id': `${siteUrl}#home`,
+            url: siteUrl,
+            name: config.name,
+            description: config.description,
+            isPartOf: { '@id': `${siteUrl}#website` },
+            about: { '@id': `${siteUrl}#author` },
+        },
+        {
+            '@type': 'ItemList',
+            '@id': `${siteUrl}#latest-posts`,
+            name: `${config.name}最新文章`,
+            itemListOrder: 'https://schema.org/ItemListOrderDescending',
+            numberOfItems: visiblePosts.length,
+            itemListElement: visiblePosts.map((post, index) => ({
+                '@type': 'ListItem',
+                position: index + 1,
+                url: absoluteUrl(post.url),
+                name: post.title,
+                ...(post.description && { description: post.description }),
+            })),
+        },
+    ],
 };
 ---
 <Base schema={schema}>

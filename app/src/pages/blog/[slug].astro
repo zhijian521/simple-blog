@@ -8,30 +8,82 @@ export function getStaticPaths() {
 }
 
 const { post } = Astro.props;
-const url = absoluteUrl(post.url);
+const canonical = absoluteUrl(post.url);
+const siteUrl = `${config.url}/`;
 const description = post.description || `${post.title}，${config.name}的技术笔记。`;
 const cover = post.cover || config.ogImage;
+
+// 正文词数按字符计（中文场景与旧站一致），阅读时长按每分钟 450 字估算
+const plainText = post.html.replace(/<[^>]+>/g, "").replace(/\s+/g, "");
+const wordCount = plainText.length;
+const readingMinutes = Math.max(1, Math.ceil(wordCount / 450));
+
 const schema = {
     '@context': 'https://schema.org',
-    '@type': 'BlogPosting',
-    headline: post.title,
-    description,
-    datePublished: post.date,
-    url,
-    mainEntityOfPage: url,
-    inLanguage: config.locale,
-    author: { '@type': 'Person', name: config.author },
-    publisher: {
-        '@type': 'Organization',
-        name: config.name,
-        logo: { '@type': 'ImageObject', url: absoluteUrl(config.appleTouchIcon) },
-    },
-    image: absoluteUrl(cover),
-    ...(post.tags.length > 0 && { keywords: post.tags.join(', ') }),
-    ...(post.category && { articleSection: post.category }),
+    '@graph': [
+        {
+            '@type': 'WebSite',
+            '@id': `${siteUrl}#website`,
+            url: siteUrl,
+            name: config.name,
+            description: config.description,
+            inLanguage: config.locale,
+        },
+        {
+            '@type': 'Person',
+            '@id': `${siteUrl}#author`,
+            name: config.author,
+            url: siteUrl,
+        },
+        {
+            '@type': 'Organization',
+            '@id': `${siteUrl}#publisher`,
+            name: config.name,
+            url: siteUrl,
+            logo: { '@type': 'ImageObject', url: absoluteUrl(config.appleTouchIcon) },
+        },
+        {
+            '@type': 'BreadcrumbList',
+            '@id': `${canonical}#breadcrumb`,
+            itemListElement: [
+                { '@type': 'ListItem', position: 1, name: config.name, item: siteUrl },
+                { '@type': 'ListItem', position: 2, name: post.title, item: canonical },
+            ],
+        },
+        {
+            '@type': 'BlogPosting',
+            '@id': `${canonical}#article`,
+            headline: post.title,
+            description,
+            image: absoluteUrl(cover),
+            datePublished: post.date,
+            author: { '@id': `${siteUrl}#author` },
+            publisher: { '@id': `${siteUrl}#publisher` },
+            mainEntityOfPage: {
+                '@type': 'WebPage',
+                '@id': canonical,
+                isPartOf: { '@id': `${siteUrl}#website` },
+            },
+            inLanguage: config.locale,
+            timeRequired: `PT${readingMinutes}M`,
+            wordCount,
+            ...(post.tags.length > 0 && { keywords: post.tags.join(', ') }),
+            ...(post.category && { articleSection: post.category }),
+        },
+    ],
 };
 ---
-<Base title={post.title} description={description} path={post.url} image={cover} schema={schema} publishedTime={post.date} tags={post.tags}>
+<Base
+    title={post.title}
+    description={description}
+    path={post.url}
+    image={cover}
+    type="article"
+    schema={schema}
+    publishedTime={post.date}
+    tags={post.tags}
+    keywords={[...post.tags, ...(post.category ? [post.category] : [])]}
+>
     <article class="article">
         <header class="article__header">
             <h1 class="article__title">{post.title}</h1>
