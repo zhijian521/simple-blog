@@ -7,13 +7,14 @@ category: 项目实战
 tags: [CesiumJS, WebGL, 三维可视化, 前端开发]
 publishedAt: 2026-06-28 12:00:00
 coverImage: images/cover-48.webp
+
 ---
 
 ## 项目缘起
 
 三维地球可视化一直是前端领域最酷的技术方向之一。CesiumJS 作为最成熟的开源三维地球引擎，功能强大但上手门槛不低——API 繁多、概念复杂，新手往往不知从何入手。
 
-**cesium-example** 正是为了解决这个问题而生：一个围绕上海陆家嘴真实场景的示例集，从最基础的飞行航线到复杂的天气模拟，6 个递进式示例带你一步步掌握 CesiumJS 的核心能力。
+cesium-example 正是为了解决这个问题而生：一个围绕上海陆家嘴真实场景的示例集，从最基础的飞行航线到复杂的天气模拟，6 个递进式示例带你一步步掌握 CesiumJS 的核心能力。
 
 > 🔗 仓库地址：[github.com/zhijian521/cesium-example](https://github.com/zhijian521/cesium-example)
 
@@ -23,7 +24,7 @@ coverImage: images/cover-48.webp
 
 项目有三个核心设计原则：
 
-**零依赖、零构建**——整个项目没有 `package.json`，没有 Node.js，没有 Webpack/Vite。CesiumJS 通过 CDN 引入，所有代码都是原生 HTML/CSS/JS。`git clone` 之后一行命令就能跑起来：
+零依赖、零构建——整个项目没有 `package.json`，没有 Node.js，没有 Webpack/Vite。CesiumJS 通过 CDN 引入，所有代码都是原生 HTML/CSS/JS。`git clone` 之后一行命令就能跑起来：
 
 ```bash
 npx serve .
@@ -31,9 +32,9 @@ npx serve .
 python3 -m http.server 8080
 ```
 
-**模块化共享**——6 个示例不是各自为政的独立 demo，而是通过 `shared/` 目录下的公共模块（`SceneManager`、`FlightTracker`、`TailEffect` 等）实现逻辑复用。每个示例的 `main.js` 只包含业务编排代码，绝不重复造轮子。
+模块化共享——6 个示例不是各自为政的独立 demo，而是通过 `shared/` 目录下的公共模块（`SceneManager`、`FlightTracker`、`TailEffect` 等）实现逻辑复用。每个示例的 `main.js` 只包含业务编排代码，绝不重复造轮子。
 
-**真实场景驱动**——所有示例围绕上海陆家嘴区域，使用真实的 OSM 建筑数据和虹桥/浦东机场坐标。不是抽象的 demo，而是你可以直接对照地图理解的场景。
+真实场景驱动——所有示例围绕上海陆家嘴区域，使用真实的 OSM 建筑数据和虹桥/浦东机场坐标。不是抽象的 demo，而是你可以直接对照地图理解的场景。
 
 ## 六个示例详解
 
@@ -58,12 +59,12 @@ python3 -m http.server 8080
 
 这个示例在基础航线上做了几个关键升级：
 
-- **圆角矩形航线**：转弯处自动侧倾（banking），飞机不再是"平移"过弯，而是真实的飞行姿态
-- **距离比例采样**：转弯段采样更密，直飞段采样更疏，实现自然的"入弯减速、出弯加速"
-- **四元数合成**：通过 `createBankedOrientationProperty` 在 ENU 局部坐标系下组合航向和侧倾旋转
-- **Hermite 插值**：使用 `HermitePolynomialApproximation` 实现平滑姿态过渡
-- **ENU 近距相机跟随**：基于东-北-天局部坐标系的精确跟随，支持滚轮缩放
-- **螺旋桨加速动画**：同样 15 倍速轮询驱动
+- 圆角矩形航线：转弯处自动侧倾（banking），飞机不再是"平移"过弯，而是真实的飞行姿态
+- 距离比例采样：转弯段采样更密，直飞段采样更疏，实现自然的"入弯减速、出弯加速"
+- 四元数合成：通过 `createBankedOrientationProperty` 在 ENU 局部坐标系下组合航向和侧倾旋转
+- Hermite 插值：使用 `HermitePolynomialApproximation` 实现平滑姿态过渡
+- ENU 近距相机跟随：基于东-北-天局部坐标系的精确跟随，支持滚轮缩放
+- 螺旋桨加速动画：同样 15 倍速轮询驱动
 
 ### 🏙️ 空域可视化
 
@@ -84,13 +85,13 @@ python3 -m http.server 8080
 
 | 预设 | 变体 | 技术要点 |
 |------|------|----------|
-| **火焰** | 核心火焰 / 外焰 / 黑烟 | Canvas 径向渐变纹理，浮力物理回调 |
-| **烟雾** | 单变体 | `ConeEmitter` 锥形发射器 |
-| **尾迹/气流** | 双流 / 三流 | 软气流对齐，逐帧模型矩阵更新 |
+| 火焰 | 核心火焰 / 外焰 / 黑烟 | Canvas 径向渐变纹理，浮力物理回调 |
+| 烟雾 | 单变体 | `ConeEmitter` 锥形发射器 |
+| 尾迹/气流 | 双流 / 三流 | 软气流对齐，逐帧模型矩阵更新 |
 
 还有 0.1x–3.0x 的强度滑块，实时调节粒子密度和大小。
 
-所有粒子纹理都是 **Canvas 运行时生成**的，无需加载外部图片资源。
+所有粒子纹理都是 Canvas 运行时生成的，无需加载外部图片资源。
 
 ### ⛈️ 天气模拟（2 个示例）
 
@@ -100,19 +101,19 @@ python3 -m http.server 8080
 
 这是最复杂的示例，封装为独立的 `weather-component.js` 组件：
 
-**三种天气预设**：
+三种天气预设：
 
-- **细雨**（drizzle）：轻微降雨，偶发闪电
-- **暴雨**（rainstorm）：中等强度，默认预设
-- **雷暴**（darkStorm）：强降雨，频繁闪电
+- 细雨（drizzle）：轻微降雨，偶发闪电
+- 暴雨（rainstorm）：中等强度，默认预设
+- 雷暴（darkStorm）：强降雨，频繁闪电
 
-**核心技术**：
+核心技术：
 
-- **程序化云图**：使用种子随机数生成云/烟雾 Billboard 精灵，含边缘噪声、Alpha 羽化、多轮平滑
-- **雨帘**：多条折线动画模拟雨丝下落 + 风偏摆
-- **闪电**：分段折线 + 发光效果，状态机控制雷击间隔
-- **云漂移动画**：云层沿风向缓慢移动
-- **`drillPick`**：穿透天气实体点击下方的飞机
+- 程序化云图：使用种子随机数生成云/烟雾 Billboard 精灵，含边缘噪声、Alpha 羽化、多轮平滑
+- 雨帘：多条折线动画模拟雨丝下落 + 风偏摆
+- 闪电：分段折线 + 发光效果，状态机控制雷击间隔
+- 云漂移动画：云层沿风向缓慢移动
+- `drillPick`：穿透天气实体点击下方的飞机
 
 #### 云模型加载
 
@@ -139,24 +140,23 @@ shared/
 
 ### 统一飞机模型
 
-项目统一使用 **Beta Alia VTOL 倾转旋翼机**（`beta_alia_vtol_aircraft.glb`）作为唯一的飞机模型。所有飞行相关示例共享同一模型，通过 `shared/config/constants.js` 统一配置坐标和参数，避免模型碎片化。
+项目统一使用 Beta Alia VTOL 倾转旋翼机（`beta_alia_vtol_aircraft.glb`）作为唯一的飞机模型。所有飞行相关示例共享同一模型，通过 `shared/config/constants.js` 统一配置坐标和参数，避免模型碎片化。
 
-螺旋桨动画采用 **轮询驱动模式**：禁用模型默认动画后，每帧轮询 `modelPrimitive.activeAnimations`，在模型就绪时以 15 倍速注入动画。这一机制从 `CircularFlightPath` 到 `03-particles`、`04-weather` 全部统一。
+螺旋桨动画采用 轮询驱动模式：禁用模型默认动画后，每帧轮询 `modelPrimitive.activeAnimations`，在模型就绪时以 15 倍速注入动画。这一机制从 `CircularFlightPath` 到 `03-particles`、`04-weather` 全部统一。
 
 ### 自定义 Shader 系统
 
 OSM 建筑使用 `CustomShader`，通过 Uniform 传入日夜环境贴图和 `u_isDark` 开关。`constants.js` 中定义了两个 Shader 变体：
 
-- **BUILDING_SHADER**：带扫描线效果的简化版，50 米以上建筑显示白色扫描光效
-- **BUILDING_SHADER_OPTIMIZED**：日夜分支版，白天使用环境贴图反射，夜间带脉冲发光和扫描线
+- BUILDING_SHADER：带扫描线效果的简化版，50 米以上建筑显示白色扫描光效
+- BUILDING_SHADER_OPTIMIZED：日夜分支版，白天使用环境贴图反射，夜间带脉冲发光和扫描线
 
 ### 相机跟随
 
 `FlightTracker` 提供两种模式：
 
-- **经纬度模式**（`latlon`）：简单近似，适合远距离观察
-- **ENU 模式**（`enu`）：基于东-北-天局部坐标系的精确跟随，适合近距离跟拍，支持鼠标滚轮缩放
-
+- 经纬度模式（`latlon`）：简单近似，适合远距离观察
+- ENU 模式（`enu`）：基于东-北-天局部坐标系的精确跟随，适合近距离跟拍，支持鼠标滚轮缩放
 
 ## 技术亮点总结
 
