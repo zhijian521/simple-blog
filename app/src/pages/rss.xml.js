@@ -1,5 +1,5 @@
 import config, { absoluteUrl } from "../../site.config.mjs";
-import { getNotes } from "../lib/notes.js";
+import { getPosts } from "../lib/posts.js";
 
 const escapeXml = (value) =>
     String(value)
@@ -10,20 +10,20 @@ const escapeXml = (value) =>
         .replace(/'/g, "&apos;");
 
 export function GET() {
-    const notes = getNotes();
-    const latest = notes[0]?.date;
+    const posts = getPosts();
+    const latest = posts[0]?.date;
 
-    const items = notes
-        .map((note) => {
-            const url = absoluteUrl(note.url);
+    const items = posts
+        .map((post) => {
+            const url = absoluteUrl(post.url);
 
             return [
                 "        <item>",
-                `            <title>${escapeXml(note.title)}</title>`,
+                `            <title>${escapeXml(post.title)}</title>`,
                 `            <link>${escapeXml(url)}</link>`,
                 `            <guid isPermaLink="true">${escapeXml(url)}</guid>`,
-                `            <pubDate>${new Date(`${note.date}T00:00:00Z`).toUTCString()}</pubDate>`,
-                note.description ? `            <description>${escapeXml(note.description)}</description>` : "",
+                `            <pubDate>${new Date(`${post.date}T00:00:00Z`).toUTCString()}</pubDate>`,
+                post.description ? `            <description>${escapeXml(post.description)}</description>` : "",
                 "        </item>",
             ]
                 .filter(Boolean)

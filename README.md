@@ -132,7 +132,7 @@ simple-blog/
 │  ├─ astro.config.mjs      Astro 配置（站点地址、sitemap）
 │  ├─ scripts/sync-media.js 构建前同步 docs 里的图片和视频
 │  ├─ src/
-│  │  ├─ lib/notes.js       读取 docs/blog 并渲染 Markdown
+│  │  ├─ lib/posts.js       读取 docs/blog 并渲染 Markdown
 │  │  ├─ layouts/Base.astro 全站布局与 SEO meta
 │  │  ├─ components/        PostList、Pagination
 │  │  ├─ pages/             首页、文章页、归档页、robots.txt、rss.xml

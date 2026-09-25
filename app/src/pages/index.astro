@@ -1,11 +1,11 @@
 ---
 import Base from '../layouts/Base.astro';
 import PostList from '../components/PostList.astro';
-import { getNotes } from '../lib/notes.js';
+import { getPosts } from '../lib/posts.js';
 import config from '../../site.config.mjs';
 
-const notes = getNotes();
-const visibleNotes = notes.slice(0, config.postsOnHome);
+const posts = getPosts();
+const visiblePosts = posts.slice(0, config.postsOnHome);
 const schema = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
@@ -44,7 +44,7 @@ const schema = {
 
     <section class="section" id="blog" aria-labelledby="blog-title">
         <h2 class="section__title" id="blog-title">文章</h2>
-        {visibleNotes.length ? <PostList posts={visibleNotes} /> : <p class="empty">还没有文章。</p>}
-        {notes.length > visibleNotes.length && <a class="archive-link" href="/page/1/">归档</a>}
+        {visiblePosts.length ? <PostList posts={visiblePosts} /> : <p class="empty">还没有文章。</p>}
+        {posts.length > visiblePosts.length && <a class="archive-link" href="/page/1/">归档</a>}
     </section>
 </Base>

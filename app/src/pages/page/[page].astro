@@ -2,19 +2,19 @@
 import Base from '../../layouts/Base.astro';
 import PostList from '../../components/PostList.astro';
 import Pagination from '../../components/Pagination.astro';
-import { getNotes } from '../../lib/notes.js';
+import { getPosts } from '../../lib/posts.js';
 import config from '../../../site.config.mjs';
 
 export function getStaticPaths() {
     const perPage = config.postsPerArchivePage;
-    const notes = getNotes();
+    const allPosts = getPosts();
 
     // 首页已经能展示全部文章时，不生成归档页，避免出现没人链接、内容重复的孤岛页面
-    if (notes.length <= config.postsOnHome) {
+    if (allPosts.length <= config.postsOnHome) {
         return [];
     }
 
-    const pages = Math.ceil(notes.length / perPage);
+    const pages = Math.ceil(allPosts.length / perPage);
 
     return Array.from({ length: pages }, (_, index) => {
         const page = index + 1;
@@ -23,7 +23,7 @@ export function getStaticPaths() {
             props: {
                 page,
                 pages,
-                posts: notes.slice((page - 1) * perPage, page * perPage),
+                posts: allPosts.slice((page - 1) * perPage, page * perPage),
             },
         };
     });

@@ -1,22 +1,22 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { formatDate, getNotes } from '../../lib/notes.js';
+import { formatDate, getPosts } from '../../lib/posts.js';
 import config, { absoluteUrl } from '../../../site.config.mjs';
 
 export function getStaticPaths() {
-    return getNotes().map((note) => ({ params: { slug: note.slug }, props: { note } }));
+    return getPosts().map((post) => ({ params: { slug: post.slug }, props: { post } }));
 }
 
-const { note } = Astro.props;
-const url = absoluteUrl(note.url);
-const description = note.description || `${note.title}，${config.name}的技术笔记。`;
-const cover = note.cover || config.ogImage;
+const { post } = Astro.props;
+const url = absoluteUrl(post.url);
+const description = post.description || `${post.title}，${config.name}的技术笔记。`;
+const cover = post.cover || config.ogImage;
 const schema = {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
-    headline: note.title,
+    headline: post.title,
     description,
-    datePublished: note.date,
+    datePublished: post.date,
     url,
     mainEntityOfPage: url,
     inLanguage: config.locale,
@@ -27,25 +27,17 @@ const schema = {
         logo: { '@type': 'ImageObject', url: absoluteUrl(config.appleTouchIcon) },
     },
     image: absoluteUrl(cover),
-    ...(note.tags.length > 0 && { keywords: note.tags.join(', ') }),
-    ...(note.category && { articleSection: note.category }),
+    ...(post.tags.length > 0 && { keywords: post.tags.join(', ') }),
+    ...(post.category && { articleSection: post.category }),
 };
 ---
-<Base
-    title={note.title}
-    description={description}
-    path={note.url}
-    image={cover}
-    schema={schema}
-    publishedTime={note.date}
-    tags={note.tags}
->
+<Base title={post.title} description={description} path={post.url} image={cover} schema={schema} publishedTime={post.date} tags={post.tags}>
     <article class="article">
         <header class="article__header">
-            <h1 class="article__title">{note.title}</h1>
-            <time class="article__date" datetime={note.date}>{formatDate(note.date)}</time>
-            {note.description && <p class="article__description">{note.description}</p>}
+            <h1 class="article__title">{post.title}</h1>
+            <time class="article__date" datetime={post.date}>{formatDate(post.date)}</time>
+            {post.description && <p class="article__description">{post.description}</p>}
         </header>
-        <div class="prose" set:html={note.html} />
+        <div class="prose" set:html={post.html} />
     </article>
 </Base>

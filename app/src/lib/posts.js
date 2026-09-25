@@ -4,8 +4,8 @@ import matter from "gray-matter";
 import MarkdownIt from "markdown-it";
 import config from "../../site.config.mjs";
 
-const notesDir = path.join(config.docsDir, config.postsDir);
-const imagesDir = path.join(config.docsDir, "images");
+const postsPath = path.join(config.docsDir, config.postsDir);
+const imagesPath = path.join(config.docsDir, "images");
 const postsBase = config.postsBase.replace(/\/+$/, "");
 
 const markdown = new MarkdownIt({ html: true, linkify: true });
@@ -104,7 +104,7 @@ const imageSize = (src) => {
         try {
             // 允许 images/ 下的子目录，同时避免跳出 docs/images
             const file = path.resolve(config.docsDir, src.slice(1));
-            size = file.startsWith(imagesDir) ? readWebpSize(fs.readFileSync(file)) : undefined;
+            size = file.startsWith(imagesPath) ? readWebpSize(fs.readFileSync(file)) : undefined;
         } catch {
             size = undefined;
         }
@@ -146,8 +146,8 @@ const prepareHtml = (html) => {
         .replace(/<img\b[^>]*>/g, (tag) => withImageAttrs(tag, index++));
 };
 
-const readNote = (filename) => {
-    const source = fs.readFileSync(path.join(notesDir, filename), "utf8");
+const readPostFile = (filename) => {
+    const source = fs.readFileSync(path.join(postsPath, filename), "utf8");
 
     try {
         return matter(source);
@@ -177,16 +177,16 @@ const readDate = (filename, data) => {
     return date;
 };
 
-export function getNotes() {
-    if (!fs.existsSync(notesDir)) {
-        throw new Error(`找不到文章目录：${notesDir}`);
+export function getPosts() {
+    if (!fs.existsSync(postsPath)) {
+        throw new Error(`找不到文章目录：${postsPath}`);
     }
 
-    const notes = fs
-        .readdirSync(notesDir)
+    const posts = fs
+        .readdirSync(postsPath)
         .filter((filename) => filename.endsWith(".md"))
         .map((filename) => {
-            const { data, content } = readNote(filename);
+            const { data, content } = readPostFile(filename);
             const slug = readSlug(filename, data);
 
             return {
@@ -203,21 +203,21 @@ export function getNotes() {
                 html: prepareHtml(markdown.render(content)),
             };
         })
-        .filter((note) => note.status === "published");
+        .filter((post) => post.status === "published");
 
     const seen = new Map();
 
-    for (const note of notes) {
-        const previous = seen.get(note.slug);
+    for (const post of posts) {
+        const previous = seen.get(post.slug);
 
         if (previous) {
-            throw new Error(`slug 重复：${note.slug}（${previous} 和 ${note.file}）`);
+            throw new Error(`slug 重复：${post.slug}（${previous} 和 ${post.file}）`);
         }
 
-        seen.set(note.slug, note.file);
+        seen.set(post.slug, post.file);
     }
 
-    return notes.sort((a, b) => b.date.localeCompare(a.date));
+    return posts.sort((a, b) => b.date.localeCompare(a.date));
 }
 
 export function formatDate(date) {
