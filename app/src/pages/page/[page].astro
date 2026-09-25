@@ -1,0 +1,30 @@
+---
+import Base from '../../layouts/Base.astro';
+import PostList from '../../components/PostList.astro';
+import { getNotes } from '../../lib/notes.js';
+
+export function getStaticPaths() {
+    const notes = getNotes();
+    const pages = Math.ceil(notes.length / 6);
+    return Array.from({ length: Math.max(0, pages - 1) }, (_, index) => {
+        const page = index + 2;
+        return {
+            params: { page: String(page) },
+            props: { page, pages, posts: notes.slice((page - 1) * 6, page * 6) },
+        };
+    });
+}
+
+const { page, pages, posts } = Astro.props;
+---
+<Base title={`文章归档 · 第 ${page} 页`} description="知简的文章归档。" path={`/page/${page}/`}>
+    <div class="archive-page">
+        <header class="page-heading"><p class="eyebrow">Notes</p><h1>文章归档</h1><p>第 {page} 页，共 {pages} 页。</p></header>
+        <PostList posts={posts} />
+        <nav class="page-navigation" aria-label="文章分页">
+            {page > 2 && <a href={`/page/${page - 1}/`}>上一页</a>}
+            <a href="/">返回首页</a>
+            {page < pages && <a href={`/page/${page + 1}/`}>下一页</a>}
+        </nav>
+    </div>
+</Base>

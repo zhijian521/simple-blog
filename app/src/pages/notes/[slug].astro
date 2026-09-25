@@ -1,0 +1,33 @@
+---
+import Base from '../../layouts/Base.astro';
+import { formatDate, getNotes } from '../../lib/notes.js';
+
+export function getStaticPaths() {
+    return getNotes().map((note) => ({ params: { slug: note.slug }, props: { note } }));
+}
+
+const { note } = Astro.props;
+const siteUrl = (import.meta.env.SITE_URL || 'http://localhost:4321').replace(/\/$/, '');
+const description = note.description || `${note.title}，知简的个人笔记。`;
+const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: note.title,
+    description,
+    datePublished: note.date,
+    mainEntityOfPage: `${siteUrl}${note.url}`,
+    author: { '@type': 'Person', name: '知简' },
+};
+---
+<Base title={note.title} description={description} path={note.url} schema={schema}>
+    <article class="article-page">
+        <header class="article-header">
+            <a class="back-link" href="/">返回首页</a>
+            <p class="eyebrow">Note</p>
+            <h1>{note.title}</h1>
+            <time datetime={note.date}>{formatDate(note.date)}</time>
+            {note.description && <p class="article-header__description">{note.description}</p>}
+        </header>
+        <div class="prose" set:html={note.html} />
+    </article>
+</Base>

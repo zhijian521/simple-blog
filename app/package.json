@@ -3,23 +3,15 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "dev": "nuxt dev",
-        "build": "nuxt build",
-        "generate": "nuxt generate",
-        "preview": "nuxt preview",
-        "prepare": "nuxt prepare"
+        "predev": "node scripts/sync-media.js",
+        "dev": "astro dev",
+        "prebuild": "node scripts/sync-media.js",
+        "build": "astro build",
+        "preview": "astro preview"
     },
     "dependencies": {
-        "@nuxt/content": "^3.6.1",
-        "@nuxtjs/robots": "^6.2.3",
-        "@nuxtjs/sitemap": "^8.5.1",
-        "better-sqlite3": "^13.0.3",
-        "nuxt": "^3.21.11",
-        "vue": "^3.5.13"
-    },
-    "devDependencies": {
-        "@types/node": "^22.15.0",
-        "typescript": "^5.8.3",
-        "vue-tsc": "^3.3.11"
+        "astro": "^7.3.5",
+        "gray-matter": "^4.0.3",
+        "markdown-it": "^14.1.0"
     }
 }

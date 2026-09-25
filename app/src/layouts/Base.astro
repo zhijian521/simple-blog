@@ -1,0 +1,30 @@
+---
+import '../styles/main.css';
+
+const { title = '知简', description = '记录技术、项目与日常思考。', path = '/', schema } = Astro.props;
+const siteUrl = (import.meta.env.SITE_URL || 'http://localhost:4321').replace(/\/$/, '');
+const canonical = `${siteUrl}${path}`;
+---
+<!doctype html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#f8f8f5" />
+        <title>{title === '知简' ? title : `${title} · 知简`}</title>
+        <meta name="description" content={description} />
+        <link rel="canonical" href={canonical} />
+        <meta property="og:type" content={schema?.['@type'] === 'BlogPosting' ? 'article' : 'website'} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={canonical} />
+        {schema && <script type="application/ld+json" set:html={JSON.stringify(schema).replace(/</g, '\\u003c')} />}
+    </head>
+    <body>
+        <div class="site-shell">
+            <header class="site-header"><div class="site-header__inner"><a class="site-name" href="/">知简</a><nav class="site-nav" aria-label="主导航"><a href="/">首页</a></nav></div></header>
+            <main class="site-main"><slot /></main>
+            <footer class="site-footer"><p>记录想法，持续构建。</p></footer>
+        </div>
+    </body>
+</html>

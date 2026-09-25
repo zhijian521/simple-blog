@@ -1,9 +1,0 @@
-{
-    "extends": "./.nuxt/tsconfig.json",
-    "compilerOptions": {
-        "strict": true,
-        "noUnusedLocals": true,
-        "noUnusedParameters": true,
-        "forceConsistentCasingInFileNames": true
-    }
-}
