@@ -2,12 +2,18 @@
 import { formatDate } from '../lib/notes.js';
 const { posts } = Astro.props;
 ---
-<div class="post-list">
-    {posts.map((post) => (
-        <article class="post-list__item">
-            <div class="post-list__meta"><time datetime={post.date}>{formatDate(post.date)}</time>{post.tags.length > 0 && <span>{post.tags.join(' · ')}</span>}</div>
-            <h3 class="post-list__title"><a href={post.url}>{post.title}</a></h3>
-            {post.description && <p class="post-list__description">{post.description}</p>}
-        </article>
-    ))}
+<div class="entries">
+    {
+        posts.map((post) => (
+            <article class="entry">
+                <h3 class="entry__title">
+                    <a href={post.url}>{post.title}</a>
+                </h3>
+                <time class="entry__date" datetime={post.date}>
+                    {formatDate(post.date)}
+                </time>
+                {post.description && <p class="entry__description">{post.description}</p>}
+            </article>
+        ))
+    }
 </div>

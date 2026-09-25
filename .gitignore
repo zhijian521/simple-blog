@@ -4,7 +4,8 @@ node_modules/
 .data/
 .astro/
 dist/
-public/
+app/public/*
+!app/public/logo.png
 .env
 .env.*
 !.env.example
