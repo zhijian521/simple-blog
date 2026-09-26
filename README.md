@@ -132,8 +132,6 @@ front matter 字段：
 - 正文里的 `---` 按「纯留白」处理，不画横线。
 - 正文中的原始 HTML 会保留（`html: true`），请只写自己信任的内容。
 
-更细的写作约定（含全部已知的坑）另见 [`docs/写作规范.md`](docs/写作规范.md)。
-
 ## 字体
 
 两套自托管字体，运行时不请求任何外部 CDN：
@@ -214,8 +212,7 @@ simple-blog/
 ├─ docs/                    ★ 你的内容
 │  ├─ blog/                 Markdown 文章（只有这里会被发布）
 │  ├─ images/               图片
-│  ├─ videos/               视频
-│  └─ 写作规范.md           写文章与改代码的约定，含全部已知的坑
+│  └─ videos/               视频
 ├─ .nvmrc
 └─ .gitattributes
 ```
