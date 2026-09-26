@@ -5,7 +5,7 @@
     --font-mono: "LXGW WenKai Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     --color-background: #f8f8f5;
     --color-text: #1c1d1b;
-    --color-muted: #6b6d66;
+    --color-muted: #63655e;
     --color-code: #eeeee7;
     --color-accent: #1f615f;
     --color-border: #e3e3da;
@@ -34,6 +34,19 @@ body {
     font-synthesis: none;
 }
 
+/* 中文断行：段落用 pretty 减少末行孤字，标题用 balance 让多行更均匀。
+   旧浏览器不认识这两条，会直接忽略。 */
+p {
+    text-wrap: pretty;
+}
+
+.intro__title,
+.entry__title,
+.article__title,
+.archive__title {
+    text-wrap: balance;
+}
+
 a {
     color: inherit;
     text-decoration: underline dashed;
@@ -58,8 +71,8 @@ a:focus-visible {
     text-align: left;
 }
 
-/* 介绍：站点名与身份排在同一行 */
-.intro {
+/* 介绍：站点名与身份一行，下面接简介与订阅/社交入口 */
+.intro__head {
     display: flex;
     align-items: baseline;
     gap: 0.5em;
@@ -81,6 +94,21 @@ a:focus-visible {
 
 .intro__sep {
     margin-right: 0.5em;
+}
+
+.intro__bio {
+    margin: 1rem 0 0;
+    color: var(--color-muted);
+    font-size: 1rem;
+    line-height: 1.85;
+}
+
+.intro__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1rem;
+    margin: 0.85rem 0 0;
+    font-size: 0.88rem;
 }
 
 /* 区块 */
@@ -132,7 +160,7 @@ a.plain-list__name:hover {
     font-size: 0.9rem;
 }
 
-/* 文章列表：标题与日期同行，摘要占一行；首页只显示标题 */
+/* 文章列表：标题与日期同行，摘要换行显示在下方 */
 .entry {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
@@ -168,24 +196,10 @@ a.plain-list__name:hover {
 
 .entry__description {
     grid-column: 1 / -1;
-    overflow: hidden;
     margin: 0;
     color: var(--color-muted);
     font-size: 0.92rem;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-/* 保留在 DOM 中但不出现在版面上 */
-.visually-hidden {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    padding: 0;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
+    line-height: 1.75;
 }
 
 .archive-link {

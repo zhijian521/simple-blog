@@ -3,7 +3,7 @@
 一个极简的静态个人博客：Astro + Markdown，零原生依赖（不需要 Python、node-gyp 或 C++ 编译工具链）。
 
 - 文章与素材都放在仓库根目录的 `docs/`，应用代码在 `app/`，两者互不干扰
-- 首页：介绍 + 项目列表 + 最新文章
+- 首页：站点介绍（简介 + RSS / GitHub 入口）+ 项目列表 + 最新文章，文章条目含标题、日期与摘要
 - 归档：分页列表，显示时间和摘要
 - 自带 SEO：canonical、Open Graph、Twitter Card、JSON-LD、sitemap、robots.txt、RSS
 - 极简版式：无页头页脚、无边框、居中窄栏、正文左对齐

@@ -83,7 +83,7 @@ const config = {
     postsBase: "/blog",
 
     // 首页最多展示多少篇文章（不足则全部展示，并且不显示「归档」入口）
-    postsOnHome: 10,
+    postsOnHome: 4,
 
     // 归档每页条数
     postsPerArchivePage: 10,

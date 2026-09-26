@@ -44,7 +44,7 @@ const description = pages > 1 ? `第 ${page} 页，共 ${pages} 页。${config.b
                 </p>
             )}
         </header>
-        <PostList posts={posts} showMeta heading="h2" />
+        <PostList posts={posts} heading="h2" />
         {pages > 1 && <Pagination page={page} pages={pages} />}
     </section>
 </Base>

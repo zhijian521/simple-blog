@@ -57,14 +57,23 @@ const schema = {
 
 <Base schema={schema}>
     <section class="intro" aria-labelledby="intro-title">
-        <h1 class="intro__title" id="intro-title">
-            {config.name}
-        </h1>
-        <p class="intro__role">
-            <span class="intro__sep" aria-hidden="true">
-                ·
-            </span>
-            {config.role}
+        <div class="intro__head">
+            <h1 class="intro__title" id="intro-title">
+                {config.name}
+            </h1>
+            <p class="intro__role">
+                <span class="intro__sep" aria-hidden="true">
+                    ·
+                </span>
+                {config.role}
+            </p>
+        </div>
+        <p class="intro__bio">{config.authorTagline}。{config.authorBio}</p>
+        <p class="intro__links">
+            <a href="/rss.xml">RSS 订阅</a>
+            <a href={config.github} target="_blank" rel="me noopener noreferrer">
+                GitHub
+            </a>
         </p>
     </section>
 
