@@ -10,11 +10,12 @@
     --color-accent: #1f615f;
     --color-border: #e3e3da;
     --width: 680px;
-    --section-gap: 64px;
+    --section-gap: 4rem;
     color: var(--color-text);
     background: var(--color-background);
     font-family: var(--font-sans);
-    font-size: 16px;
+    /* 全站基准字号：其余尺寸都由 rem 派生，调整这里即可整体放大/缩小 */
+    font-size: 18px;
     line-height: 1.85;
     -webkit-font-smoothing: antialiased;
 }
@@ -51,7 +52,7 @@ a {
     color: inherit;
     text-decoration: underline dashed;
     text-decoration-thickness: 1px;
-    text-underline-offset: 4px;
+    text-underline-offset: 0.25em;
 }
 
 a:hover {
@@ -67,7 +68,7 @@ a:focus-visible {
     width: 100%;
     max-width: var(--width);
     margin: 0 auto;
-    padding: clamp(52px, 6rem, 96px) 24px clamp(60px, 7rem, 112px);
+    padding: 6rem 1.5rem 7rem;
     text-align: left;
 }
 
@@ -117,7 +118,7 @@ a:focus-visible {
 }
 
 .section__title {
-    margin: 0 0 14px;
+    margin: 0 0 0.875rem;
     color: var(--color-muted);
     font-size: 0.76rem;
     font-weight: 400;
@@ -222,7 +223,7 @@ a.plain-list__name:hover {
 
 /* 文章页 */
 .article__header {
-    padding-bottom: 30px;
+    padding-bottom: 1.9rem;
 }
 
 .article__title {
@@ -250,7 +251,7 @@ a.plain-list__name:hover {
 
 /* 正文：中文长文，段间距收紧到 1.05rem、行高 1.8，避免一屏内被空白割裂 */
 .prose {
-    margin-top: 32px;
+    margin-top: 2rem;
     text-align: left;
     font-size: 1rem;
     line-height: 1.8;
@@ -328,7 +329,7 @@ a.plain-list__name:hover {
 }
 
 .prose code {
-    padding: 2px 6px;
+    padding: 0.12em 0.36em;
     border-radius: 2px;
     background: var(--color-code);
     font-family: var(--font-mono);
@@ -412,7 +413,7 @@ a.plain-list__name:hover {
 
 /* 归档页 */
 .archive__header {
-    padding-bottom: 22px;
+    padding-bottom: 1.4rem;
 }
 
 .archive__title {
@@ -433,7 +434,7 @@ a.plain-list__name:hover {
     flex-wrap: wrap;
     align-items: baseline;
     gap: 1.5rem;
-    margin-top: 26px;
+    margin-top: 1.625rem;
     font-size: 0.85rem;
 }
 
