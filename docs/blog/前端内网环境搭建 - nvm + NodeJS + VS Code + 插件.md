@@ -2,10 +2,10 @@
 title: 前端内网环境搭建 - nvm + NodeJS + VS Code + 插件
 slug: nvm-nodejs-vscode-offline-setup
 status: published
-summary: 面向内网开发场景，讲解如何离线下载并安装 VS Code 插件（VSIX）与使用 nvm 部署多版本 NodeJS。
+description: 面向内网开发场景，讲解如何离线下载并安装 VS Code 插件（VSIX）与使用 nvm 部署多版本 NodeJS。
 category: 技术笔记
 tags: [Node.js, VS Code, nvm, 内网开发]
-publishedAt: 2025-07-03 00:00:00
+date: 2025-07-03
 
 ---
 

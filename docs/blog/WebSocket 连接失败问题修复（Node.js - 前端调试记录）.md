@@ -2,10 +2,10 @@
 title: WebSocket 连接失败问题修复（Node.js / 前端调试记录）
 slug: websocket-connection-failed-fix
 status: published
-summary: 记录一次 WebSocket 连接失败的排查。问题不是代码，而是 Windows 防火墙没有放行对应端口，开放端口后恢复正常。
+description: 记录一次 WebSocket 连接失败的排查。问题不是代码，而是 Windows 防火墙没有放行对应端口，开放端口后恢复正常。
 category: 技术笔记
 tags: [Windows 防火墙, WebSocket, Node.js]
-publishedAt: 2025-07-10 00:00:00
+date: 2025-07-10
 
 ---
 

@@ -77,8 +77,8 @@ SITE_URL=https://your-domain.com
 ---
 title: 文章标题
 slug: my-post
-summary: 一句话摘要，会显示在列表和搜索结果里
-publishedAt: 2026-06-28 12:00:00
+description: 一句话摘要，会显示在列表、搜索结果和分享卡片里
+date: 2026-06-28
 category: 项目实战
 tags: [Astro, 前端]
 coverImage: images/cover.webp
@@ -88,18 +88,18 @@ status: published
 正文……
 ```
 
-front matter 同时兼容两种写法：
+front matter 字段：
 
-| 用途 | 简写                                | Obsidian 导出写法 |
-| ---- | ----------------------------------- | ----------------- |
-| 标题 | `title`                             | `title`           |
-| 地址 | `slug`（缺省时用文件名）            | `slug`            |
-| 摘要 | `description`                       | `summary`         |
-| 日期 | `date`                              | `publishedAt`     |
-| 标签 | `tags`                              | `tags`            |
-| 分类 | —                                   | `category`        |
-| 封面 | —                                   | `coverImage`      |
-| 状态 | `status`，非 `published` 不生成页面 | `status`          |
+| 字段         | 说明                                              |
+| ------------ | ------------------------------------------------- |
+| `title`      | 文章标题，缺省时用 slug                           |
+| `slug`       | 文章地址，缺省时用文件名                          |
+| `description` | 一句话摘要，用于列表、meta description 与分享卡片 |
+| `date`       | 发布日期，格式 `YYYY-MM-DD`，也是列表排序依据     |
+| `tags`       | 标签，用于关键词与结构化数据                      |
+| `category`   | 分类，写入结构化数据的 `articleSection`           |
+| `coverImage` | 封面图，相对 `docs/` 的路径，如 `images/cover.webp` |
+| `status`     | 非 `published` 不生成页面                         |
 
 内容约定：
 

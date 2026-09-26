@@ -2,10 +2,10 @@
 title: 用 CesiumJS 构建三维地球可视化：cesium-example 开源项目分享
 slug: cesium-example
 status: published
-summary: 一个基于 CesiumJS 的三维地球示例集，围绕上海陆家嘴场景，展示飞行航线动画、空域可视化、粒子特效和天气模拟。零依赖、零构建，纯静态即开即用。
+description: 一个基于 CesiumJS 的三维地球示例集，围绕上海陆家嘴场景，展示飞行航线动画、空域可视化、粒子特效和天气模拟。零依赖、零构建，纯静态即开即用。
 category: 项目实战
 tags: [CesiumJS, WebGL, 三维可视化, 前端开发]
-publishedAt: 2026-06-28 12:00:00
+date: 2026-06-28
 coverImage: images/cover-48.webp
 
 ---

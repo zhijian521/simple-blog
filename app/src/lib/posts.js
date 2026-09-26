@@ -34,8 +34,8 @@ markdown.core.ruler.push("normalize_heading_level", (state) => {
     }
 });
 
-// 兼容两种 front matter 写法：
-// 站点早期文章用 date / description，Obsidian 导出用 publishedAt / summary。
+// front matter 的 date 统一写成 YYYY-MM-DD；
+// js-yaml 会把它解析成 Date，这里再规整回字符串。
 const toDateString = (value) => {
     if (value instanceof Date) {
         return value.toISOString().slice(0, 10);
@@ -166,10 +166,10 @@ const readSlug = (filename, data) => {
 };
 
 const readDate = (filename, data) => {
-    const date = toDateString(data.date ?? data.publishedAt);
+    const date = toDateString(data.date);
 
     if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-        throw new Error(`${filename} 缺少合法的日期（date 或 publishedAt），当前值：${date || "空"}`);
+        throw new Error(`${filename} 缺少合法的日期（date，格式 YYYY-MM-DD），当前值：${date || "空"}`);
     }
 
     return date;
@@ -192,7 +192,7 @@ export function getPosts() {
                 slug,
                 url: `${postsBase}/${slug}/`,
                 title: String(data.title || slug),
-                description: data.description || data.summary,
+                description: data.description,
                 date: readDate(filename, data),
                 tags: toTagList(data.tags),
                 category: data.category,

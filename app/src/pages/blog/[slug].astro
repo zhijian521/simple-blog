@@ -13,7 +13,7 @@ const siteUrl = `${config.url}/`;
 const description = post.description || `${post.title}，${config.name}的技术笔记。`;
 const cover = post.cover || config.ogImage;
 
-// 正文词数按字符计（中文场景与旧站一致），阅读时长按每分钟 450 字估算
+// 正文词数按字符计（中文场景），阅读时长按每分钟 450 字估算
 const plainText = post.html.replace(/<[^>]+>/g, "").replace(/\s+/g, "");
 const wordCount = plainText.length;
 const readingMinutes = Math.max(1, Math.ceil(wordCount / 450));
