@@ -36,7 +36,7 @@ export function GET() {
         '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">',
         "    <channel>",
         `        <title>${escapeXml(config.name)}</title>`,
-        `        <link>${escapeXml(config.url)}</link>`,
+        `        <link>${escapeXml(config.url)}/</link>`,
         `        <description>${escapeXml(config.description)}</description>`,
         `        <language>${escapeXml(config.locale)}</language>`,
         `        <lastBuildDate>${lastBuildDate}</lastBuildDate>`,

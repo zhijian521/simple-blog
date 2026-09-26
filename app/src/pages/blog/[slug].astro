@@ -43,7 +43,8 @@ const schema = {
             "@id": `${siteUrl}#publisher`,
             name: config.name,
             url: siteUrl,
-            logo: { "@type": "ImageObject", url: absoluteUrl(config.appleTouchIcon) },
+            // 180×180 是实测的 apple-touch-icon 真实尺寸，补上宽高富结果测试才不告警
+            logo: { "@type": "ImageObject", url: absoluteUrl(config.appleTouchIcon), width: 180, height: 180 },
         },
         {
             "@type": "BreadcrumbList",
@@ -60,6 +61,8 @@ const schema = {
             description,
             image: absoluteUrl(cover),
             datePublished: post.date,
+            // 没有单独的修订日期时退回发布日期，保证 dateModified 始终存在
+            dateModified: post.updated || post.date,
             author: { "@id": `${siteUrl}#author` },
             publisher: { "@id": `${siteUrl}#publisher` },
             mainEntityOfPage: {
@@ -82,6 +85,9 @@ const schema = {
     description={description}
     path={post.url}
     image={cover}
+    imageWidth={post.coverWidth}
+    imageHeight={post.coverHeight}
+    imageType={post.coverType}
     type="article"
     schema={schema}
     publishedTime={post.date}

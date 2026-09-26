@@ -6,7 +6,7 @@ description: 一个基于 CesiumJS 的三维地球示例集，围绕上海陆家
 category: 项目实战
 tags: [CesiumJS, WebGL, 三维可视化, 前端开发]
 date: 2026-06-28
-coverImage: images/cover-48.webp
+coverImage: images/cover-48-og.png
 
 ---
 

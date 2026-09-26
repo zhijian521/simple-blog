@@ -90,6 +90,24 @@ const readWebpSize = (buffer) => {
     return undefined;
 };
 
+// png 的宽高固定在 IHDR 里（第 16/20 字节，大端），同样不需要图像库
+const readPngSize = (buffer) => {
+    if (buffer.length < 24 || buffer.readUInt32BE(0) !== 0x89504e47) {
+        return undefined;
+    }
+
+    return { width: buffer.readUInt32BE(16), height: buffer.readUInt32BE(20) };
+};
+
+// 目前只有 webp 与 png 能直接读出尺寸；jpg 等其它格式一律返回 undefined，
+// 调用方要自己写 width/height（README 的写作约定里也这么要求）
+const readImageSize = (buffer) => (buffer.toString("ascii", 0, 4) === "RIFF" ? readWebpSize(buffer) : readPngSize(buffer));
+
+const MIME_BY_EXTENSION = { png: "image/png", webp: "image/webp", jpg: "image/jpeg", jpeg: "image/jpeg" };
+
+// 给 og:image:type 用；认不出的扩展名就交给爬虫自己判断
+const imageMime = (src) => MIME_BY_EXTENSION[path.extname(src).slice(1).toLowerCase()];
+
 const sizeCache = new Map();
 
 const imageSize = (src) => {
@@ -103,7 +121,7 @@ const imageSize = (src) => {
         try {
             // 允许 images/ 下的子目录，同时避免跳出 docs/images
             const file = path.resolve(config.docsDir, src.slice(1));
-            size = file.startsWith(imagesPath) ? readWebpSize(fs.readFileSync(file)) : undefined;
+            size = file.startsWith(imagesPath) ? readImageSize(fs.readFileSync(file)) : undefined;
         } catch {
             size = undefined;
         }
@@ -166,14 +184,24 @@ const readSlug = (filename, data) => {
     return slug;
 };
 
-const readDate = (filename, data) => {
-    const date = toDateString(data.date);
+const readDate = (filename, data, field = "date") => {
+    const date = toDateString(data[field]);
 
     if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-        throw new Error(`${filename} 缺少合法的日期（date，格式 YYYY-MM-DD），当前值：${date || "空"}`);
+        throw new Error(`${filename} 缺少合法的日期（${field}，格式 YYYY-MM-DD），当前值：${date || "空"}`);
     }
 
     return date;
+};
+
+// updated 是可选的修订日期，写了就用于结构化数据的 dateModified。
+// 格式要求与 date 一致：写错同样拦住构建，而不是悄悄忽略。
+const readUpdated = (filename, data) => {
+    if (data.updated === undefined || data.updated === null || data.updated === "") {
+        return undefined;
+    }
+
+    return readDate(filename, data, "updated");
 };
 
 export function getPosts() {
@@ -187,6 +215,8 @@ export function getPosts() {
         .map((filename) => {
             const { data, content } = readPostFile(filename);
             const slug = readSlug(filename, data);
+            const cover = toAssetUrl(data.coverImage);
+            const coverSize = cover ? imageSize(cover) : undefined;
 
             return {
                 file: filename,
@@ -195,9 +225,14 @@ export function getPosts() {
                 title: String(data.title || slug),
                 description: data.description,
                 date: readDate(filename, data),
+                updated: readUpdated(filename, data),
                 tags: toTagList(data.tags),
                 category: data.category,
-                cover: toAssetUrl(data.coverImage),
+                cover,
+                // 社交卡片要靠真实尺寸决定裁切，读不到就不输出，交给爬虫自己抓
+                coverWidth: coverSize?.width,
+                coverHeight: coverSize?.height,
+                coverType: cover ? imageMime(cover) : undefined,
                 status: String(data.status || "published"),
                 html: highlightCode(prepareHtml(markdown.render(content))),
             };

@@ -6,7 +6,7 @@ description: "本篇文章覆盖基础优化、性能指标与结构化数据。
 category: 技术笔记
 tags: [SEO, 性能优化, 前端开发]
 date: 2025-05-09
-coverImage: images/cover-44.webp
+coverImage: images/cover-44-og.png
 
 ---
 
