@@ -13,7 +13,6 @@
         "fonts": "node scripts/build-font-subset.mjs",
         "format": "prettier --write .",
         "format:check": "prettier --check .",
-        "test": "node --test",
         "preview": "astro preview"
     },
     "dependencies": {
