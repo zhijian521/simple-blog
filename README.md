@@ -185,8 +185,8 @@ npm run fonts
 | `manifest.json`                      | PWA 清单（本站无客户端 JS）|
 | `images/`、`_astro/`                 | 图片与带内容 hash 的 CSS / 字体 |
 
-**自建 nginx 部署时，缓存策略与安全响应头需要额外配置**（`Cache-Control`、CSP、`X-Content-Type-Options`、
-`rss.xml` 的 `Content-Type`、www 跳转等），可直接复制 [`部署清单.md`](部署清单.md) 里的配置与验证命令。
+**自建服务器部署时，缓存策略与安全响应头要自己配**（`Cache-Control`、CSP、`X-Content-Type-Options`、
+`rss.xml` 的 `Content-Type` 等）——这些都不在构建产物里，属于托管层配置。
 
 ## 目录结构
 
@@ -217,7 +217,6 @@ simple-blog/
 │  ├─ videos/               视频
 │  └─ 写作规范.md           写文章与改代码的约定，含全部已知的坑
 ├─ .github/workflows/ci.yml 构建 + 格式 + 测试 + 产物断言
-├─ 部署清单.md              nginx 配置、部署流程与上线后验证命令
 ├─ .nvmrc
 └─ .gitattributes
 ```
