@@ -213,6 +213,7 @@ simple-blog/
 │  ├─ blog/                 Markdown 文章（只有这里会被发布）
 │  ├─ images/               图片
 │  └─ videos/               视频
+├─ LICENSE
 ├─ .nvmrc
 └─ .gitattributes
 ```
@@ -220,3 +221,9 @@ simple-blog/
 ## 技术栈
 
 Astro 7、Markdown、gray-matter、markdown-it、@astrojs/sitemap、Shiki（构建期代码高亮，运行时零 JS）、subset-font（构建期裁剪字体，纯 JS/WASM，不需要本地编译）。开发期用 Prettier（含 `prettier-plugin-astro`）与 Node 内置的 `node --test`。没有数据库，没有服务端，没有需要本地编译的依赖。
+
+## 许可
+
+- **代码**（`app/`）采用 [MIT 许可](LICENSE)。
+- **字体**（`app/src/assets/fonts/`）是第三方资源，采用 SIL OFL 1.1，**不受 MIT 覆盖**；对应的 `OFL.txt` 就在各自目录里，再分发时请一并保留。
+- **文章内容**（`docs/`）版权归作者所有；如需转载，请先联系作者。
