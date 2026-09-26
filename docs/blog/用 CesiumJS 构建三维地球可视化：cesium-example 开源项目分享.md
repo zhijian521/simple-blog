@@ -95,7 +95,7 @@ python3 -m http.server 8080
 
 ### ⛈️ 天气模拟（2 个示例）
 
-![Ceisum-天气模拟](images/959184be.webp)
+![Cesium-天气模拟](images/959184be.webp)
 
 #### 雷雨云天气
 

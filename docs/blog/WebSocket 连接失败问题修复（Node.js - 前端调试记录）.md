@@ -72,7 +72,7 @@ WebSocket 在本地测试环境中（如 `localhost:8080`）可以正常连接�
 ```
 控制面板\系统和安全\Windows Defender 防火墙
 ```
-![Image_20260703105817.png](images/5ecaad35.webp)
+![Windows Defender 防火墙设置页面中关闭防火墙的开关](images/5ecaad35.webp)
 不推荐长期使用，仅用于排查问题
 
 关闭后可以快速验证是否为防火墙导致问题。

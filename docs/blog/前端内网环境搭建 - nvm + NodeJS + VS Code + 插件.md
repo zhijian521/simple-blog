@@ -26,11 +26,11 @@ date: 2025-07-03
 1. 在外网环境下载最新版 VS Code 安装包。
    - 官网地址：`https://code.visualstudio.com/`
 2. 打开 VS Code 插件页面，右键需要的插件，选择下载为 VSIX 格式文件。
-![image5-DupheweY.png](images/8980326d.webp)
+![VS Code 扩展页面的右键菜单，选择「下载 VSIX」](images/8980326d.webp)
 3. 将 VS Code 安装包与插件的 VSIX 文件一起打包，导入内网。
-![image7-C5ehMDXK.png](images/086f39dc.webp)
+![VS Code 安装包与插件 VSIX 文件放在同一目录，便于一起导入内网](images/086f39dc.webp)
 4. 在内网安装完 VS Code 后，进入「扩展」页面 → 点击右上角「更多」按钮 → 选择「从 VSIX 安装」，即可完成插件安装。
-![image6-B38vvdBa.png](images/4db687c1.webp)
+![扩展页面右上角「更多」菜单中的「从 VSIX 安装」](images/4db687c1.webp)
 
 > 💡 提示：如果安装失败，可能是插件版本与 VS Code 版本不兼容。建议在外网环境下，下载最新版 VS Code 与最新版插件 VSIX 文件进行测试，确认安装成功后再导入内网开发环境。
 
@@ -48,25 +48,25 @@ date: 2025-07-03
 
 > ⚠️ 注意：NodeJS 要下载 独立文件（zip 压缩包），不要下载安装程序版本。
 
-![image8-BC1F0caR.png](images/fabe5597.webp)
+![NodeJS 官网下载页中选择 zip 独立文件而不是安装程序](images/fabe5597.webp)
 2. 将 nvm 安装程序与 NodeJS 压缩包上传至内网电脑。
 3. 在 C 盘新建 `dev` 文件夹，并在其中新建 `nvm` 子文件夹，用于存放 nvm。
-![image9-BNvU8fUW.png](images/e97ad4b5.webp)
+![在 C 盘 dev 目录下新建 nvm 子文件夹](images/e97ad4b5.webp)
 4. 运行 nvm 安装程序：
    - 第一步：选择 nvm 安装位置为 `C:\dev\nvm`。
    - 第二步：选择 NodeJS 安装位置为 `C:\dev\nodejs`，随后一路「下一步」即可。
 
-![image10-W6j1XG8M.png](images/82c36247.webp)
+![nvm 安装向导第一步，把 nvm 安装位置设为 C 盘 dev 目录下的 nvm 文件夹](images/82c36247.webp)
 
-![image11-CE_16l5T.png](images/db0e1f3d.webp)
+![nvm 安装向导第二步，把 NodeJS 安装位置设为 C 盘 dev 目录下的 nodejs 文件夹](images/db0e1f3d.webp)
 
 5. 安装完成后，运行 `nvm -v` 验证是否安装成功。
 
 6. 将下载的各版本 NodeJS 压缩包解压到 `C:\dev\nvm` 文件夹中，并将文件夹名修改为对应版本号。
 
-![image12-BXjRiUb2.png](images/e32c2ab1.webp)
+![把 NodeJS 压缩包解压到 dev 目录下的 nvm 文件夹](images/e32c2ab1.webp)
 
-![image13-B4PjIryq.png](images/f4f893c7.webp)
+![解压后的文件夹重命名为对应版本号](images/f4f893c7.webp)
 
 常用命令：
 

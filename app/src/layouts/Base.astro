@@ -15,6 +15,7 @@ const {
     tags = [],
     keywords = [],
     hasCode = false,
+    noindex = false,
 } = Astro.props;
 
 // 正文子集每个页面都要用；等宽子集只服务代码块，不让没有代码的页面白下
@@ -37,8 +38,8 @@ const metaKeywords = [...new Set([...keywords, ...config.keywords])];
         <meta name="description" content={description} />
         {metaKeywords.length > 0 && <meta name="keywords" content={metaKeywords.join(", ")} />}
         <meta name="author" content={config.author} />
-        <meta name="robots" content="index, follow, max-image-preview:large" />
-        <link rel="canonical" href={canonical} />
+        <meta name="robots" content={noindex ? "noindex, follow" : "index, follow, max-image-preview:large"} />
+        {!noindex && <link rel="canonical" href={canonical} />}
 
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" type="image/png" sizes="32x32" href={config.favicon} />
@@ -57,7 +58,7 @@ const metaKeywords = [...new Set([...keywords, ...config.keywords])];
         <meta property="og:locale" content={config.locale.replace("-", "_")} />
         <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />
-        <meta property="og:url" content={canonical} />
+        {!noindex && <meta property="og:url" content={canonical} />}
         <meta property="og:image" content={ogImage} />
         <meta property="og:image:alt" content={title} />
         {isDefaultImage && <meta property="og:image:width" content="1200" />}

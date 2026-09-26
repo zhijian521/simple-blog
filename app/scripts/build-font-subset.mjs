@@ -1,16 +1,17 @@
 // 按站内实际用到的字符裁剪字体，生成自托管子集与 @font-face 规则。
 //
 // 两个字体族：
-//   正文/标题 —— 霞鹜文楷（比例体），字符集 = docs/ 与 app/ 里的全部用字
-//   代码/行内码 —— IBM Plex Mono（等宽，只有拉丁字形），字符集 = 代码里的非中日韩字符
+//   正文/标题 —— 霞鹜文楷（比例体），字符集 = 已发布文章 + 会渲染的模板字面量 + CSS content
+//   代码/行内码 —— IBM Plex Mono（等宽，只有拉丁字形），字符集 = 代码块与行内码里的非中日韩字符
 //   代码里的中文由 --font-mono 的第二顺位「霞鹜文楷」接住，不需要额外的中文字体
 //
-// 为什么要裁剪：官方分片版是按字频切成 97 片/字族，一篇中文长文会命中 24～56 片
-// （首访 1.2～2.7MB），字体替换时会明显闪一下。按内容裁成子集后正文约 253KB、
-// 等宽约 30KB，且各自只有一个文件，可以整份 preload。
+// 为什么要裁剪：官方分片版是按字频切成 97 片/字族，一篇中文长文会命中 24–56 片
+// （首访 1.2–2.7MB），字体替换时会明显闪一下。按内容裁成子集后正文约 253KB、
+// 等宽约 15KB，且各自只有一个文件，可以整份 preload。
 //
-//   node scripts/build-font-subset.mjs          重新生成
-//   node scripts/build-font-subset.mjs --check  只检查现有子集是否覆盖全部用字
+//   node scripts/build-font-subset.mjs                          重新生成
+//   node scripts/build-font-subset.mjs --check                  检查覆盖，缺字退出码 1
+//   node scripts/build-font-subset.mjs --check --allow-missing  缺字只警告，不拦构建
 //
 // 首次生成会从网络下载完整字体（24MB / 136KB）到 app/.cache/fonts/，之后复用缓存。
 // 受限网络下先设置 HTTPS_PROXY 与 NODE_USE_ENV_PROXY=1。
@@ -18,7 +19,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import subsetFont from "subset-font";
+import config from "../site.config.mjs";
 
 const FONTS = [
     {
@@ -43,10 +44,13 @@ const FONTS = [
 ];
 
 const appDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const rootDir = path.resolve(appDir, "..");
-const docsDir = path.join(rootDir, "docs");
+// 内容目录跟着 site.config.mjs 走，避免配置改了这里还在扫 docs/。
+// 注意：site.config.mjs 用 process.cwd() 定位内容目录，所以本脚本必须经 npm 脚本在 app/ 下运行。
+const docsDir = path.resolve(appDir, config.contentDir);
+const postsDir = path.join(docsDir, config.postsDir);
+const stylesDir = path.join(appDir, "src", "styles");
 const cacheDir = path.join(appDir, ".cache", "fonts");
-const cssPath = path.join(appDir, "src", "styles", "fonts.css");
+const cssPath = path.join(stylesDir, "fonts.css");
 
 // 正文兜底字符：ASCII、常用标点、全角形式等；真正的用字从内容里扫出来。
 const TEXT_BUFFER = [
@@ -87,13 +91,28 @@ const walk = (dir, exts, files = []) => {
     return files;
 };
 
+// 源码注释不会渲染到页面上，却会把大量只出现在中文注释里的字带进子集：
+// 既白涨体积，又会把真正缺字的告警淹掉，所以先剥掉注释再扫。
+const stripComments = (text) => text.replace(/\/\*[\s\S]*?\*\//g, " ").replace(/(?<!:)\/\/[^\n]*/g, "");
+
+// 只扫已发布的文章和会渲染出文字的源码；docs/ 下不发布的说明性文档不参与。
 const readSiteText = () => {
     const files = [
-        ...walk(docsDir, [".md"]),
+        ...walk(postsDir, [".md"]),
         ...walk(path.join(appDir, "src"), [".astro", ".js"]),
         path.join(appDir, "site.config.mjs"),
     ];
-    return files.map((file) => fs.readFileSync(file, "utf8")).join("\n");
+    return files.map((file) => stripComments(fs.readFileSync(file, "utf8"))).join("\n");
+};
+
+// CSS 里只有 content: "…" 的字符会出现在页面上（例如任务清单的 ☐ / ☑），
+// 属性名和注释都不渲染，所以单独挑出 content 字符串，而不是扫整个 CSS。
+const readCssContentText = () => {
+    const parts = [];
+    for (const file of walk(stylesDir, [".css"])) {
+        for (const match of fs.readFileSync(file, "utf8").matchAll(/content:\s*"([^"]*)"/g)) parts.push(match[1]);
+    }
+    return parts;
 };
 
 // 等宽字体只用在代码块与行内代码上，按这些位置的真实字符裁剪即可。
@@ -118,7 +137,7 @@ const charset = (kind) => {
 
     if (kind === "site") {
         addRanges(points, TEXT_BUFFER);
-        for (const char of readSiteText()) points.add(char.codePointAt(0));
+        for (const char of readSiteText() + readCssContentText()) points.add(char.codePointAt(0));
         return points;
     }
 
@@ -194,8 +213,15 @@ if (process.argv.includes("--check")) {
                 `        运行 npm run fonts 重新裁剪即可。`,
         );
     }
-    process.exit(0);
+
+    // 缺字默认判失败：这道检查只有在能拦住回归时才有意义。
+    // 确实要带着回退字形继续构建时，加 --allow-missing 降级为警告。
+    process.exit(missing.length > 0 && !process.argv.includes("--allow-missing") ? 1 : 0);
 }
+
+// 只有真正要生成时才加载 subset-font。它是 devDependency，而 --check 必须在
+// 只装了生产依赖的环境里也能跑，否则 npm ci --omit=dev 之后 prebuild 会直接崩。
+const { default: subsetFont } = await import("subset-font");
 
 const blocks = [];
 
