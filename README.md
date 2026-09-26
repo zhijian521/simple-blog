@@ -216,7 +216,6 @@ simple-blog/
 │  ├─ images/               图片
 │  ├─ videos/               视频
 │  └─ 写作规范.md           写文章与改代码的约定，含全部已知的坑
-├─ .github/workflows/ci.yml 构建 + 格式 + 测试 + 产物断言
 ├─ .nvmrc
 └─ .gitattributes
 ```
