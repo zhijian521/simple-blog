@@ -1,5 +1,7 @@
 ---
 import "../styles/main.css";
+import regularFont from "../assets/fonts/lxgw-wenkai/lxgw-wenkai-site.woff2?url";
+import monoFont from "../assets/fonts/lxgw-wenkai/lxgw-wenkai-mono-site.woff2?url";
 import config, { absoluteUrl } from "../../site.config.mjs";
 
 const {
@@ -12,7 +14,11 @@ const {
     publishedTime,
     tags = [],
     keywords = [],
+    hasCode = false,
 } = Astro.props;
+
+// 正文子集每个页面都要用；等宽子集只服务代码块，不让没有代码的页面白下 97KB
+const fontPreloads = hasCode ? [regularFont, monoFont] : [regularFont];
 
 const canonical = absoluteUrl(path);
 const ogImage = absoluteUrl(image);
@@ -40,6 +46,11 @@ const metaKeywords = [...new Set([...keywords, ...config.keywords])];
         <link rel="apple-touch-icon" sizes="180x180" href={config.appleTouchIcon} />
         <link rel="manifest" href="/manifest.json" />
         <link rel="alternate" type="application/rss+xml" title={config.name} href="/rss.xml" />
+
+        {/* 提前下载本页真正会用到的字体分片，减少字体替换造成的闪动 */}
+        {fontPreloads.map((href) => (
+            <link rel="preload" as="font" type="font/woff2" href={href} crossorigin />
+        ))}
 
         <meta property="og:type" content={type} />
         <meta property="og:site_name" content={config.name} />

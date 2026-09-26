@@ -7,6 +7,7 @@
 - 归档：分页列表，显示时间和摘要
 - 自带 SEO：canonical、Open Graph、Twitter Card、JSON-LD、sitemap、robots.txt、RSS
 - 极简版式：无页头页脚、无边框、居中窄栏、正文左对齐
+- 自托管字体：霞鹜文楷（LXGW WenKai）简体版，按 `unicode-range` 分片，浏览器只下载用到的分片
 
 ## 快速开始
 
@@ -109,6 +110,32 @@ front matter 字段：
 - 正文里的 `---` 按「纯留白」处理，不画横线。
 - 正文中的原始 HTML 会保留（`html: true`），请只写自己信任的内容。
 
+## 字体
+
+正文、标题、列表、代码块统一用 **霞鹜文楷（LXGW WenKai）简体版**（正文用比例体、代码用同族等宽体），自托管，运行时不请求任何外部 CDN。
+
+字体不是整套塞进去的，而是**按站内实际用字裁剪过的子集**：
+
+| 文件 | 覆盖 | 体积 |
+| --- | --- | --- |
+| `app/src/assets/fonts/lxgw-wenkai/lxgw-wenkai-site.woff2` | 正文与界面实际用到的 1471 个码点 | 253 KB |
+| `app/src/assets/fonts/lxgw-wenkai/lxgw-wenkai-mono-site.woff2` | 代码块与行内代码里的字符 | 97 KB |
+
+- 为什么裁剪：官方分片版是按字频切成 97 片/字族，一篇中文长文会命中 24–56 片（首访 1.2–2.7MB），字体替换那一下非常明显；裁成子集后每篇首访最多 **351KB**，且各自只有一个文件，可以整份 preload
+- `app/src/styles/fonts.css` 由脚本生成（两条 `@font-face`，带精确的 `unicode-range`），由 `main.css` 用 `@import` 引入；子集覆盖不到的字符会退回系统字体，不会出现豆腐块
+- `Base.astro` 里正文子集每页都 preload，等宽子集只在含代码的页面 preload，避免没有代码的页面白下 97KB
+- 字体遵循 SIL OFL 1.1，授权文件在 `app/src/assets/fonts/lxgw-wenkai/OFL.txt`
+- 排版参数：正文 16px / 行高 1.85 / 栏宽 680px；全站不用粗体（`font-synthesis: none`），层级靠字号与间距区分
+
+新文章如果用到子集里没有的字，`npm run dev` 与 `npm run build` 会在同步/构建前提示，运行下面这条重新裁剪即可：
+
+```bash
+cd app
+npm run fonts
+```
+
+首次运行会从 GitHub 下载完整字体（约 25MB/个）缓存到 `app/.cache/fonts/`（已 ignore），之后复用；受限网络下先设置 `HTTPS_PROXY` 与 `NODE_USE_ENV_PROXY=1`。升级字体或换字体，改 `scripts/build-font-subset.mjs` 顶部的 `FONT_VERSION` 等常量。
+
 ## 部署
 
 `app/dist/` 是纯静态产物，可直接部署到 GitHub Pages、Vercel、Netlify、Cloudflare Pages 或任意静态服务器。
@@ -131,12 +158,15 @@ simple-blog/
 │  ├─ site.config.mjs       ★ 站点配置，克隆后主要改这里
 │  ├─ astro.config.mjs      Astro 配置（站点地址、sitemap）
 │  ├─ scripts/sync-media.js 构建前同步 docs 里的图片和视频
+│  ├─ scripts/build-font-subset.mjs 按站内用字裁剪字体子集、检查覆盖
 │  ├─ src/
 │  │  ├─ lib/posts.js       读取 docs/blog 并渲染 Markdown
 │  │  ├─ layouts/Base.astro 全站布局与 SEO meta
 │  │  ├─ components/        PostList、Pagination
 │  │  ├─ pages/             首页、文章页、归档页、robots.txt、rss.xml
-│  │  └─ styles/main.css    全站样式
+│  │  ├─ styles/main.css    全站样式
+│  │  ├─ styles/fonts.css   字体子集的 @font-face 规则（脚本生成）
+│  │  └─ assets/fonts/      自托管字体子集与 OFL 授权
 │  ├─ assets/logo.png       图标与分享图的源文件（不参与部署）
 │  └─ public/               图标与分享图（会被部署）
 ├─ docs/                    ★ 你的内容
@@ -144,9 +174,11 @@ simple-blog/
 │  ├─ images/               图片
 │  └─ videos/               视频
 ├─ .nvmrc
-└─ .prettierrc.json
+├─ .prettierrc.json
+├─ .prettierignore
+└─ .gitattributes
 ```
 
 ## 技术栈
 
-Astro 7、Markdown、gray-matter、markdown-it、@astrojs/sitemap。没有数据库，没有服务端，没有需要本地编译的依赖。
+Astro 7、Markdown、gray-matter、markdown-it、@astrojs/sitemap。字体自托管且按内容裁剪成子集，没有数据库，没有服务端，没有需要本地编译的依赖。

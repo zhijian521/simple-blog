@@ -1,16 +1,21 @@
+@import "./fonts.css";
+
 :root {
+    --font-sans: "LXGW WenKai", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    --font-mono: "LXGW WenKai Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     --color-background: #f8f8f5;
     --color-text: #1c1d1b;
     --color-muted: #6b6d66;
     --color-code: #eeeee7;
     --color-accent: #1f615f;
-    --width: 620px;
+    --color-border: #e3e3da;
+    --width: 680px;
     --section-gap: 64px;
     color: var(--color-text);
     background: var(--color-background);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-    font-size: 15px;
-    line-height: 1.75;
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.85;
     -webkit-font-smoothing: antialiased;
 }
 
@@ -25,12 +30,15 @@ html {
 body {
     margin: 0;
     min-width: 320px;
+    /* 只装了 400 一个字重，禁止合成粗体/斜体，保证「全站无粗体」不被未来的 **粗体** 破坏 */
+    font-synthesis: none;
 }
 
 a {
     color: inherit;
+    text-decoration: underline dashed;
     text-decoration-thickness: 1px;
-    text-underline-offset: 3px;
+    text-underline-offset: 4px;
 }
 
 a:hover {
@@ -38,8 +46,8 @@ a:hover {
 }
 
 a:focus-visible {
-    outline: 2px solid var(--color-accent);
-    outline-offset: 4px;
+    outline: 2px dashed var(--color-accent);
+    outline-offset: 3px;
 }
 
 .page {
@@ -205,9 +213,9 @@ a.plain-list__name:hover {
 
 .article__title {
     margin: 0;
-    font-size: clamp(1.3rem, 3.2vw, 1.7rem);
+    font-size: clamp(1.35rem, 3.4vw, 1.55rem);
     font-weight: 400;
-    line-height: 1.45;
+    line-height: 1.5;
     letter-spacing: 0.01em;
 }
 
@@ -231,7 +239,7 @@ a.plain-list__name:hover {
     margin-top: 40px;
     text-align: left;
     font-size: 1rem;
-    line-height: 1.9;
+    line-height: 1.85;
 }
 
 .prose :first-child {
@@ -275,6 +283,10 @@ a.plain-list__name:hover {
     padding-left: 1.5em;
 }
 
+.prose li::marker {
+    color: var(--color-accent);
+}
+
 .prose li + li {
     margin-top: 0.5rem;
 }
@@ -291,6 +303,7 @@ a.plain-list__name:hover {
     max-width: 100%;
     height: auto;
     margin: 2.2rem 0;
+    border: 1px solid var(--color-border);
 }
 
 /* 正文里的 --- 只作留白，不画线 */
@@ -304,7 +317,7 @@ a.plain-list__name:hover {
     padding: 2px 6px;
     border-radius: 2px;
     background: var(--color-code);
-    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-family: var(--font-mono);
     font-size: 0.88em;
 }
 
@@ -313,7 +326,7 @@ a.plain-list__name:hover {
     padding: 1.1rem 1.2rem;
     background: var(--color-code);
     color: var(--color-text);
-    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-family: var(--font-mono);
     font-size: 0.86rem;
     line-height: 1.75;
 }
@@ -327,6 +340,7 @@ a.plain-list__name:hover {
 
 .prose blockquote {
     padding-left: 1.1em;
+    border-left: 2px solid rgba(31, 97, 95, 0.45);
     color: var(--color-muted);
 }
 

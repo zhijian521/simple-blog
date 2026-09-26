@@ -6,10 +6,11 @@
         "node": ">=22.12.0"
     },
     "scripts": {
-        "predev": "node scripts/sync-media.js",
+        "predev": "node scripts/sync-media.js && node scripts/build-font-subset.mjs --check",
         "dev": "astro dev",
-        "prebuild": "node scripts/sync-media.js",
+        "prebuild": "node scripts/sync-media.js && node scripts/build-font-subset.mjs --check",
         "build": "astro build",
+        "fonts": "node scripts/build-font-subset.mjs",
         "preview": "astro preview"
     },
     "dependencies": {
@@ -17,5 +18,8 @@
         "astro": "^7.3.5",
         "gray-matter": "^4.0.3",
         "markdown-it": "^14.1.0"
+    },
+    "devDependencies": {
+        "subset-font": "^2.9.0"
     }
 }

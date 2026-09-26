@@ -18,6 +18,9 @@ const plainText = post.html.replace(/<[^>]+>/g, "").replace(/\s+/g, "");
 const wordCount = plainText.length;
 const readingMinutes = Math.max(1, Math.ceil(wordCount / 450));
 
+// 页面里有代码块或行内代码时，才需要额外预加载等宽子集
+const hasCode = post.html.includes("<code");
+
 const schema = {
     "@context": "https://schema.org",
     "@graph": [
@@ -84,6 +87,7 @@ const schema = {
     publishedTime={post.date}
     tags={post.tags}
     keywords={[...post.tags, ...(post.category ? [post.category] : [])]}
+    hasCode={hasCode}
 >
     <article class="article">
         <header class="article__header">

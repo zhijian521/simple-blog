@@ -1,0 +1,6 @@
+# 字体等二进制资源不做换行符转换、不做 diff
+*.woff2 binary
+*.woff binary
+*.ico binary
+*.png binary
+*.webp binary
