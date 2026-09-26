@@ -3,6 +3,7 @@ import { formatDate } from "../lib/posts.js";
 
 // heading 用来匹配所在页面的标题层级：首页是 h2 区块下用 h3，归档页 h1 下用 h2
 const { posts, heading = "h3" } = Astro.props;
+// 必须存进大写开头的变量，Astro 模板才会把它当动态组件，而不是普通变量
 const Heading = heading;
 ---
 

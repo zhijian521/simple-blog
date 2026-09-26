@@ -1,3 +1,9 @@
+// 文章读取与渲染的唯一入口：扫 docs/blog/*.md，解析 front matter，用 markdown-it
+// 渲染后用 Shiki 高亮代码块，并给图片补上真实宽高。
+//
+// 这里也是「构建成功但产出错误 URL」的唯一防线：日期格式、slug 合法性、slug 重复
+// 都在这一步拦住，出错直接让构建失败，而不是生成一批坏链接。
+
 import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
@@ -67,7 +73,12 @@ const toAssetUrl = (value) => {
 
 // 读取 webp 真实尺寸。带上 width/height 后浏览器会预先留出空间，
 // 图片加载完成时不会把下方内容顶下去，滚动才不会有跳动感。
+// 三种容器各自读字节，不引图像库：
+//   VP8  有损，26/28 字节起各 2 字节小端宽高，高 2 位是缩放系数，故 & 0x3fff
+//   VP8L 无损，21 字节起 32 位小端：低 14 位宽、接着 14 位高，存的是「实际值 - 1」
+//   VP8X 扩展，24/27 字节起各 3 字节小端，同样存「实际值 - 1」
 const readWebpSize = (buffer) => {
+    // 少于 30 字节连 VP8X 头都放不下，先挡掉，避免按固定偏移读出垃圾值
     if (buffer.length < 30 || buffer.toString("ascii", 0, 4) !== "RIFF" || buffer.toString("ascii", 8, 12) !== "WEBP") {
         return undefined;
     }
@@ -108,6 +119,8 @@ const MIME_BY_EXTENSION = { png: "image/png", webp: "image/webp", jpg: "image/jp
 // 给 og:image:type 用；认不出的扩展名就交给爬虫自己判断
 const imageMime = (src) => MIME_BY_EXTENSION[path.extname(src).slice(1).toLowerCase()];
 
+// 一次构建里 getPosts() 会被 astro.config、各页面的 getStaticPaths 反复调用，
+// 缓存避免同一张图被同步读盘多次
 const sizeCache = new Map();
 
 const imageSize = (src) => {
@@ -153,6 +166,12 @@ const withImageAttrs = (tag, index) => {
 
 // 导出内容里的图片是相对路径 images/xxx.webp，站点需要 /images/xxx.webp
 // 同时把 Obsidian 的任务清单语法渲染成勾选框
+//
+// 三个 replace 的顺序不能调换：
+//   1. 先改写 images/ 前缀，因为 imageSize() 只认 /images/ 开头的 src
+//   2. 任务清单只匹配紧凑写法（<li>[ ] ），松散列表会被包成 <li><p>[ ]，
+//      这种情况宁可不转换，也不误伤正文里的方括号
+//   3. 最后才补 width/height，晚于第 1 步才拿得到尺寸
 const prepareHtml = (html) => {
     let index = 0;
 
@@ -204,6 +223,10 @@ const readUpdated = (filename, data) => {
     return readDate(filename, data, "updated");
 };
 
+/**
+ * 读取全部已发布文章，按日期倒序返回。
+ * 日期格式、slug 合法性、slug 重复校验失败时直接抛错，让构建失败。
+ */
 export function getPosts() {
     if (!fs.existsSync(postsPath)) {
         throw new Error(`找不到文章目录：${postsPath}`);
@@ -251,9 +274,12 @@ export function getPosts() {
         seen.set(post.slug, post.file);
     }
 
+    // date 已规整成 YYYY-MM-DD，字符串倒序就是时间倒序，
+    // 不用再建 Date 对象，也就不会引入时区偏移
     return posts.sort((a, b) => b.date.localeCompare(a.date));
 }
 
+/** 把 YYYY-MM-DD 格式化成「2026年6月28日」；无法解析时原样返回 */
 export function formatDate(date) {
     const parsed = new Date(`${date}T00:00:00Z`);
 
@@ -265,6 +291,8 @@ export function formatDate(date) {
         year: "numeric",
         month: "long",
         day: "numeric",
+        // date 按 UTC 零点解析，这里必须钉死 UTC，
+        // 否则 UTC-x 时区的读者会看到前一天
         timeZone: "UTC",
     }).format(parsed);
 }

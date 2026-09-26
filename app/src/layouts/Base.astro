@@ -82,6 +82,7 @@ const metaKeywords = [...new Set([...keywords, ...config.keywords])];
         <meta name="twitter:description" content={description} />
         <meta name="twitter:image" content={ogImage} />
 
+        {/* 转义 < 防止标题或正文里出现 </script> 时提前闭合 JSON-LD（既是 XSS 也是解析失败） */}
         {schema && <script type="application/ld+json" set:html={JSON.stringify(schema).replace(/</g, "\\u003c")} />}
     </head>
     <body>

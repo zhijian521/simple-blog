@@ -182,6 +182,8 @@ const ensureFile = async (url, target, label) => {
     return buffer;
 };
 
+// --check 靠反解自己生成的 fonts.css 判断覆盖范围，
+// 所以那个文件里 unicode-range 的写法（U+ 前缀、大写、逗号分隔）不能被改动。
 const parsedRanges = () => {
     if (!fs.existsSync(cssPath)) return [];
     const css = fs.readFileSync(cssPath, "utf8");
@@ -235,7 +237,9 @@ for (const font of FONTS) {
     fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(path.join(dir, font.out), output);
     fs.writeFileSync(path.join(dir, "VERSION"), `${font.version}\n`, "utf8");
-    if (font.license) await ensureFile(font.license, path.join(dir, "OFL.txt"), `${font.dir}/OFL.txt`);
+    // 只有 IBM Plex Mono 配了 license 下载地址；文楷的 OFL.txt 是手工放进仓库的，
+// 不会被这个脚本刷新
+if (font.license) await ensureFile(font.license, path.join(dir, "OFL.txt"), `${font.dir}/OFL.txt`);
 
     blocks.push(
         [

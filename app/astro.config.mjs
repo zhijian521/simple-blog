@@ -1,3 +1,5 @@
+// Astro 配置：站点地址、sitemap 的 lastmod，以及给 app/ 之外的 docs/ 补上 dev 热更新。
+
 import path from "node:path";
 import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
@@ -44,6 +46,7 @@ export default defineConfig({
                 const date = postDates.get(item.url) || latestDate;
 
                 if (date) {
+                    // 显式 UTC 零点：不写 Z 会按构建机本地时区解析，lastmod 会漂一天
                     item.lastmod = new Date(`${date}T00:00:00Z`).toISOString();
                 }
 

@@ -31,7 +31,8 @@ const config = {
     // 作者主页，作为 Person 的 sameAs，帮助搜索引擎归并实体
     github: "https://github.com/zhijian521",
 
-    // 站点描述。首页的 meta description，也是没有摘要的文章的兜底描述。
+    // 站点描述。只用于首页的 meta description 与 RSS 的 channel description；
+    // 文章页的摘要来自各篇文章自己的 description，没写时才用文章标题兜底。
     description:
         "语无边的个人技术博客 — 追求简洁设计与美好事物，以代码与文字安静造物。涵盖前端开发、TypeScript、Node.js、CesiumJS 三维可视化、SEO 优化与建站部署。",
 
@@ -113,6 +114,7 @@ const url = (process.env.SITE_URL || config.url).replace(/\/+$/, "");
 
 // 用字符串拼接生成绝对地址，而不是 new URL()：部署在子路径
 // （例如 https://name.github.io/blog）时前者才不会丢掉前缀。
+// encodeURI 只转义中文与空格、保留 /，所以中文 slug 也能拼出可用链接。
 export const absoluteUrl = (target) => `${url}${encodeURI(target.startsWith("/") ? target : `/${target}`)}`;
 
 const docsDir = path.resolve(appDir, config.contentDir);

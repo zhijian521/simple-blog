@@ -37,7 +37,9 @@ const COLOR_FIXES = {
     "#e36209": "#a04100",
 };
 
-// markdown-it 交给我们的代码是转义后的实体，Shiki 需要原始文本
+// markdown-it 交给我们的代码是转义后的实体，Shiki 需要原始文本。
+// 替换顺序不能改：&amp; 必须最后换，否则 &amp;lt; 会先变成 &lt;，
+// 下一轮又被还原成 <，把代码里的字面量当成真标签。
 const unescapeHtml = (text) =>
     text.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, "&");
 

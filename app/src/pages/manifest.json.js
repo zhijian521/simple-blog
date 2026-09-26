@@ -1,6 +1,9 @@
+// /manifest.json 端点：PWA 清单。本站没有客户端 JS，清单只为「添加到主屏幕」服务。
 import config from "../../site.config.mjs";
 
 export function GET() {
+    // background_color 是启动画面底色，theme_color 是浏览器 UI 底色，
+    // 两者都用站点主题色，避免安装后先闪一下白底
     const manifest = {
         name: config.name,
         short_name: config.name,
