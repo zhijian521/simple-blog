@@ -257,6 +257,14 @@ a.plain-list__name:hover {
     line-height: 1.8;
 }
 
+/* 长 URL 和长标识符在窄屏下会顶破行盒（实测 createBankedOrientationProperty 宽 301.5px，
+   而 320px 视口只有 266px 可用）。只加在段落和列表项上：表格单元格故意不加，
+   否则 4 列表格会被压成每列三四个字，窄屏下宁可让表格自己横向滚动（见文件末尾的媒体查询）。 */
+.prose p,
+.prose li {
+    overflow-wrap: anywhere;
+}
+
 .prose :first-child {
     margin-top: 0;
 }
@@ -336,9 +344,11 @@ a.plain-list__name:hover {
     font-size: 0.88em;
 }
 
+/* 内边距放在内层 code 上：如果和 overflow-x 同在一个元素上，
+   横向滚动到最右时文字会贴着右边框。 */
 .prose pre {
     overflow-x: auto;
-    padding: 1.05rem 1.2rem;
+    padding: 0;
     border: 1px solid var(--color-border);
     border-radius: 3px;
     background: var(--color-code);
@@ -349,7 +359,8 @@ a.plain-list__name:hover {
 }
 
 .prose pre code {
-    padding: 0;
+    display: block;
+    padding: 1.05rem 1.2rem;
     background: transparent;
     color: inherit;
     font-size: inherit;
@@ -465,6 +476,22 @@ a.plain-list__name:hover {
 
     .entry__date {
         grid-column: 1;
+    }
+
+    /* 表格最小内容宽度会超过窄屏可用宽度（实测 315.6px > 320px 视口的 266px），
+       让表格自己横向滚动，而不是把整页撑出横向滚动条。
+       表格单元格不做 overflow-wrap，正是为了让这里仍有可滚动的余量。 */
+    .prose table {
+        display: block;
+        overflow-x: auto;
+    }
+
+    /* 单元格要有最小宽度：中文可以逐字断行，自动布局会把列一路压到「一行一个字」
+       （实测 320px 下首列最窄只有 34px，标题「动作」被拆成两行、正文五行的字堆）。
+       给个下限，宁可让表格多滚一点，也不要压成竖排。 */
+    .prose th,
+    .prose td {
+        min-width: 3.5em;
     }
 }
 
