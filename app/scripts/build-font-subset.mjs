@@ -1,40 +1,81 @@
-// 按站内实际用到的字符裁剪霞鹜文楷，生成自托管字体子集与 @font-face 规则。
+// 按站内实际用到的字符裁剪字体，生成自托管子集与 @font-face 规则。
 //
-// 为什么要裁剪：官方的分片 webfont 是按字频切的 97 片/字族，一篇中文长文会命中
-// 24～56 片（首访 1.2～2.7MB），字体替换那一瞬间就非常明显。按内容裁成子集后
-// 正文族约 235KB、等宽族约 74KB，且各自只有一个文件，可以整份 preload。
+// 两个字体族：
+//   正文/标题 —— 霞鹜文楷（比例体），字符集 = docs/ 与 app/ 里的全部用字
+//   代码/行内码 —— IBM Plex Mono（等宽，只有拉丁字形），字符集 = 代码里的非中日韩字符
+//   代码里的中文由 --font-mono 的第二顺位「霞鹜文楷」接住，不需要额外的中文字体
+//
+// 为什么要裁剪：官方分片版是按字频切成 97 片/字族，一篇中文长文会命中 24～56 片
+// （首访 1.2～2.7MB），字体替换时会明显闪一下。按内容裁成子集后正文约 253KB、
+// 等宽约 30KB，且各自只有一个文件，可以整份 preload。
 //
 //   node scripts/build-font-subset.mjs          重新生成
 //   node scripts/build-font-subset.mjs --check  只检查现有子集是否覆盖全部用字
 //
-// 首次生成会从 GitHub 下载完整字体（约 25MB/个）到 app/.cache/fonts/，之后复用缓存。
-// 需要能访问 GitHub；在受限网络下可以先设置 HTTPS_PROXY + NODE_USE_ENV_PROXY=1。
+// 首次生成会从网络下载完整字体（24MB / 136KB）到 app/.cache/fonts/，之后复用缓存。
+// 受限网络下先设置 HTTPS_PROXY 与 NODE_USE_ENV_PROXY=1。
 
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import subsetFont from "subset-font";
 
-const FONT_VERSION = "v1.522";
-const RELEASE = `https://github.com/lxgw/LxgwWenKai/releases/download/${FONT_VERSION}`;
+const FONTS = [
+    {
+        family: "LXGW WenKai",
+        dir: "lxgw-wenkai",
+        out: "lxgw-wenkai-site.woff2",
+        file: "LXGWWenKai-Regular.ttf",
+        version: "v1.522",
+        url: "https://github.com/lxgw/LxgwWenKai/releases/download/v1.522/LXGWWenKai-Regular.ttf",
+        charset: "site",
+    },
+    {
+        family: "IBM Plex Mono",
+        dir: "ibm-plex-mono",
+        out: "ibm-plex-mono-site.woff2",
+        file: "IBMPlexMono-Regular.ttf",
+        version: "google/fonts@main",
+        url: "https://cdn.jsdelivr.net/gh/google/fonts@main/ofl/ibmplexmono/IBMPlexMono-Regular.ttf",
+        license: "https://cdn.jsdelivr.net/gh/google/fonts@main/ofl/ibmplexmono/OFL.txt",
+        charset: "code",
+    },
+];
 
 const appDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const rootDir = path.resolve(appDir, "..");
 const docsDir = path.join(rootDir, "docs");
 const cacheDir = path.join(appDir, ".cache", "fonts");
-const fontDir = path.join(appDir, "src", "assets", "fonts", "lxgw-wenkai");
 const cssPath = path.join(appDir, "src", "styles", "fonts.css");
 
-const REGULAR = { id: "regular", file: "LXGWWenKai-Regular.ttf", out: "lxgw-wenkai-site.woff2", family: "LXGW WenKai" };
-const MONO = { id: "mono", file: "LXGWWenKaiMono-Regular.ttf", out: "lxgw-wenkai-mono-site.woff2", family: "LXGW WenKai Mono" };
-
-// 兜底字符：ASCII、常用标点、全角形式等。真正的用字从内容里扫出来。
-const BUFFER = [
+// 正文兜底字符：ASCII、常用标点、全角形式等；真正的用字从内容里扫出来。
+const TEXT_BUFFER = [
     [0x20, 0x7e],
     [0xa0, 0xff],
     [0x2000, 0x206f],
     [0x3000, 0x303f],
     [0xff00, 0xff5e],
+];
+
+// 等宽族的字符范围：Plex Mono 只覆盖拉丁与常用符号，中文交给文楷。
+const MONO_RANGES = [
+    [0x20, 0x7e],
+    [0xa0, 0xff],
+    [0x2000, 0x206f],
+    [0x2190, 0x21ff],
+];
+
+// 这些区段属于中日韩，等宽族不申请，交给文楷渲染
+const CJK_RANGES = [
+    [0x2e80, 0x2eff],
+    [0x3000, 0x303f],
+    [0x3040, 0x30ff],
+    [0x3400, 0x4dbf],
+    [0x4e00, 0x9fff],
+    [0xf900, 0xfaff],
+    [0xfe30, 0xfe4f],
+    [0xff00, 0xffef],
+    [0x20000, 0x3ffff],
 ];
 
 const walk = (dir, exts, files = []) => {
@@ -46,7 +87,7 @@ const walk = (dir, exts, files = []) => {
     return files;
 };
 
-const readText = () => {
+const readSiteText = () => {
     const files = [
         ...walk(docsDir, [".md"]),
         ...walk(path.join(appDir, "src"), [".astro", ".js"]),
@@ -55,7 +96,7 @@ const readText = () => {
     return files.map((file) => fs.readFileSync(file, "utf8")).join("\n");
 };
 
-// 等宽字体只用在代码块和行内代码上，按这些位置的真实字符裁剪即可。
+// 等宽字体只用在代码块与行内代码上，按这些位置的真实字符裁剪即可。
 const readCodeText = () => {
     const parts = [];
     for (const file of walk(docsDir, [".md"])) {
@@ -66,8 +107,27 @@ const readCodeText = () => {
     return parts.join("\n");
 };
 
-const addRange = (set, [from, to]) => {
-    for (let code = from; code <= to; code++) set.add(code);
+const addRanges = (set, ranges) => {
+    for (const [from, to] of ranges) for (let code = from; code <= to; code++) set.add(code);
+};
+
+const inRanges = (code, ranges) => ranges.some(([from, to]) => code >= from && code <= to);
+
+const charset = (kind) => {
+    const points = new Set();
+
+    if (kind === "site") {
+        addRanges(points, TEXT_BUFFER);
+        for (const char of readSiteText()) points.add(char.codePointAt(0));
+        return points;
+    }
+
+    addRanges(points, MONO_RANGES);
+    for (const char of readCodeText()) {
+        const code = char.codePointAt(0);
+        if (!inRanges(code, CJK_RANGES)) points.add(code);
+    }
+    return points;
 };
 
 const toRanges = (points) => {
@@ -84,28 +144,26 @@ const toRanges = (points) => {
 const hex = (code) => code.toString(16).toUpperCase().padStart(4, "0");
 const formatRanges = (ranges) => ranges.map(([from, to]) => (from === to ? `U+${hex(from)}` : `U+${hex(from)}-${hex(to)}`)).join(", ");
 
-const charset = (text) => {
-    const points = new Set();
-    for (const range of BUFFER) addRange(points, range);
-    for (const char of text) points.add(char.codePointAt(0));
-    return points;
-};
-
-const ensureTtf = async (font) => {
-    const target = path.join(cacheDir, font.file);
-    if (fs.existsSync(target)) return fs.readFileSync(target);
-    const url = `${RELEASE}/${font.file}`;
-    process.stdout.write(`[fonts] 下载 ${font.file} (${FONT_VERSION}) ... `);
+const download = async (url, target) => {
     const response = await fetch(url);
-    if (!response.ok) throw new Error(`下载失败：${url} → HTTP ${response.status}（受限网络可设置 HTTPS_PROXY 与 NODE_USE_ENV_PROXY=1）`);
+    if (!response.ok) {
+        throw new Error(`下载失败：${url} → HTTP ${response.status}（受限网络可设置 HTTPS_PROXY 与 NODE_USE_ENV_PROXY=1）`);
+    }
     const buffer = Buffer.from(await response.arrayBuffer());
-    fs.mkdirSync(cacheDir, { recursive: true });
+    fs.mkdirSync(path.dirname(target), { recursive: true });
     fs.writeFileSync(target, buffer);
-    console.log(`${(buffer.length / 1048576).toFixed(1)} MB`);
     return buffer;
 };
 
-const parseExistingRanges = () => {
+const ensureFile = async (url, target, label) => {
+    if (fs.existsSync(target)) return fs.readFileSync(target);
+    process.stdout.write(`[fonts] 下载 ${label} ... `);
+    const buffer = await download(url, target);
+    console.log(`${(buffer.length / 1024).toFixed(0)} KB`);
+    return buffer;
+};
+
+const parsedRanges = () => {
     if (!fs.existsSync(cssPath)) return [];
     const css = fs.readFileSync(cssPath, "utf8");
     const ranges = [];
@@ -121,16 +179,13 @@ const parseExistingRanges = () => {
     return ranges;
 };
 
-const regularText = readText();
-const regularPoints = charset(regularText);
-// 等宽族只用在代码块与行内代码上，按这些位置的真实字符裁剪，能少下 200KB+ 的正文汉字
-const monoPoints = charset(readCodeText());
+const sitePoints = charset("site");
 
 if (process.argv.includes("--check")) {
-    const covered = parseExistingRanges();
-    const missing = [...regularPoints].filter((point) => !covered.some(([from, to]) => point >= from && point <= to));
+    const covered = parsedRanges();
+    const missing = [...sitePoints].filter((point) => !covered.some(([from, to]) => point >= from && point <= to));
     if (missing.length === 0) {
-        console.log(`[fonts] 子集覆盖完整：${regularPoints.size} 个码点全部命中`);
+        console.log(`[fonts] 子集覆盖完整：${sitePoints.size} 个码点全部命中`);
     } else {
         const sample = missing.slice(0, 40).map((point) => String.fromCodePoint(point)).join("");
         console.warn(
@@ -142,39 +197,41 @@ if (process.argv.includes("--check")) {
     process.exit(0);
 }
 
-const report = [];
-for (const [font, points] of [
-    [REGULAR, regularPoints],
-    [MONO, monoPoints],
-]) {
-    const ttf = await ensureTtf(font);
-    const ranges = toRanges(points);
-    const output = await subsetFont(ttf, String.fromCodePoint(...points), { targetFormat: "woff2" });
-    fs.mkdirSync(fontDir, { recursive: true });
-    fs.writeFileSync(path.join(fontDir, font.out), output);
-    report.push({ font, ranges, size: output.length });
-    console.log(`[fonts] ${font.out}: ${points.size} 个码点 / ${ranges.length} 段 unicode-range / ${(output.length / 1024).toFixed(0)} KB`);
-}
+const blocks = [];
 
-const blocks = report.map(
-    ({ font, ranges }) =>
+for (const font of FONTS) {
+    const points = font.charset === "site" ? sitePoints : charset("code");
+    const ranges = toRanges(points);
+    const ttf = await ensureFile(font.url, path.join(cacheDir, font.file), `${font.file}（${font.version}）`);
+    const output = await subsetFont(ttf, String.fromCodePoint(...points), { targetFormat: "woff2" });
+
+    const dir = path.join(appDir, "src", "assets", "fonts", font.dir);
+    fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(path.join(dir, font.out), output);
+    fs.writeFileSync(path.join(dir, "VERSION"), `${font.version}\n`, "utf8");
+    if (font.license) await ensureFile(font.license, path.join(dir, "OFL.txt"), `${font.dir}/OFL.txt`);
+
+    blocks.push(
         [
             "@font-face {",
             `    font-family: "${font.family}";`,
             "    font-style: normal;",
             "    font-weight: 400;",
             "    font-display: swap;",
-            `    src: url("../assets/fonts/lxgw-wenkai/${font.out}") format("woff2");`,
+            `    src: url("../assets/fonts/${font.dir}/${font.out}") format("woff2");`,
             `    unicode-range: ${formatRanges(ranges)};`,
             "}",
         ].join("\n"),
-);
+    );
+
+    console.log(`[fonts] ${font.out}: ${points.size} 个码点 / ${ranges.length} 段 unicode-range / ${(output.length / 1024).toFixed(0)} KB`);
+}
 
 fs.writeFileSync(
     cssPath,
     [
-        `/* 由 scripts/build-font-subset.mjs 生成（霞鹜文楷 ${FONT_VERSION}），请勿手改。 */`,
-        `/* 字符集来自 docs/ 与 app/ 的实际用字，重新生成：npm run fonts */`,
+        "/* 由 scripts/build-font-subset.mjs 生成，请勿手改。 */",
+        "/* 字符集来自 docs/ 与 app/ 的实际用字，重新生成：npm run fonts */",
         "",
         blocks.join("\n\n"),
         "",
@@ -182,5 +239,4 @@ fs.writeFileSync(
     "utf8",
 );
 
-fs.writeFileSync(path.join(fontDir, "VERSION"), `${FONT_VERSION}\n`, "utf8");
-console.log(`[fonts] fonts.css 已更新（${report.reduce((sum, item) => sum + item.ranges.length, 0)} 段 unicode-range）`);
+console.log("[fonts] fonts.css 已更新");

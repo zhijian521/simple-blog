@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
 import MarkdownIt from "markdown-it";
+import { highlightCode } from "./highlight.js";
 import config from "../../site.config.mjs";
 
 const postsPath = path.join(config.docsDir, config.postsDir);
@@ -198,7 +199,7 @@ export function getPosts() {
                 category: data.category,
                 cover: toAssetUrl(data.coverImage),
                 status: String(data.status || "published"),
-                html: prepareHtml(markdown.render(content)),
+                html: highlightCode(prepareHtml(markdown.render(content))),
             };
         })
         .filter((post) => post.status === "published");

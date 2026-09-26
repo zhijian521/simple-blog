@@ -107,25 +107,29 @@ front matter 字段：
 - 图片放 `docs/images/`，视频放 `docs/videos/`，构建前会自动同步到站点静态目录。
 - 正文里的图片写成相对路径 `images/xxx.webp` 即可，构建时会改写为 `/images/xxx.webp`，并自动补上宽高和懒加载。
 - `- [ ]` / `- [x]` 任务清单会渲染成勾选框。
+- 代码块用围栏加语言标注（如 ts、bash、html、json），构建时由 Shiki 着色；不标语言的围栏按纯文本显示。主题是 `github-light`，换主题改 `app/src/lib/highlight.js` 顶部常量。
 - 正文里的 `---` 按「纯留白」处理，不画横线。
 - 正文中的原始 HTML 会保留（`html: true`），请只写自己信任的内容。
 
 ## 字体
 
-正文、标题、列表、代码块统一用 **霞鹜文楷（LXGW WenKai）简体版**（正文用比例体、代码用同族等宽体），自托管，运行时不请求任何外部 CDN。
+两套自托管字体，运行时不请求任何外部 CDN：
+
+- **正文、标题、列表**：霞鹜文楷（LXGW WenKai）简体版，比例体
+- **代码块与行内代码**：IBM Plex Mono，代码里的中文由 `--font-mono` 的第二顺位文楷接住，不需要额外的中文字体
 
 字体不是整套塞进去的，而是**按站内实际用字裁剪过的子集**：
 
 | 文件 | 覆盖 | 体积 |
 | --- | --- | --- |
-| `app/src/assets/fonts/lxgw-wenkai/lxgw-wenkai-site.woff2` | 正文与界面实际用到的 1471 个码点 | 253 KB |
-| `app/src/assets/fonts/lxgw-wenkai/lxgw-wenkai-mono-site.woff2` | 代码块与行内代码里的字符 | 97 KB |
+| `app/src/assets/fonts/lxgw-wenkai/lxgw-wenkai-site.woff2` | `docs/` 与 `app/` 里出现的全部用字（1471 个码点） | 252 KB |
+| `app/src/assets/fonts/ibm-plex-mono/ibm-plex-mono-site.woff2` | 代码里的拉丁字符与符号（423 个码点） | 15 KB |
 
-- 为什么裁剪：官方分片版是按字频切成 97 片/字族，一篇中文长文会命中 24–56 片（首访 1.2–2.7MB），字体替换那一下非常明显；裁成子集后每篇首访最多 **351KB**，且各自只有一个文件，可以整份 preload
+- 为什么裁剪：官方分片版是按字频切成 97 片/字族，一篇中文长文会命中 24–56 片（首访 1.2–2.7MB），字体替换那一下非常明显；裁成子集后每页只下 252KB（含代码的页面再加 15KB），各自只有一个文件，可以整份 preload
 - `app/src/styles/fonts.css` 由脚本生成（两条 `@font-face`，带精确的 `unicode-range`），由 `main.css` 用 `@import` 引入；子集覆盖不到的字符会退回系统字体，不会出现豆腐块
-- `Base.astro` 里正文子集每页都 preload，等宽子集只在含代码的页面 preload，避免没有代码的页面白下 97KB
-- 字体遵循 SIL OFL 1.1，授权文件在 `app/src/assets/fonts/lxgw-wenkai/OFL.txt`
-- 排版参数：正文 16px / 行高 1.85 / 栏宽 680px；全站不用粗体（`font-synthesis: none`），层级靠字号与间距区分
+- `Base.astro` 里正文子集每页都 preload，等宽子集只在含代码的页面 preload，避免没有代码的页面白下
+- 两套字体都是 SIL OFL 1.1，`OFL.txt` 分别放在各自目录里
+- 排版参数：正文 16px / 行高 1.8 / 段间距 1.05rem / 栏宽 680px；全站不用粗体（`font-synthesis: none`），层级靠字号与间距区分
 
 新文章如果用到子集里没有的字，`npm run dev` 与 `npm run build` 会在同步/构建前提示，运行下面这条重新裁剪即可：
 
@@ -134,7 +138,7 @@ cd app
 npm run fonts
 ```
 
-首次运行会从 GitHub 下载完整字体（约 25MB/个）缓存到 `app/.cache/fonts/`（已 ignore），之后复用；受限网络下先设置 `HTTPS_PROXY` 与 `NODE_USE_ENV_PROXY=1`。升级字体或换字体，改 `scripts/build-font-subset.mjs` 顶部的 `FONT_VERSION` 等常量。
+首次运行会下载完整字体（文楷 24MB、Plex Mono 136KB）缓存到 `app/.cache/fonts/`（已 ignore），之后复用；受限网络下先设置 `HTTPS_PROXY` 与 `NODE_USE_ENV_PROXY=1`。升级字体或换字体，改 `scripts/build-font-subset.mjs` 顶部的 `FONTS` 常量。
 
 ## 部署
 
@@ -161,6 +165,7 @@ simple-blog/
 │  ├─ scripts/build-font-subset.mjs 按站内用字裁剪字体子集、检查覆盖
 │  ├─ src/
 │  │  ├─ lib/posts.js       读取 docs/blog 并渲染 Markdown
+│  │  ├─ lib/highlight.js   构建期用 Shiki 给代码块着色
 │  │  ├─ layouts/Base.astro 全站布局与 SEO meta
 │  │  ├─ components/        PostList、Pagination
 │  │  ├─ pages/             首页、文章页、归档页、robots.txt、rss.xml
@@ -181,4 +186,4 @@ simple-blog/
 
 ## 技术栈
 
-Astro 7、Markdown、gray-matter、markdown-it、@astrojs/sitemap。字体自托管且按内容裁剪成子集，没有数据库，没有服务端，没有需要本地编译的依赖。
+Astro 7、Markdown、gray-matter、markdown-it、@astrojs/sitemap、Shiki（构建期代码高亮，运行时零 JS）。字体自托管且按内容裁剪成子集，没有数据库，没有服务端，没有需要本地编译的依赖。

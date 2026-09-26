@@ -1,7 +1,7 @@
 ---
 import "../styles/main.css";
 import regularFont from "../assets/fonts/lxgw-wenkai/lxgw-wenkai-site.woff2?url";
-import monoFont from "../assets/fonts/lxgw-wenkai/lxgw-wenkai-mono-site.woff2?url";
+import monoFont from "../assets/fonts/ibm-plex-mono/ibm-plex-mono-site.woff2?url";
 import config, { absoluteUrl } from "../../site.config.mjs";
 
 const {
@@ -17,7 +17,7 @@ const {
     hasCode = false,
 } = Astro.props;
 
-// 正文子集每个页面都要用；等宽子集只服务代码块，不让没有代码的页面白下 97KB
+// 正文子集每个页面都要用；等宽子集只服务代码块，不让没有代码的页面白下
 const fontPreloads = hasCode ? [regularFont, monoFont] : [regularFont];
 
 const canonical = absoluteUrl(path);
