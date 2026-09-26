@@ -11,6 +11,9 @@
         "prebuild": "node scripts/sync-media.js && node scripts/build-font-subset.mjs --check",
         "build": "astro build",
         "fonts": "node scripts/build-font-subset.mjs",
+        "format": "prettier --write .",
+        "format:check": "prettier --check .",
+        "test": "node --test",
         "preview": "astro preview"
     },
     "dependencies": {
@@ -21,6 +24,8 @@
         "shiki": "^4.4.3"
     },
     "devDependencies": {
+        "prettier": "^3.9.9",
+        "prettier-plugin-astro": "^1.1.0",
         "subset-font": "^2.9.0"
     }
 }

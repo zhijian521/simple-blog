@@ -1,6 +1,0 @@
-# 构建产物
-app/dist/
-app/.astro/
-
-# 由 lxgw-wenkai-webfont 的官方 CSS 生成，保持与字体分片一致，不参与格式化
-app/src/styles/fonts.css

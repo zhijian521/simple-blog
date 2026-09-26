@@ -192,11 +192,15 @@ const readPostFile = (filename) => {
     }
 };
 
-// 挡住“构建成功但产出错误 URL”的情况
+// 挡住“构建成功但产出错误 URL”的情况。
+// slug 会直接进 URL，所以把所有会改变 URL 语义的字符都挡掉：
+//   / 和 \ 会拆出多余路径层级，开头的 . 与中间的 .. 会跳出目录，
+//   ? 与 # 会被当成查询串和片段，% 会与百分号编码冲突，空白会产出不可读的地址。
+// 控制字符也一并挡掉：YAML 双引号里的 \b 之类会被解析成真的控制字符，绕开上面几条。
 const readSlug = (filename, data) => {
     const slug = String(data.slug || path.basename(filename, ".md"));
 
-    if (!slug || slug.includes("/") || slug.includes("\\") || slug.includes("..")) {
+    if (!slug || /[/\\?#%\s\u0000-\u001f\u007f]/.test(slug) || slug.startsWith(".") || slug.includes("..")) {
         throw new Error(`${filename} 的 slug 非法：${slug}`);
     }
 

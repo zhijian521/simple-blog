@@ -41,7 +41,12 @@ const COLOR_FIXES = {
 // 替换顺序不能改：&amp; 必须最后换，否则 &amp;lt; 会先变成 &lt;，
 // 下一轮又被还原成 <，把代码里的字面量当成真标签。
 const unescapeHtml = (text) =>
-    text.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, "&");
+    text
+        .replace(/&lt;/g, "<")
+        .replace(/&gt;/g, ">")
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'")
+        .replace(/&amp;/g, "&");
 
 // 代码块在窄屏下靠横向滚动阅读，而浏览器只允许键盘滚动可聚焦的滚动区域；
 // Shiki 会给它生成的 <pre> 加 tabindex，未高亮的块得自己补，否则同一篇文章里两种行为。

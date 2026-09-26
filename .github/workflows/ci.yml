@@ -1,0 +1,56 @@
+name: CI
+
+on:
+    push:
+        branches: [main]
+    pull_request:
+    workflow_dispatch:
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: app
+        steps:
+            - uses: actions/checkout@v4
+
+            - uses: actions/setup-node@v4
+              with:
+                  node-version-file: .nvmrc
+                  cache: npm
+                  cache-dependency-path: app/package-lock.json
+
+            - name: 安装依赖
+              run: npm ci
+
+            # prebuild 会先同步图片，再跑字体子集覆盖检查。
+            # 该检查在缺字时以退出码 1 失败，所以新文章引入新汉字时必须先跑 npm run fonts。
+            - name: 构建
+              run: npm run build
+
+            - name: 代码格式
+              run: npm run format:check
+
+            - name: 单元测试
+              run: npm test
+
+            - name: 产物断言
+              run: |
+                  set -e
+                  for f in index.html 404.html rss.xml sitemap-index.xml sitemap-0.xml \
+                           robots.txt manifest.json page/1/index.html; do
+                    test -f "dist/$f" || { echo "缺少产物 dist/$f"; exit 1; }
+                  done
+
+                  # 每篇已发布文章都要有对应页面
+                  test "$(ls -d dist/blog/*/ | wc -l)" -eq "$(ls ../docs/blog/*.md | wc -l)"
+                  # 字体只应有 2 个子集，且产物里不能出现任何客户端 JS
+                  test "$(ls dist/_astro/*.woff2 | wc -l)" -eq 2
+                  test "$(find dist -name '*.js' | wc -l)" -eq 0
+                  # SEO 关键项：首页 canonical 用正式域名，404 页不得被收录
+                  grep -q '<link rel="canonical" href="https://yuwb.dev/">' dist/index.html
+                  grep -q 'noindex' dist/404.html
+                  grep -q 'sitemap-index.xml' dist/robots.txt
+
+                  echo "产物断言通过"

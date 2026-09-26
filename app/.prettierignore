@@ -1,0 +1,10 @@
+# 构建产物
+dist/
+.astro/
+node_modules/
+
+# 字体子集与 @font-face 规则由 scripts/build-font-subset.mjs 生成，不要手改
+src/styles/fonts.css
+
+# 依赖字体在缓存目录里，不是源码
+.cache/

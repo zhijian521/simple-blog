@@ -97,11 +97,7 @@ const stripComments = (text) => text.replace(/\/\*[\s\S]*?\*\//g, " ").replace(/
 
 // 只扫已发布的文章和会渲染出文字的源码；docs/ 下不发布的说明性文档不参与。
 const readSiteText = () => {
-    const files = [
-        ...walk(postsDir, [".md"]),
-        ...walk(path.join(appDir, "src"), [".astro", ".js"]),
-        path.join(appDir, "site.config.mjs"),
-    ];
+    const files = [...walk(postsDir, [".md"]), ...walk(path.join(appDir, "src"), [".astro", ".js"]), path.join(appDir, "site.config.mjs")];
     return files.map((file) => stripComments(fs.readFileSync(file, "utf8"))).join("\n");
 };
 
@@ -208,7 +204,10 @@ if (process.argv.includes("--check")) {
     if (missing.length === 0) {
         console.log(`[fonts] 子集覆盖完整：${sitePoints.size} 个码点全部命中`);
     } else {
-        const sample = missing.slice(0, 40).map((point) => String.fromCodePoint(point)).join("");
+        const sample = missing
+            .slice(0, 40)
+            .map((point) => String.fromCodePoint(point))
+            .join("");
         console.warn(
             `[fonts] 有 ${missing.length} 个新字符不在现有字体子集里，这些字会退回系统字体。\n` +
                 `        例如：${sample}\n` +
@@ -238,8 +237,8 @@ for (const font of FONTS) {
     fs.writeFileSync(path.join(dir, font.out), output);
     fs.writeFileSync(path.join(dir, "VERSION"), `${font.version}\n`, "utf8");
     // 只有 IBM Plex Mono 配了 license 下载地址；文楷的 OFL.txt 是手工放进仓库的，
-// 不会被这个脚本刷新
-if (font.license) await ensureFile(font.license, path.join(dir, "OFL.txt"), `${font.dir}/OFL.txt`);
+    // 不会被这个脚本刷新
+    if (font.license) await ensureFile(font.license, path.join(dir, "OFL.txt"), `${font.dir}/OFL.txt`);
 
     blocks.push(
         [
