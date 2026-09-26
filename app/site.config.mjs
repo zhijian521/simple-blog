@@ -65,6 +65,7 @@ const config = {
 
     // 语言与主题色
     locale: "zh-CN",
+    // 浏览器 UI 的主题色，与页面底色保持一致
     themeColor: "#f8f8f5",
 
     // 社交分享默认图，放在 app/public/ 下，建议 1200×630。
@@ -72,6 +73,7 @@ const config = {
 
     // 站点图标，放在 app/public/ 下。
     favicon: "/favicon-32.png",
+    // iOS「添加到主屏幕」用的图标，需为 180×180
     appleTouchIcon: "/apple-touch-icon.png",
 
     // 内容目录，相对 app/ 定位。

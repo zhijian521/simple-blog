@@ -1,13 +1,10 @@
 # Simple Blog
 
-一个极简的静态个人博客：Astro + Markdown，零原生依赖（不需要 Python、node-gyp 或 C++ 编译工具链）。
+一个极简的静态个人博客：Astro + Markdown，零原生依赖，运行时零 JS。文章与素材在 `docs/`，应用代码在 `app/`，两者互不干扰。
 
-- 文章与素材都放在仓库根目录的 `docs/`，应用代码在 `app/`，两者互不干扰
-- 首页：站点介绍（简介 + RSS / GitHub 入口）+ 项目列表 + 最新文章，文章条目含标题、日期与摘要
-- 归档：分页列表，显示时间和摘要
-- 自带 SEO：canonical、Open Graph、Twitter Card、JSON-LD、sitemap、robots.txt、RSS
-- 极简版式：无页头页脚、无栅格线框、居中窄栏、正文左对齐；图片与代码块只有一道极浅的描边
-- 自托管字体：霞鹜文楷（正文）与 IBM Plex Mono（代码），按站内实际用字裁剪成子集，运行时不请求任何外部 CDN
+首页是「简介 + 项目 + 最新文章」，另有分页归档；自带 canonical、Open Graph、JSON-LD、sitemap、robots.txt 与 RSS。版式刻意做减法：无页头页脚、无栅格线框、居中窄栏、全站不用粗体。字体自托管（霞鹜文楷 + IBM Plex Mono），不请求任何外部 CDN。
+
+技术上用 Astro 7、markdown-it + gray-matter、Shiki（构建期代码高亮）、subset-font（构建期裁剪字体）；开发期用 Prettier。没有数据库、没有服务端、没有需要本地编译的依赖。
 
 ## 快速开始
 
@@ -15,80 +12,24 @@
 git clone https://github.com/zhijian521/simple-blog.git
 cd simple-blog/app
 npm install
-npm run dev
+npm run dev        # http://localhost:4321
 ```
 
-打开 http://localhost:4321 。
+需要 Node 22.12 或更高版本（`app/package.json` 的 `engines` 里写着要求）。
 
-构建静态文件：
-
-```bash
-cd app
-npm run build     # 输出到 app/dist/
-npm run preview   # 本地预览构建结果
-```
-
-全部脚本（都在 `app/` 下执行）：
-
-| 命令                             | 作用                                                       |
-| -------------------------------- | ---------------------------------------------------------- |
-| `npm run dev`                    | 开发服务器；会先同步图片并检查字体子集覆盖                 |
-| `npm run build`                  | 构建到 `app/dist/`；同样先做同步与字体检查                 |
-| `npm run preview`                | 本地预览构建产物                                           |
-| `npm run fonts`                  | 按站内用字重新裁剪字体子集（文章引入新汉字后要跑）         |
-| `npm test`                       | 单元测试（Node 内置 `node --test`，零额外框架）            |
-| `npm run format` / `format:check`| 用 Prettier 格式化 / 只检查（不覆盖 `docs/` 里的文章）     |
-
-需要 Node 22.12 或更高版本，仓库根目录的 `.nvmrc` 已固定推荐版本：
-
-```bash
-nvm use
-```
+常用命令都在 `app/` 下执行：`npm run build` 构建到 `app/dist/`，`npm run preview` 本地预览，`npm run fonts` 重新裁剪字体子集，`npm run format` 格式化。
 
 ## 配置
 
-**所有站点配置都在 [`app/site.config.mjs`](app/site.config.mjs) 一个文件里**，改完即可，不需要动页面代码。
-
-| 配置项                       | 说明                                                                           |
-| ---------------------------- | ------------------------------------------------------------------------------ |
-| `url`                        | 部署后的正式域名，用于 canonical、sitemap、RSS、分享卡片。末尾不要带斜杠       |
-| `name`                       | 站点名，出现在浏览器标题后缀和结构化数据里                                     |
-| `role`                       | 首页介绍区的身份，与站点名同行显示：`语无边 · 开发工程师`                      |
-| `author`                     | 文章作者署名                                                                   |
-| `authorTagline`              | 作者签名行，首页简介开头与结构化数据共用                                       |
-| `authorBio`                  | 作者简介，写入 Person 结构化数据                                               |
-| `github`                     | 作者主页，作为 Person 的 `sameAs`，帮助搜索引擎归并实体                        |
-| `description`                | 站点描述。用于首页 meta description 与 RSS 的 channel 描述；文章摘要来自各篇文章自己的 `description` |
-| `blogDescription`            | 归档页的 meta description                                                      |
-| `keywords`                   | 全站关键词数组；文章页会自动追加该文的标签与分类                               |
-| `locale`                     | 语言，默认 `zh-CN`                                                             |
-| `themeColor`                 | 浏览器主题色                                                                   |
-| `ogImage`                    | 社交分享默认图，放在 `app/public/`，建议 1200×630                              |
-| `favicon` / `appleTouchIcon` | 站点图标，放在 `app/public/`                                                   |
-| `contentDir`                 | 内容目录，相对 `app/`，默认 `../docs`                                          |
-| `postsDir`                   | 文章所在的子目录，相对 `contentDir`，默认 `blog`                               |
-| `postsBase`                  | 文章地址前缀，默认 `/blog`，即文章生成在 `/blog/<slug>/`                       |
-| `postsOnHome`                | 首页最多展示多少篇。文章不超过此数时，首页不显示「归档」入口，也不会生成归档页 |
-| `postsPerArchivePage`        | 归档每页条数                                                                   |
-| `projects`                   | 首页项目列表，每项为 `{ title, description, href }`，`href` 留空则只显示文字   |
-
-站点域名也可以用环境变量覆盖，便于同一份代码在不同环境构建：
+所有站点配置都在 [`app/site.config.mjs`](app/site.config.mjs) 一个文件里，每一项都有注释，改完即生效，不需要动页面代码。域名可以用环境变量覆盖，便于同一份代码在不同环境构建：
 
 ```bash
 SITE_URL=https://your-domain.com npm run build
 ```
 
-也可以写在 `app/.env` 里（Astro 会自动读取）：
-
-```bash
-SITE_URL=https://your-domain.com
-```
-
-环境变量优先于 `site.config.mjs` 里的 `url`。如果把 `url` 填成 `example.com` 这类占位域名，构建时会打印提醒。
-
 ## 写文章
 
-文章放在 `docs/blog/`，一篇文章一个 Markdown 文件。文件名或 front matter 里的 `slug` 决定文章地址，最终生成在 `/blog/<slug>/`。
+文章放 `docs/blog/`，一篇文章一个 Markdown 文件，地址是 `/blog/<slug>/`。
 
 ```markdown
 ---
@@ -96,134 +37,59 @@ title: 文章标题
 slug: my-post
 description: 一句话摘要，会显示在列表、搜索结果和分享卡片里
 date: 2026-06-28
-category: 项目实战
+category: 技术笔记
 tags: [Astro, 前端]
-coverImage: images/cover.webp
-status: published
 ---
 
 正文……
 ```
 
-front matter 字段：
+- `slug` 必填，只允许小写字母、数字与连字符；`date` 必须补零写成 `YYYY-MM-DD`。
+- `status` 不是 `published` 就不发布；`coverImage` 只用于分享卡片（1200×630，**不显示在页面上**）；`updated` 可选，写进结构化数据的 `dateModified`。
+- 格式写错会**直接让构建失败并指出文件名**——这是有意的，比生成一堆坏链接强。
 
-| 字段         | 说明                                              |
-| ------------ | ------------------------------------------------- |
-| `title`      | 文章标题，缺省时用 slug                           |
-| `slug`       | 文章地址。**建议显式声明**：缺省时用文件名，而文件名通常是中文。只允许小写字母、数字与连字符 |
-| `description` | 一句话摘要，用于列表、meta description 与分享卡片 |
-| `date`       | 发布日期，格式 `YYYY-MM-DD`（必须补零），也是列表排序依据 |
-| `updated`    | 可选，修订日期，写入结构化数据的 `dateModified`；不写则用 `date` |
-| `tags`       | 标签，用于关键词与结构化数据                      |
-| `category`   | 分类，写入结构化数据的 `articleSection`           |
-| `coverImage` | 社交分享图，相对 `docs/` 的路径。**只用于分享卡片与结构化数据，不显示在页面上**；比例应为 1200×630 |
-| `status`     | 非 `published` 不生成页面                         |
+配图与排版上踩过的坑：
 
-内容约定：
-
-- 图片放 `docs/images/`，视频放 `docs/videos/`，构建前会自动同步到站点静态目录。
-- 图片文件名只用 `[a-z0-9._-]`：**带空格时 markdown 根本不会解析这行**，中文名虽然能显示但读不到宽高。
-- 正文里的图片写成相对路径 `images/xxx.webp` 即可，构建时会改写为 `/images/xxx.webp`，并自动补上宽高和懒加载。**只有 `.webp` 与 `.png` 能自动读到尺寸**，其它格式要自己写 `width`/`height`。
-- 每张图都要写有意义的 `alt`，不要留文件名。**`alt` 里不要写反斜杠**：markdown-it 会把反斜杠和它后面那个字符一起吃掉，`C:\dev\nvm` 会变成 `C:evvm`。
-- 视频要写绝对路径 `/videos/x.mp4`，相对路径不会被改写。
-- `- [ ]` / `- [x]` 任务清单会渲染成勾选框，但**列表项之间不能有空行**，否则会退化成松散列表、不转换。
-- 代码块用围栏加语言标注，支持 `bash`、`html`、`javascript`、`json`、`typescript`（`ts`）；不标语言或标了不支持的语言会按纯文本显示，不报错。
-- 主题是 `github-light`，且把 4 个在浅灰底上对比度不足的颜色替换成了同色相的更深值。换主题要同时改 `app/src/lib/highlight.js` 里的 import、`themes` 数组里的变量与 `THEME` 常量，并重新确认对比度。
-- 正文里的 `---` 按「纯留白」处理，不画横线。
-- 正文中的原始 HTML 会保留（`html: true`），请只写自己信任的内容。
+- 图片放 `docs/images/`，正文写相对路径 `images/xxx.webp`。文件名只用 `[a-z0-9._-]`：**带空格时 markdown 会整行不解析**，中文名则读不到宽高。只有 `.webp` 和 `.png` 会**自动补宽高**，其它格式要自己写 `width`/`height`。
+- 每张图都写有意义的 `alt`，不要留文件名；**`alt` 里不能写反斜杠**（`C:\dev\nvm` 会变成 `C:evvm`）。视频要写绝对路径 `/videos/x.mp4`。
+- 任务清单 `- [ ]` / `- [x]` 会渲染成勾选框，但列表项之间**不能有空行**。
+- 代码围栏标上语言才会高亮，支持 `bash`、`html`、`javascript`、`json`、`typescript`（`ts`）；正文标题从哪一级开始都行，构建时会归一化成 h2 起步。
+- 正文里的原始 HTML 会原样保留，请只写自己信任的内容。
 
 ## 字体
 
-两套自托管字体，运行时不请求任何外部 CDN：
+两套字体都是**按站内实际用字裁剪过的子集**，各自只有一个文件、可以整份 preload：霞鹜文楷（正文与标题，约 250KB）、IBM Plex Mono（代码，约 15KB）。子集覆盖不到的字会退回系统字体（emoji 就是如此，走系统的彩色字体）。
 
-- **正文、标题、列表**：霞鹜文楷（LXGW WenKai）简体版，比例体
-- **代码块与行内代码**：IBM Plex Mono，代码里的中文由 `--font-mono` 的第二顺位文楷接住，不需要额外的中文字体
-
-字体不是整套塞进去的，而是**按站内实际用字裁剪过的子集**：
-
-| 文件 | 覆盖 | 体积 |
-| --- | --- | --- |
-| `app/src/assets/fonts/lxgw-wenkai/lxgw-wenkai-site.woff2` | 已发布文章 + 会渲染的模板字面量 + CSS 里的 `content`（1460 个码点） | 250 KB |
-| `app/src/assets/fonts/ibm-plex-mono/ibm-plex-mono-site.woff2` | 代码块与行内码里的非中日韩字符（423 个码点） | 15 KB |
-
-- 为什么裁剪：官方分片版是按字频切成 97 片/字族，一篇中文长文会命中 24–56 片（首访 1.2–2.7MB），字体替换那一下非常明显；裁成子集后每页只下 250KB（含代码的页面再加 15KB），各自只有一个文件，可以整份 preload
-- 字符集只扫**会渲染出文字**的地方：已发布文章、`.astro`/`.js` 里剥掉注释后的字面量、`site.config.mjs`，以及 CSS 的 `content: "…"`（任务清单的 ☐/☑ 就是这么进来的）。源码注释里的字不算——否则白涨体积，还会把真正缺字的告警淹掉
-- `app/src/styles/fonts.css` 由脚本生成（两条 `@font-face`，带精确的 `unicode-range`），由 `main.css` 用 `@import` 引入；子集覆盖不到的字符会退回系统字体（emoji 就是如此，走系统的彩色 emoji 字体），不会出现豆腐块
-- `Base.astro` 里正文子集每页都 preload，等宽子集只在含代码的页面 preload，避免没有代码的页面白下
-- 两套字体都是 SIL OFL 1.1，`OFL.txt` 分别放在各自目录里；脚本只自动刷新 Plex Mono 的授权文件，文楷那份是手工放进仓库的
-- 排版参数：正文 18px（基准字号，定义在 `main.css` 的 `:root`）/ 行高 1.8 / 段间距 1.05rem / 栏宽 680px；全站不用粗体（`font-synthesis: none`），层级靠字号与间距区分
-
-新文章如果用到子集里没有的字，`prebuild` 会**直接失败并列出缺的字**（不会静默回退成系统字体），按提示重新裁剪即可：
+文章里出现新汉字就要重新裁剪，否则那个字会静默掉回系统字体：
 
 ```bash
-cd app
 npm run fonts
 ```
 
-确实想带着回退字形先构建，用 `node scripts/build-font-subset.mjs --check --allow-missing`。
+`prebuild` 会检查覆盖情况，**缺字时让构建失败**并列出缺的字（确实想先跳过，加 `--allow-missing`）。首次裁剪要联网下载完整字体并缓存到 `app/.cache/fonts/`；升级或更换字体改 `app/scripts/build-font-subset.mjs` 顶部的 `FONTS`。
 
-首次运行会下载完整字体（文楷 24MB、Plex Mono 136KB）缓存到 `app/.cache/fonts/`（已 ignore），之后复用；受限网络下先设置 `HTTPS_PROXY` 与 `NODE_USE_ENV_PROXY=1`。升级字体或换字体，改 `scripts/build-font-subset.mjs` 顶部的 `FONTS` 常量。
+排版参数（基准字号 18px、行高、栏宽、段间距）都定义在 `app/src/styles/main.css` 的 `:root` 里，改那一处即可整体调整。
 
 ## 部署
 
-`app/dist/` 是纯静态产物，可直接部署到 GitHub Pages、Vercel、Netlify、Cloudflare Pages 或任意静态服务器。
+`app/dist/` 是纯静态产物，传到任意静态托管或服务器即可。部署前把 `site.config.mjs` 里的 `url` 改成正式域名，否则 canonical、sitemap 与分享卡片会指向占位域名。
 
-部署前记得在 `app/site.config.mjs` 里把 `url` 改成正式域名，否则 canonical、sitemap 和分享卡片会指向占位域名。
-
-构建产物包含：
-
-| 文件                                 | 用途                      |
-| ------------------------------------ | ------------------------- |
-| `index.html`、`page/1/index.html`    | 首页与归档页              |
-| `blog/<slug>/index.html`             | 每篇文章一个页面          |
-| `404.html`                           | 404 页（已加 `noindex`，不会被收录） |
-| `sitemap-index.xml`、`sitemap-0.xml` | 站点地图                  |
-| `robots.txt`                         | 爬虫规则，含 sitemap 地址 |
-| `rss.xml`                            | RSS 订阅源                |
-| `manifest.json`                      | PWA 清单（本站无客户端 JS）|
-| `images/`、`_astro/`                 | 图片与带内容 hash 的 CSS / 字体 |
-
-**自建服务器部署时，缓存策略与安全响应头要自己配**（`Cache-Control`、CSP、`X-Content-Type-Options`、
-`rss.xml` 的 `Content-Type` 等）——这些都不在构建产物里，属于托管层配置。
+产物包含 HTML、`sitemap-index.xml`、`robots.txt`、`rss.xml`、`manifest.json`，以及带内容 hash 的 `_astro/`。缓存策略与安全响应头（`Cache-Control`、CSP 等）不在产物里，属于托管层配置——自建服务器时记得给 `_astro/*` 设长期缓存，否则每次导航都会回源校验那份 250KB 字体。
 
 ## 目录结构
 
 ```text
 simple-blog/
-├─ app/                     Astro 应用
-│  ├─ site.config.mjs       ★ 站点配置，克隆后主要改这里
-│  ├─ astro.config.mjs      Astro 配置（站点地址、sitemap、docs 的 dev 热更新）
-│  ├─ .prettierrc.json      格式化规则（含必需的 prettier-plugin-astro）
-│  ├─ .prettierignore       排除 dist/、.astro/ 与生成的 fonts.css
-│  ├─ scripts/sync-media.js 构建前同步 docs 里的图片和视频
-│  ├─ scripts/build-font-subset.mjs 按站内用字裁剪字体子集、检查覆盖
-│  ├─ tests/                node:test 单元测试（posts.js 与 highlight.js）
-│  ├─ src/
-│  │  ├─ lib/posts.js       读取 docs/blog 并渲染 Markdown
-│  │  ├─ lib/highlight.js   构建期用 Shiki 给代码块着色
-│  │  ├─ layouts/Base.astro 全站布局与 SEO meta
-│  │  ├─ components/        PostList、Pagination
-│  │  ├─ pages/             首页、文章页、归档页、404、robots.txt、rss.xml、manifest.json
-│  │  ├─ styles/main.css    全站样式
-│  │  ├─ styles/fonts.css   字体子集的 @font-face 规则（脚本生成，勿手改）
-│  │  └─ assets/fonts/      自托管字体子集与 OFL 授权
-│  ├─ assets/logo.png       图标与分享图的源文件（不参与部署）
-│  └─ public/               图标与分享图（会被部署）
-├─ docs/                    ★ 你的内容
-│  ├─ blog/                 Markdown 文章（只有这里会被发布）
-│  ├─ images/               图片
-│  └─ videos/               视频
-├─ LICENSE
-├─ .nvmrc
-└─ .gitattributes
+├─ app/                    Astro 应用
+│  ├─ site.config.mjs      ★ 站点配置，克隆后主要改这里
+│  ├─ src/lib/posts.js     读取 docs/blog 并渲染 Markdown
+│  ├─ src/lib/highlight.js 构建期用 Shiki 给代码块着色
+│  ├─ src/styles/          main.css 与生成的 fonts.css
+│  └─ scripts/             同步图片、裁剪字体子集
+├─ docs/                   ★ 你的内容：blog/ images/ videos/
+└─ LICENSE
 ```
-
-## 技术栈
-
-Astro 7、Markdown、gray-matter、markdown-it、@astrojs/sitemap、Shiki（构建期代码高亮，运行时零 JS）、subset-font（构建期裁剪字体，纯 JS/WASM，不需要本地编译）。开发期用 Prettier（含 `prettier-plugin-astro`）与 Node 内置的 `node --test`。没有数据库，没有服务端，没有需要本地编译的依赖。
 
 ## 许可
 
-- **代码**（`app/`）采用 [MIT 许可](LICENSE)。
-- **字体**（`app/src/assets/fonts/`）是第三方资源，采用 SIL OFL 1.1，**不受 MIT 覆盖**；对应的 `OFL.txt` 就在各自目录里，再分发时请一并保留。
-- **文章内容**（`docs/`）版权归作者所有；如需转载，请先联系作者。
+代码（`app/`）采用 [MIT 许可](LICENSE)。字体（`app/src/assets/fonts/`）是第三方资源，采用 SIL OFL 1.1，**不受 MIT 覆盖**，再分发时请保留各自的 `OFL.txt`。文章内容（`docs/`）版权归作者所有。
