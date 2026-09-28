@@ -69,7 +69,8 @@ const schema = {
             </p>
         </div>
         <p class="intro__bio">
-            {config.authorTagline}。{config.authorBio}
+            <span class="intro__line">{config.authorTagline}。</span>
+            <span class="intro__line">{config.authorBio}</span>
         </p>
         <p class="intro__links">
             <a href="/rss.xml">RSS 订阅</a>
@@ -103,7 +104,7 @@ const schema = {
         <h2 class="section__title" id="blog-title">
             文章
         </h2>
-        {visiblePosts.length ? <PostList posts={visiblePosts} /> : <p class="empty">还没有文章。</p>}
+        {visiblePosts.length ? <PostList posts={visiblePosts} showDate={false} /> : <p class="empty">还没有文章。</p>}
         {posts.length > visiblePosts.length && (
             <a class="archive-link" href="/page/1/">
                 归档

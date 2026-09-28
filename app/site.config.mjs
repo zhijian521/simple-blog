@@ -22,10 +22,10 @@ const config = {
     author: "语无边",
 
     // 作者签名行，与个人页、结构化数据共用
-    authorTagline: "前端开发 · 全栈 · 简约设计 · 造物",
+    authorTagline: "前端 · 全栈 · 简约设计",
 
     // 作者简介，写入 Person 结构化数据
-    authorBio: "喜欢简洁的设计，也喜欢安静写代码。做些小工具，记下零散的想法和日常的快乐。",
+    authorBio: "喜欢简洁的设计，也喜欢安静写代码。记下零散的想法和日常的快乐。",
 
     // 作者主页，作为 Person 的 sameAs，帮助搜索引擎归并实体
     github: "https://github.com/zhijian521",

@@ -107,6 +107,12 @@ a:focus-visible {
     line-height: 1.85;
 }
 
+/* 简介固定两行：第一行身份，第二行自我介绍。
+   用块级 span 而不是两个 <p>，这样两行紧挨着，不会多出一段段间距 */
+.intro__line {
+    display: block;
+}
+
 .intro__links {
     display: flex;
     flex-wrap: wrap;
@@ -171,6 +177,12 @@ a.plain-list__name:hover {
     gap: 0.3rem 1.5rem;
     align-items: baseline;
     padding: 0.65rem 0;
+}
+
+/* 不显示日期时退回单列：留着空列的话，跨列的摘要会比标题宽出 1.5rem 列间距，
+   两段文字的右边界对不齐 */
+.entry--nodate {
+    grid-template-columns: minmax(0, 1fr);
 }
 
 .entry__title {
