@@ -7,6 +7,5 @@ app/public/*
 !app/public/favicon-16.png
 !app/public/favicon.ico
 !app/public/apple-touch-icon.png
-!app/public/og.png
 .env
 .env.*

@@ -5,6 +5,7 @@ import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 import config, { absoluteUrl } from "./site.config.mjs";
 import { getPosts } from "./src/lib/posts.js";
+import { syncMedia } from "./scripts/sync-media.js";
 
 if (config.url.includes("example.com")) {
     console.warn("[site.config.mjs] 还没有填写正式域名（url）。canonical、sitemap、RSS 会使用占位域名，部署前请修改。");
@@ -12,20 +13,40 @@ if (config.url.includes("example.com")) {
 
 // 文章放在 app/ 之外的 docs/，Vite 默认不监听它，而且文章 HTML 是在
 // getStaticPaths 阶段生成的，所以改了 Markdown 开发服务器不会更新。
-// 这个插件补上监听，并在内容变化时丢弃模块缓存、整页刷新。
+// 素材先同步到 public，再丢弃模块缓存、整页刷新。
 const watchContent = {
     name: "watch-content",
     configureServer(server) {
         const contentDir = path.resolve(process.cwd(), config.contentDir);
+        let reloadTimer;
+        let mediaChanged = false;
 
         server.watcher.add(contentDir);
-        server.watcher.on("all", (_event, file) => {
-            if (!file.startsWith(contentDir)) {
+        const onContentChange = (_event, file) => {
+            const relative = path.relative(contentDir, path.resolve(file));
+            if (relative === ".." || relative.startsWith(`..${path.sep}`) || path.isAbsolute(relative)) {
                 return;
             }
 
-            server.moduleGraph.invalidateAll();
-            server.ws.send({ type: "full-reload" });
+            mediaChanged ||= ["images", "videos"].includes(relative.split(path.sep)[0]);
+            clearTimeout(reloadTimer);
+            // 合并编辑器保存/重命名产生的一组事件，避免读到替换中的文件。
+            reloadTimer = setTimeout(() => {
+                try {
+                    if (mediaChanged) syncMedia();
+                    mediaChanged = false;
+                    server.moduleGraph.invalidateAll();
+                    server.ws.send({ type: "full-reload" });
+                } catch (error) {
+                    server.config.logger.error(error.stack || error.message);
+                    server.ws.send({ type: "error", err: { message: error.message, stack: error.stack } });
+                }
+            }, 75);
+        };
+        server.watcher.on("all", onContentChange);
+        server.httpServer?.once("close", () => {
+            clearTimeout(reloadTimer);
+            server.watcher.off("all", onContentChange);
         });
     },
 };

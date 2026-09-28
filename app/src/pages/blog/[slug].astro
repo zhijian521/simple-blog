@@ -11,7 +11,6 @@ const { post } = Astro.props;
 const canonical = absoluteUrl(post.url);
 const siteUrl = `${config.url}/`;
 const description = post.description || `${post.title}，${config.name}的技术笔记。`;
-const cover = post.cover || config.ogImage;
 
 // 正文词数按字符计（中文场景），阅读时长按每分钟 450 字估算
 const plainText = post.html.replace(/<[^>]+>/g, "").replace(/\s+/g, "");
@@ -59,7 +58,6 @@ const schema = {
             "@id": `${canonical}#article`,
             headline: post.title,
             description,
-            image: absoluteUrl(cover),
             datePublished: post.date,
             // 没有单独的修订日期时退回发布日期，保证 dateModified 始终存在
             dateModified: post.updated || post.date,
@@ -84,10 +82,6 @@ const schema = {
     title={post.title}
     description={description}
     path={post.url}
-    image={cover}
-    imageWidth={post.coverWidth}
-    imageHeight={post.coverHeight}
-    imageType={post.coverType}
     type="article"
     schema={schema}
     publishedTime={post.date}

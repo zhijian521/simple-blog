@@ -19,7 +19,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import config from "../site.config.mjs";
+import { readPublishedPosts } from "../src/lib/content.js";
 
 const FONTS = [
     {
@@ -44,10 +44,8 @@ const FONTS = [
 ];
 
 const appDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-// 内容目录跟着 site.config.mjs 走，避免配置改了这里还在扫 docs/。
-// 注意：site.config.mjs 用 process.cwd() 定位内容目录，所以本脚本必须经 npm 脚本在 app/ 下运行。
-const docsDir = path.resolve(appDir, config.contentDir);
-const postsDir = path.join(docsDir, config.postsDir);
+// 与页面共用发布规则和内容目录；本脚本仍从 app/ 下运行。
+const publishedPosts = readPublishedPosts();
 const stylesDir = path.join(appDir, "src", "styles");
 const cacheDir = path.join(appDir, ".cache", "fonts");
 const cssPath = path.join(stylesDir, "fonts.css");
@@ -97,8 +95,12 @@ const stripComments = (text) => text.replace(/\/\*[\s\S]*?\*\//g, " ").replace(/
 
 // 只扫已发布的文章和会渲染出文字的源码；docs/ 下不发布的说明性文档不参与。
 const readSiteText = () => {
-    const files = [...walk(postsDir, [".md"]), ...walk(path.join(appDir, "src"), [".astro", ".js"]), path.join(appDir, "site.config.mjs")];
-    return files.map((file) => stripComments(fs.readFileSync(file, "utf8"))).join("\n");
+    const files = [...walk(path.join(appDir, "src"), [".astro", ".js"]), path.join(appDir, "site.config.mjs")];
+    // 正文中的代码注释也是可见文字，不能像源码注释一样剥除。
+    const articles = publishedPosts.map(({ title, description, category, tags, content }) =>
+        [title, description, category, ...tags, content].join("\n"),
+    );
+    return [...articles, ...files.map((file) => stripComments(fs.readFileSync(file, "utf8")))].join("\n");
 };
 
 // CSS 里只有 content: "…" 的字符会出现在页面上（例如任务清单的 ☐ / ☑），
@@ -114,8 +116,7 @@ const readCssContentText = () => {
 // 等宽字体只用在代码块与行内代码上，按这些位置的真实字符裁剪即可。
 const readCodeText = () => {
     const parts = [];
-    for (const file of walk(docsDir, [".md"])) {
-        const markdown = fs.readFileSync(file, "utf8");
+    for (const { content: markdown } of publishedPosts) {
         for (const block of markdown.matchAll(/```[^\n]*\n([\s\S]*?)```/g)) parts.push(block[1]);
         for (const span of markdown.matchAll(/`([^`\n]+)`/g)) parts.push(span[1]);
     }

@@ -1,8 +1,8 @@
 ---
-title: 浏览器页签跳转和管理（window.open 实战）
+title: window.open 页签管理
 slug: window-open-tab-management
 status: published
-description: 介绍如何用 window.open() 打开、复用与切换浏览器页签，用窗口缓存与 closed 状态判断避免重复打开，并说明 window.close() 的限制。
+description: 整理 window.open 的打开、复用与切换，说明窗口关闭的使用限制。
 category: 技术笔记
 tags: [前端开发, HTML, JavaScript]
 date: 2025-07-10

@@ -27,6 +27,8 @@ npm run dev        # http://localhost:4321
 SITE_URL=https://your-domain.com npm run build
 ```
 
+站点部署在域名根路径，文章路由固定为 `/blog/<slug>/`，归档固定为 `/page/N/`。`url` 或 `SITE_URL` 不接受子路径，避免生成与实际页面不一致的链接；`postsOnHome` 和 `postsPerArchivePage` 必须是正整数。
+
 ## 写文章
 
 文章放 `docs/blog/`，一篇文章一个 Markdown 文件，地址是 `/blog/<slug>/`。
@@ -44,9 +46,11 @@ tags: [Astro, 前端]
 正文……
 ```
 
-- `slug` 必填，只允许小写字母、数字与连字符；`date` 必须补零写成 `YYYY-MM-DD`。
-- `status` 不是 `published` 就不发布；`coverImage` 只用于分享卡片（1200×630，**不显示在页面上**）；`updated` 可选，写进结构化数据的 `dateModified`。
-- 格式写错会**直接让构建失败并指出文件名**——这是有意的，比生成一堆坏链接强。
+- 已发布文章的 `slug` 必填，只允许小写字母、数字，以及连接单词的单个连字符，不允许首尾连字符。
+- `date` 必须是真实存在的日期，格式严格为 `YYYY-MM-DD`，不接受时间戳或附加字符；带引号和不带引号均可。
+- `updated` 可选，同样要求真实日期，且不能早于 `date`，用于结构化数据的 `dateModified`。
+- `status` 默认是 `published`；设为 `draft` 等其他值时不发布，也不参与字段校验、slug 去重、正文渲染和字体扫描。草稿可以暂缺 slug、日期，但 YAML 语法仍需合法。
+- 发布字段写错会**直接让构建失败并指出文件名**。本站不提供文章封面或默认分享图，保留文字分享摘要与正文配图。
 
 配图与排版上踩过的坑：
 
@@ -55,6 +59,8 @@ tags: [Astro, 前端]
 - 任务清单 `- [ ]` / `- [x]` 会渲染成勾选框，但列表项之间**不能有空行**。
 - 代码围栏标上语言才会高亮，支持 `bash`、`html`、`javascript`、`json`、`typescript`（`ts`）；正文标题从哪一级开始都行，构建时会归一化成 h2 起步。
 - 正文里的原始 HTML 会原样保留，请只写自己信任的内容。
+
+开发服务器运行时，`docs/images/` 与 `docs/videos/` 的新增、替换、重命名和删除会先同步到 `app/public/`，再刷新页面，无需重启。
 
 ## 字体
 
@@ -66,7 +72,7 @@ tags: [Astro, 前端]
 npm run fonts
 ```
 
-`prebuild` 会检查覆盖情况，**缺字时让构建失败**并列出缺的字（确实想先跳过，加 `--allow-missing`）。首次裁剪要联网下载完整字体并缓存到 `app/.cache/fonts/`；升级或更换字体改 `app/scripts/build-font-subset.mjs` 顶部的 `FONTS`。
+`prebuild` 会检查已发布文章的字符覆盖情况，**缺字时让构建失败**并列出缺的字（确实想先跳过，加 `--allow-missing`）。草稿不参与裁剪与检查，发布后有新字符才需要重新裁剪。首次裁剪要联网下载完整字体并缓存到 `app/.cache/fonts/`；升级或更换字体改 `app/scripts/build-font-subset.mjs` 顶部的 `FONTS`。
 
 排版参数（基准字号 18px、行高、栏宽、段间距）都定义在 `app/src/styles/main.css` 的 `:root` 里，改那一处即可整体调整。
 
@@ -82,7 +88,8 @@ npm run fonts
 simple-blog/
 ├─ app/                    Astro 应用
 │  ├─ site.config.mjs      ★ 站点配置，克隆后主要改这里
-│  ├─ src/lib/posts.js     读取 docs/blog 并渲染 Markdown
+│  ├─ src/lib/content.js   校验文章元数据，筛选已发布内容
+│  ├─ src/lib/posts.js     渲染 Markdown 与正文图片
 │  ├─ src/lib/highlight.js 构建期用 Shiki 给代码块着色
 │  ├─ src/styles/          main.css 与生成的 fonts.css
 │  └─ scripts/             同步图片、裁剪字体子集

@@ -1,19 +1,14 @@
-// 文章读取与渲染的唯一入口：扫 docs/blog/*.md，解析 front matter，用 markdown-it
-// 渲染后用 Shiki 高亮代码块，并给图片补上真实宽高。
-//
-// 这里也是「构建成功但产出错误 URL」的唯一防线：日期格式、slug 合法性、slug 重复
-// 都在这一步拦住，出错直接让构建失败，而不是生成一批坏链接。
+// 文章渲染入口：content.js 校验并筛选已发布内容，markdown-it 渲染正文，
+// Shiki 在构建期高亮代码块，并给正文图片补上真实宽高。
 
 import fs from "node:fs";
 import path from "node:path";
-import matter from "gray-matter";
 import MarkdownIt from "markdown-it";
 import { highlightCode } from "./highlight.js";
+import { readPublishedPosts } from "./content.js";
 import config from "../../site.config.mjs";
 
-const postsPath = path.join(config.docsDir, config.postsDir);
 const imagesPath = path.join(config.docsDir, "images");
-const postsBase = config.postsBase.replace(/\/+$/, "");
 
 const markdown = new MarkdownIt({ html: true, linkify: true });
 
@@ -40,36 +35,6 @@ markdown.core.ruler.push("normalize_heading_level", (state) => {
         }
     }
 });
-
-// front matter 的 date 统一写成 YYYY-MM-DD；
-// js-yaml 会把它解析成 Date，这里再规整回字符串。
-const toDateString = (value) => {
-    if (value instanceof Date) {
-        return value.toISOString().slice(0, 10);
-    }
-
-    return String(value ?? "").slice(0, 10);
-};
-
-const toTagList = (value) => {
-    if (Array.isArray(value)) {
-        return value.map(String);
-    }
-
-    return value === undefined || value === null || value === "" ? [] : [String(value)];
-};
-
-const toAssetUrl = (value) => {
-    if (typeof value !== "string" || value.length === 0) {
-        return undefined;
-    }
-
-    if (/^https?:\/\//.test(value)) {
-        return value;
-    }
-
-    return value.startsWith("/") ? value : `/${value.replace(/^\.\//, "")}`;
-};
 
 // 读取 webp 真实尺寸。带上 width/height 后浏览器会预先留出空间，
 // 图片加载完成时不会把下方内容顶下去，滚动才不会有跳动感。
@@ -114,13 +79,7 @@ const readPngSize = (buffer) => {
 // 调用方要自己写 width/height（README 的写作约定里也这么要求）
 const readImageSize = (buffer) => (buffer.toString("ascii", 0, 4) === "RIFF" ? readWebpSize(buffer) : readPngSize(buffer));
 
-const MIME_BY_EXTENSION = { png: "image/png", webp: "image/webp", jpg: "image/jpeg", jpeg: "image/jpeg" };
-
-// 给 og:image:type 用；认不出的扩展名就交给爬虫自己判断
-const imageMime = (src) => MIME_BY_EXTENSION[path.extname(src).slice(1).toLowerCase()];
-
-// 一次构建里 getPosts() 会被 astro.config、各页面的 getStaticPaths 反复调用，
-// 缓存避免同一张图被同步读盘多次
+// 同一次文章读取中，缓存避免重复图片被同步读盘多次。
 const sizeCache = new Map();
 
 const imageSize = (src) => {
@@ -134,7 +93,7 @@ const imageSize = (src) => {
         try {
             // 允许 images/ 下的子目录，同时避免跳出 docs/images
             const file = path.resolve(config.docsDir, src.slice(1));
-            size = file.startsWith(imagesPath) ? readImageSize(fs.readFileSync(file)) : undefined;
+            size = file.startsWith(`${imagesPath}${path.sep}`) ? readImageSize(fs.readFileSync(file)) : undefined;
         } catch {
             size = undefined;
         }
@@ -182,105 +141,13 @@ const prepareHtml = (html) => {
         .replace(/<img\b[^>]*>/g, (tag) => withImageAttrs(tag, index++));
 };
 
-const readPostFile = (filename) => {
-    const source = fs.readFileSync(path.join(postsPath, filename), "utf8");
-
-    try {
-        return matter(source);
-    } catch (error) {
-        throw new Error(`${filename} 的 front matter 解析失败：${error.message}`);
-    }
-};
-
-// 挡住“构建成功但产出错误 URL”的情况。
-// slug 会直接进 URL，所以把所有会改变 URL 语义的字符都挡掉：
-//   / 和 \ 会拆出多余路径层级，开头的 . 与中间的 .. 会跳出目录，
-//   ? 与 # 会被当成查询串和片段，% 会与百分号编码冲突，空白会产出不可读的地址。
-// 控制字符也一并挡掉：YAML 双引号里的 \b 之类会被解析成真的控制字符，绕开上面几条。
-const readSlug = (filename, data) => {
-    const slug = String(data.slug || path.basename(filename, ".md"));
-
-    if (!slug || /[/\\?#%\s\u0000-\u001f\u007f]/.test(slug) || slug.startsWith(".") || slug.includes("..")) {
-        throw new Error(`${filename} 的 slug 非法：${slug}`);
-    }
-
-    return slug;
-};
-
-const readDate = (filename, data, field = "date") => {
-    const date = toDateString(data[field]);
-
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-        throw new Error(`${filename} 缺少合法的日期（${field}，格式 YYYY-MM-DD），当前值：${date || "空"}`);
-    }
-
-    return date;
-};
-
-// updated 是可选的修订日期，写了就用于结构化数据的 dateModified。
-// 格式要求与 date 一致：写错同样拦住构建，而不是悄悄忽略。
-const readUpdated = (filename, data) => {
-    if (data.updated === undefined || data.updated === null || data.updated === "") {
-        return undefined;
-    }
-
-    return readDate(filename, data, "updated");
-};
-
-/**
- * 读取全部已发布文章，按日期倒序返回。
- * 日期格式、slug 合法性、slug 重复校验失败时直接抛错，让构建失败。
- */
-export function getPosts() {
-    if (!fs.existsSync(postsPath)) {
-        throw new Error(`找不到文章目录：${postsPath}`);
-    }
-
-    const posts = fs
-        .readdirSync(postsPath)
-        .filter((filename) => filename.endsWith(".md"))
-        .map((filename) => {
-            const { data, content } = readPostFile(filename);
-            const slug = readSlug(filename, data);
-            const cover = toAssetUrl(data.coverImage);
-            const coverSize = cover ? imageSize(cover) : undefined;
-
-            return {
-                file: filename,
-                slug,
-                url: `${postsBase}/${slug}/`,
-                title: String(data.title || slug),
-                description: data.description,
-                date: readDate(filename, data),
-                updated: readUpdated(filename, data),
-                tags: toTagList(data.tags),
-                category: data.category,
-                cover,
-                // 社交卡片要靠真实尺寸决定裁切，读不到就不输出，交给爬虫自己抓
-                coverWidth: coverSize?.width,
-                coverHeight: coverSize?.height,
-                coverType: cover ? imageMime(cover) : undefined,
-                status: String(data.status || "published"),
-                html: highlightCode(prepareHtml(markdown.render(content))),
-            };
-        })
-        .filter((post) => post.status === "published");
-
-    const seen = new Map();
-
-    for (const post of posts) {
-        const previous = seen.get(post.slug);
-
-        if (previous) {
-            throw new Error(`slug 重复：${post.slug}（${previous} 和 ${post.file}）`);
-        }
-
-        seen.set(post.slug, post.file);
-    }
-
-    // date 已规整成 YYYY-MM-DD，字符串倒序就是时间倒序，
-    // 不用再建 Date 对象，也就不会引入时区偏移
-    return posts.sort((a, b) => b.date.localeCompare(a.date));
+/** 只渲染已发布文章；每次读取重置图片尺寸，开发时替换图片即可更新。 */
+export function getPosts(directory) {
+    sizeCache.clear();
+    return readPublishedPosts(directory).map(({ content, ...post }) => ({
+        ...post,
+        html: highlightCode(prepareHtml(markdown.render(content))),
+    }));
 }
 
 /** 把 YYYY-MM-DD 格式化成「2026年6月28日」；无法解析时原样返回 */

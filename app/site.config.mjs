@@ -9,7 +9,7 @@ import path from "node:path";
  */
 const config = {
     // 部署后的正式域名。用于 canonical、sitemap、RSS 和分享卡片。
-    // 末尾不要带斜杠。也可以用环境变量 SITE_URL 覆盖（shell 变量或 app/.env 都可以）。
+    // 末尾不要带斜杠。也可以用环境变量 SITE_URL 覆盖（shell 变量）。
     url: "https://yuwb.dev",
 
     // 站点名。会出现在浏览器标题后缀、结构化数据和 RSS 里。
@@ -25,8 +25,7 @@ const config = {
     authorTagline: "前端开发 · 全栈 · 简约设计 · 造物",
 
     // 作者简介，写入 Person 结构化数据
-    authorBio:
-        "喜欢简洁的设计，也喜欢安静地写点代码。偶尔捣鼓些小工具，把一闪而过的想法变成看得见的东西。这里没有宏大的叙事，只有一些零散的记录和简单的快乐。",
+    authorBio: "喜欢简洁的设计，也喜欢安静写代码。做些小工具，记下零散的想法和日常的快乐。",
 
     // 作者主页，作为 Person 的 sameAs，帮助搜索引擎归并实体
     github: "https://github.com/zhijian521",
@@ -68,9 +67,6 @@ const config = {
     // 浏览器 UI 的主题色，与页面底色保持一致
     themeColor: "#f8f8f5",
 
-    // 社交分享默认图，放在 app/public/ 下，建议 1200×630。
-    ogImage: "/og.png",
-
     // 站点图标，放在 app/public/ 下。
     favicon: "/favicon-32.png",
     // iOS「添加到主屏幕」用的图标，需为 180×180
@@ -81,9 +77,6 @@ const config = {
 
     // 文章所在的子目录（相对 contentDir）
     postsDir: "blog",
-
-    // 文章地址前缀。文章会生成在 /blog/<slug>/，归档仍在 /page/N/。
-    postsBase: "/blog",
 
     // 首页最多展示多少篇文章（不足则全部展示，并且不显示「归档」入口）
     postsOnHome: 4,
@@ -111,13 +104,27 @@ const config = {
 const appDir = process.cwd();
 
 // 域名优先取环境变量，便于同一份代码在不同环境构建。
-// shell 变量和 app/.env 都可以：Astro 会在配置求值之前把 .env 注入 process.env。
+// 使用 shell 环境变量；构建前脚本与 Astro 读取同一个值。
 const url = (process.env.SITE_URL || config.url).replace(/\/+$/, "");
 
-// 用字符串拼接生成绝对地址，而不是 new URL()：部署在子路径
-// （例如 https://name.github.io/blog）时前者才不会丢掉前缀。
-// encodeURI 只转义中文与空格、保留 /，所以中文 slug 也能拼出可用链接。
-export const absoluteUrl = (target) => `${url}${encodeURI(target.startsWith("/") ? target : `/${target}`)}`;
+// 页面和资源均部署在域名根路径，避免配置出与实际路由不一致的子路径。
+const siteUrl = new URL(url);
+if (
+    !["http:", "https:"].includes(siteUrl.protocol) ||
+    siteUrl.pathname !== "/" ||
+    siteUrl.search ||
+    siteUrl.hash ||
+    siteUrl.username ||
+    siteUrl.password
+) {
+    throw new Error("站点 url 必须是 HTTP/HTTPS 根域名，不支持子路径、查询参数或认证信息");
+}
+
+for (const field of ["postsOnHome", "postsPerArchivePage"]) {
+    if (!Number.isInteger(config[field]) || config[field] < 1) throw new Error(field + " 必须是正整数");
+}
+
+export const absoluteUrl = (target) => new URL(target, url + "/").href;
 
 const docsDir = path.resolve(appDir, config.contentDir);
 

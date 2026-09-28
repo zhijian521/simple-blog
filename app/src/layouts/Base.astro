@@ -9,10 +9,6 @@ const {
     description = config.description,
     path = "/",
     schema,
-    image = config.ogImage,
-    imageWidth,
-    imageHeight,
-    imageType,
     type = "website",
     publishedTime,
     tags = [],
@@ -25,13 +21,6 @@ const {
 const fontPreloads = hasCode ? [regularFont, monoFont] : [regularFont];
 
 const canonical = absoluteUrl(path);
-const ogImage = absoluteUrl(image);
-const isDefaultImage = image === config.ogImage;
-// 默认分享图 og.png 是已知的 1200×630；文章封面由 posts.js 从文件头读出真实尺寸，
-// 读不到就不输出，让爬虫自己抓——写错的尺寸比不写更糟。
-const ogWidth = imageWidth ?? (isDefaultImage ? 1200 : undefined);
-const ogHeight = imageHeight ?? (isDefaultImage ? 630 : undefined);
-const ogType = imageType ?? (isDefaultImage ? "image/png" : undefined);
 const pageTitle = title === config.name ? title : `${title} · ${config.name}`;
 const metaKeywords = [...new Set([...keywords, ...config.keywords])];
 ---
@@ -67,20 +56,14 @@ const metaKeywords = [...new Set([...keywords, ...config.keywords])];
         <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />
         {!noindex && <meta property="og:url" content={canonical} />}
-        <meta property="og:image" content={ogImage} />
-        <meta property="og:image:alt" content={title} />
-        {ogType && <meta property="og:image:type" content={ogType} />}
-        {ogWidth && <meta property="og:image:width" content={ogWidth} />}
-        {ogHeight && <meta property="og:image:height" content={ogHeight} />}
         {publishedTime && <meta property="article:published_time" content={publishedTime} />}
         {tags.map((tag) => (
             <meta property="article:tag" content={tag} />
         ))}
 
-        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description} />
-        <meta name="twitter:image" content={ogImage} />
 
         {/* 转义 < 防止标题或正文里出现 </script> 时提前闭合 JSON-LD（既是 XSS 也是解析失败） */}
         {schema && <script type="application/ld+json" set:html={JSON.stringify(schema).replace(/</g, "\\u003c")} />}

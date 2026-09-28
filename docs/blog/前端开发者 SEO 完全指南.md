@@ -1,12 +1,11 @@
 ---
-title: 前端开发者 SEO 完全指南
+title: 前端开发者的 SEO 指南
 slug: seo-guide
 status: published
-description: "本篇文章覆盖基础优化、性能指标与结构化数据。结合内容站、电商、SPA 与 SaaS 场景，讲清真实项目中的 SEO 关键问题。同时梳理 Google 已确认有效与无效的优化策略，帮助快速建立系统认知。"
+description: 梳理页面结构、性能与结构化数据，整理前端项目的 SEO 优化方法。
 category: 技术笔记
 tags: [SEO, 性能优化, 前端开发]
 date: 2025-05-09
-coverImage: images/cover-44-og.png
 
 ---
 
