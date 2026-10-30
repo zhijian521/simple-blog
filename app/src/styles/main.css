@@ -413,6 +413,10 @@ a.plain-list__name:hover {
     padding: 0.6rem 1rem 0.6rem 0;
     text-align: left;
     vertical-align: top;
+    /* 单元格要有最小宽度：中文可以逐字断行，自动布局会把短列一路压到「一行一个字」
+       （实测：两列表格的首列被压成「页 / 面」「总 / 览」，长文本列抢光了宽度）。
+       给个下限，宁可让窄屏表格多滚一点，也不要压成竖排。 */
+    min-width: 3.5em;
 }
 
 .prose th {
@@ -499,14 +503,6 @@ a.plain-list__name:hover {
     .prose table {
         display: block;
         overflow-x: auto;
-    }
-
-    /* 单元格要有最小宽度：中文可以逐字断行，自动布局会把列一路压到「一行一个字」
-       （实测 320px 下首列最窄只有 34px，标题「动作」被拆成两行、正文五行的字堆）。
-       给个下限，宁可让表格多滚一点，也不要压成竖排。 */
-    .prose th,
-    .prose td {
-        min-width: 3.5em;
     }
 }
 

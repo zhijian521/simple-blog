@@ -2,6 +2,7 @@ node_modules/
 .astro/
 dist/
 app/.cache/
+.workbuddy/
 app/public/*
 !app/public/favicon-32.png
 !app/public/favicon-16.png

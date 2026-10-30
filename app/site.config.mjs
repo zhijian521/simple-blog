@@ -96,6 +96,11 @@ const config = {
             description: "一个基于 CesiumJS 的三维地球可视化示例集，零依赖、零构建。",
             href: "https://github.com/zhijian521/cesium-example",
         },
+        {
+            title: "mh-tool",
+            description: "梦幻西游的养成与账本手账，Electron + Vue 桌面应用，数据只存在本机。",
+            href: "https://github.com/zhijian521/mh-toolbox",
+        },
     ],
 };
 
