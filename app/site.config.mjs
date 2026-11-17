@@ -97,9 +97,9 @@ const config = {
             href: "https://github.com/zhijian521/cesium-example",
         },
         {
-            title: "mh-tool",
-            description: "梦幻西游的养成与账本手账，Electron + Vue 桌面应用，数据只存在本机。",
-            href: "https://github.com/zhijian521/mh-toolbox",
+            title: "梦幻养老助手",
+            description: "梦幻西游端游的角色养成与本地账本，Rust + Tauri + Vue，支持离线截图识别。",
+            href: "https://github.com/zhijian521/mh-toolbox-rs",
         },
     ],
 };
